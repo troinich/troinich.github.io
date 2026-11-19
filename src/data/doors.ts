@@ -370,7 +370,7 @@ export const doorById = new Map(doors.map((d) => [d.id, d]))
  * The grid order with today's door swapped into the place of the first door of the same size.
  * Swapping two doors of the same shape never changes how the grid packs (so no gaps appear),
  * and because the shuffled order starts with one door of each shape, today's door always ends
- * up in the first rows (1–2 on desktop, 1–3 on tablet, 1–5 on phones).
+ * up in the first rows (1–2 on desktop, 1–3 on tablet). Phones use `phoneOrder` instead.
  */
 export function orderWithTodayFirst(order: number[], todayId: number): number[] {
   const size = (id: number) => doorById.get(id)?.size

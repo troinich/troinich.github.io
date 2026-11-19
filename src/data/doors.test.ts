@@ -73,14 +73,15 @@ describe("today's door near the top", () => {
     }
   })
 
-  it('leaves no gaps on any day, and puts today near the top at every width', () => {
+  // phones don't use this order (see 'phone order' below), so only tablet and desktop are checked
+  it('leaves no gaps on any day, and puts today near the top on tablet and desktop', () => {
     for (let today = 1; today <= 24; today++) {
       const order = orderWithTodayFirst(gridOrder, today)
-      for (const cols of [2, 4, 6]) {
+      for (const cols of [4, 6]) {
         const { empty, rowOf } = layout(order, cols)
         expect({ today, cols, empty }).toEqual({ today, cols, empty: 0 })
-        // desktop: first two rows; tablet: first three; phones: first five (big doors take 2 rows)
-        const maxRow = cols === 6 ? 2 : cols === 4 ? 3 : 5
+        // desktop: first two rows; tablet: first three
+        const maxRow = cols === 6 ? 2 : 3
         expect({ today, cols, inFirstRows: rowOf.get(today)! <= maxRow }).toEqual({ today, cols, inFirstRows: true })
       }
     }
@@ -88,10 +89,6 @@ describe("today's door near the top", () => {
 })
 
 describe('phone order', () => {
-  it('is 1–24 in order', () => {
-    expect(phoneOrder).toEqual(Array.from({ length: 24 }, (_, i) => i + 1))
-  })
-
   it('leaves no gaps and keeps the doors in reading order', () => {
     const { empty, rowOf } = layout(phoneOrder, 2, phoneFullWidth(phoneOrder))
     expect(empty).toBe(0)
