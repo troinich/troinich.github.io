@@ -36,9 +36,11 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
           />
         </button>
         <div className="intro-grid__title">
-          <p className="eyebrow whitespace-nowrap max-sm:tracking-[0.12em] max-[379px]:text-[0.6875rem] max-[379px]:tracking-[0.08em]">
-            {/* phones: "MEET ME ADVENT EDITION" on one line; the sparkle and dot only show on wider screens */}
-            <span className="hidden sm:inline" aria-hidden="true">✨ </span>Meet me<span className="hidden sm:inline"> ·</span> Advent edition
+          <p className="eyebrow whitespace-nowrap max-sm:tracking-[0.12em] max-[379px]:text-[0.6875rem] max-[379px]:tracking-[0.08em] max-[339px]:text-[0.625rem] max-[339px]:tracking-[0.05em]">
+            <span className="hidden sm:inline" aria-hidden="true">
+              ✨{' '}
+            </span>
+            Meet me · Advent edition
           </p>
           <h1 className="mt-1 font-display text-[2rem] leading-[1.05] font-bold text-[var(--ink)] [text-shadow:0_0_30px_rgba(232,192,106,0.35)] sm:mt-2 sm:text-6xl sm:leading-tight">
             {cv.name}
@@ -53,7 +55,10 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
               'Professional door opener',
             ].map((line) => (
               <li key={line} className="flex items-start gap-2">
-                <span className="mt-[0.3em] w-[16px] shrink-0 text-center text-[12px] leading-none sm:w-[18px] sm:text-[15px]" aria-hidden="true">
+                <span
+                  className="mt-[0.3em] w-[16px] shrink-0 text-center text-[12px] leading-none sm:w-[18px] sm:text-[15px]"
+                  aria-hidden="true"
+                >
                   🎄
                 </span>
                 <span>{line}</span>
@@ -67,28 +72,16 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
       </div>
       <div className="flex flex-wrap items-center gap-3">
         {!allOpen && (
-          <button
-            type="button"
-            onClick={onOpenAll}
-            className="btn btn--primary"
-          >
+          <button type="button" onClick={onOpenAll} className="btn btn--primary">
             🎁 Open all doors
           </button>
         )}
         {openedCount > 0 && (
-          <button
-            type="button"
-            onClick={onCloseAll}
-            className="btn btn--secondary"
-          >
+          <button type="button" onClick={onCloseAll} className="btn btn--secondary">
             Close all doors
           </button>
         )}
-        <button
-          type="button"
-          onClick={onShowCv}
-          className="btn btn--secondary"
-        >
+        <button type="button" onClick={onShowCv} className="btn btn--secondary">
           Show full CV
         </button>
         <button

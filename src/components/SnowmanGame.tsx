@@ -118,8 +118,9 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
       >
         {phase === 'intro' && (
           <>
-            <p className="eyebrow mb-4">
-              Welcome to my Advent CV Calendar 🎄
+            {/* balanced lines, and the tree stays with "Calendar" so it's never alone on a line */}
+            <p className="eyebrow mb-4 [text-wrap:balance]">
+              Welcome to my Advent CV Calendar&nbsp;🎄
             </p>
             <SeasonIcon season={season} className="mx-auto" />
             <h2 id="lock-title" className="mt-3 font-display text-3xl font-bold text-[var(--gold)]">
@@ -128,7 +129,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
             <p className="mt-3 leading-relaxed text-[var(--ink-2)]">
               The Advent calendar opens on <strong>1&nbsp;December</strong>.
             </p>
-            <p className="mt-2 text-sm text-[var(--open-ink-soft)]">Build a snowman in 3 clicks to unlock early.</p>
+            <p className="mt-2 text-sm text-[var(--open-ink-soft)] [text-wrap:balance]">Build a snowman in 3 clicks to unlock early.</p>
             <div className="mt-6 flex flex-col-reverse gap-3 sm:grid sm:grid-cols-2">
               <button
                 type="button"
