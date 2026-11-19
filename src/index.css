@@ -188,6 +188,10 @@ body {
     grid-column: span 2;
     grid-row: span 1;
   }
+  /* doors go in plain order on phones; a normal door that would sit alone in its row fills it */
+  .door--phone-full {
+    grid-column: span 2;
+  }
 }
 
 /* ---------- Door flip ---------- */

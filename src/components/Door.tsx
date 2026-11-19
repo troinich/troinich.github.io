@@ -16,6 +16,8 @@ interface Props {
   highlight?: boolean
   /** The calendar is locked: show a padlock; clicking asks to build the snowman. */
   locked?: boolean
+  /** On phones, take the whole row (a normal door that would otherwise sit alone in its row). */
+  phoneFullWidth?: boolean
   onToggle: (id: number) => void
   onReadMore: (id: number) => void
   /** Opens the full CV page (used by door 24's "Full CV" button). */
@@ -28,6 +30,7 @@ export function Door({
   today = false,
   highlight = false,
   locked = false,
+  phoneFullWidth = false,
   onToggle,
   onReadMore,
   onShowCv,
@@ -50,7 +53,7 @@ export function Door({
   return (
     <li
       id={`door-${door.id}`}
-      className={`door ${sizeClass} ${open ? 'is-open' : ''} ${today ? 'is-today' : ''} ${highlight ? 'is-highlighted' : ''}`}
+      className={`door ${sizeClass} ${phoneFullWidth ? 'door--phone-full' : ''} ${open ? 'is-open' : ''} ${today ? 'is-today' : ''} ${highlight ? 'is-highlighted' : ''}`}
     >
       <button
         type="button"

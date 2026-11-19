@@ -1,4 +1,4 @@
-import { doors, gridOrder, orderWithTodayFirst } from './doors'
+import { doors, gridOrder, orderWithTodayFirst, phoneFullWidth, phoneOrder } from './doors'
 
 describe('doors data', () => {
   it('has exactly 24 doors with unique ids 1–24', () => {
@@ -26,8 +26,13 @@ describe('doors data', () => {
  * scanning row by row, where its whole shape fits. Returns the number of empty cells
  * inside the filled area and the row (1-based) each door starts on.
  */
-function layout(order: number[], cols: number): { empty: number; rowOf: Map<number, number> } {
+function layout(
+  order: number[],
+  cols: number,
+  fullWidth: Set<number> = new Set(),
+): { empty: number; rowOf: Map<number, number> } {
   const shape = (id: number) => {
+    if (fullWidth.has(id)) return [2, 1] // phones: a normal door stretched to fill its row
     const size = doors.find((d) => d.id === id)!.size
     if (size === 'big') return [2, 2]
     if (size === 'wide') return [2, 1]
@@ -78,6 +83,24 @@ describe("today's door near the top", () => {
         const maxRow = cols === 6 ? 2 : cols === 4 ? 3 : 5
         expect({ today, cols, inFirstRows: rowOf.get(today)! <= maxRow }).toEqual({ today, cols, inFirstRows: true })
       }
+    }
+  })
+})
+
+describe('phone order', () => {
+  it("puts today's door first, then every other door in order 1–24", () => {
+    expect(phoneOrder(1)).toEqual(Array.from({ length: 24 }, (_, i) => i + 1))
+    expect(phoneOrder(5)).toEqual([5, 1, 2, 3, 4, ...Array.from({ length: 19 }, (_, i) => i + 6)])
+  })
+
+  it('leaves no gaps on any day and keeps the doors in reading order', () => {
+    for (let today = 1; today <= 24; today++) {
+      const order = phoneOrder(today)
+      const { empty, rowOf } = layout(order, 2, phoneFullWidth(order))
+      expect({ today, empty }).toEqual({ today, empty: 0 })
+      // every door starts on the same row as the one before it, or a later row: nothing jumps back
+      const rows = order.map((id) => rowOf.get(id)!)
+      expect({ today, rows }).toEqual({ today, rows: [...rows].sort((a, b) => a - b) })
     }
   })
 })

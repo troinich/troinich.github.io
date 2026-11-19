@@ -378,3 +378,28 @@ export function orderWithTodayFirst(order: number[], todayId: number): number[] 
   if (swapWith === undefined || swapWith === todayId) return order
   return order.map((id) => (id === todayId ? swapWith : id === swapWith ? todayId : id))
 }
+
+/** Phones show the doors in plain order: today's door first, then 1, 2, 3… 24 without it. */
+export function phoneOrder(todayId: number): number[] {
+  return [todayId, ...doors.map((d) => d.id).filter((id) => id !== todayId)]
+}
+
+/**
+ * On phones (2 columns), the normal doors that would sit alone in a row in this order, because the
+ * next door takes a full row (wide, tall, big) or there is no next door. They stretch to full width,
+ * so the grid has no gaps and the doors stay in order.
+ */
+export function phoneFullWidth(order: number[]): Set<number> {
+  const full = new Set<number>()
+  let waiting: number | null = null // a normal door in the left column, still without a neighbour
+  for (const id of order) {
+    if (!doorById.get(id)?.size) {
+      waiting = waiting === null ? id : null
+    } else {
+      if (waiting !== null) full.add(waiting)
+      waiting = null
+    }
+  }
+  if (waiting !== null) full.add(waiting)
+  return full
+}
