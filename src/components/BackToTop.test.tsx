@@ -1,33 +1,38 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { BackToTop } from './BackToTop'
 
-describe('BackToTop', () => {
-  afterEach(() => {
-    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true })
-  })
-
-  function scrollTo(y: number) {
-    Object.defineProperty(window, 'scrollY', { value: y, configurable: true })
+describe('BackToTop (↑ / ↓ on phones)', () => {
+  const page = (scrollY: number, scrollHeight = 5000, innerHeight = 800) => {
+    Object.defineProperty(window, 'scrollY', { value: scrollY, configurable: true })
+    Object.defineProperty(window, 'innerHeight', { value: innerHeight, configurable: true })
+    Object.defineProperty(document.documentElement, 'scrollHeight', { value: scrollHeight, configurable: true })
     act(() => {
       window.dispatchEvent(new Event('scroll'))
     })
   }
+  const up = () => screen.queryByRole('button', { name: 'Back to top' })
+  const down = () => screen.queryByRole('button', { name: 'Go to bottom' })
 
-  it('is hidden at the top and appears after scrolling down', () => {
+  afterEach(() => page(0))
+
+  it('shows ↓ at the top, both in the middle, and ↑ at the bottom', () => {
     render(<BackToTop reducedMotion={false} />)
-    expect(screen.queryByRole('button', { name: 'Back to top' })).not.toBeInTheDocument()
-    scrollTo(900)
-    expect(screen.getByRole('button', { name: 'Back to top' })).toBeInTheDocument()
-    scrollTo(100)
-    expect(screen.queryByRole('button', { name: 'Back to top' })).not.toBeInTheDocument()
+    page(0)
+    expect([!!up(), !!down()]).toEqual([false, true])
+    page(2000)
+    expect([!!up(), !!down()]).toEqual([true, true])
+    page(4200) // bottom of a 5000px page in an 800px window
+    expect([!!up(), !!down()]).toEqual([true, false])
   })
 
-  it('scrolls smoothly to the top when clicked', () => {
+  it('scrolls smoothly to the top or the bottom', () => {
     const spy = vi.fn()
     window.scrollTo = spy as unknown as typeof window.scrollTo
     render(<BackToTop reducedMotion={false} />)
-    scrollTo(900)
-    fireEvent.click(screen.getByRole('button', { name: 'Back to top' }))
-    expect(spy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
+    page(2000)
+    fireEvent.click(up()!)
+    expect(spy).toHaveBeenLastCalledWith({ top: 0, behavior: 'smooth' })
+    fireEvent.click(down()!)
+    expect(spy).toHaveBeenLastCalledWith({ top: 5000, behavior: 'smooth' })
   })
 })

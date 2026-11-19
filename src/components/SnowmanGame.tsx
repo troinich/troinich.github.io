@@ -1,10 +1,14 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { useModal } from '../hooks/useModal'
 import { SeasonIcon, seasonOf } from './SeasonIcon'
 
 type Phase = 'intro' | 'build' | 'done'
 
 const steps = ['Roll some snow', 'Find buttons', 'Dress him up'] as const
+
+/** The piece you place on the snowman at each step (shown in the tray, and dragged onto the picture). */
+const pieces = ['❄️', '⚫', '🎩🥕'] as const
 
 interface Props {
   /** The visitor would rather wait for December. */
@@ -29,6 +33,10 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
   const build = () => {
     const next = built + 1
     setBuilt(next)
+    if (next < steps.length) {
+      // keep keyboard focus on the tray: move it to the next glowing piece
+      window.setTimeout(() => buildRef.current?.focus(), 0)
+    }
     if (next === steps.length) {
       onBuilt?.()
       // straight to the finished snowman and the win message
@@ -36,6 +44,53 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
       window.setTimeout(() => openRef.current?.focus(), 0)
     }
   }
+
+  // Dragging the current piece onto the picture (mouse, pen or finger). A short press without
+  // moving counts as a tap and is handled by the button's click instead.
+  const dropRef = useRef<HTMLDivElement>(null)
+  const [drag, setDrag] = useState<{ x: number; y: number; startX: number; startY: number; moved: boolean; over: boolean } | null>(null)
+  const suppressClick = useRef(false)
+  const overDrop = (x: number, y: number) => {
+    const r = dropRef.current?.getBoundingClientRect()
+    return !!r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
+  }
+  const startDrag = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    suppressClick.current = false
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+    setDrag({ x: e.clientX, y: e.clientY, startX: e.clientX, startY: e.clientY, moved: false, over: false })
+  }
+  const moveDrag = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    setDrag((d) => {
+      if (!d) return d
+      const moved = d.moved || Math.hypot(e.clientX - d.startX, e.clientY - d.startY) > 6
+      return { ...d, x: e.clientX, y: e.clientY, moved, over: moved && overDrop(e.clientX, e.clientY) }
+    })
+  }
+  const endDrag = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = drag
+    setDrag(null)
+    if (!d?.moved) return // a tap: the click handler builds
+    suppressClick.current = true // this was a drag, so ignore the click that follows
+    window.setTimeout(() => (suppressClick.current = false), 0)
+    if (overDrop(e.clientX, e.clientY)) build()
+  }
+
+  // A small 👆 that shows the drag gesture on step 1: it slides from the glowing piece diagonally
+  // up onto the picture twice, then goes away. Any touch, click or key press hides it straight away.
+  const [hintDone, setHintDone] = useState(false)
+  const showHint = phase === 'build' && built === 0 && !hintDone
+  useEffect(() => {
+    if (!showHint) return
+    const hide = () => setHintDone(true)
+    const timer = window.setTimeout(hide, 3400)
+    window.addEventListener('pointerdown', hide)
+    window.addEventListener('keydown', hide)
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('pointerdown', hide)
+      window.removeEventListener('keydown', hide)
+    }
+  }, [showHint])
 
   // One step back; from the first step, back to the "Too early!" message
   const back = () => {
@@ -51,7 +106,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="lock-title"
-        className="door-details relative z-10 max-h-[94vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 text-center sm:p-8"
+        className="door-details relative z-10 max-h-[94vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 text-center sm:max-w-lg sm:p-8"
       >
         {phase === 'intro' && (
           <>
@@ -91,35 +146,62 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
 
         {phase === 'build' && (
           <>
-            <h2 id="lock-title" className="font-display text-2xl font-bold text-[var(--gold)]">
-              Build a snowman
-            </h2>
-            <p className="mt-1 text-sm text-[var(--open-ink-soft)]" aria-live="polite">
-              Click {built + 1} of {steps.length}
+            {/* title row: small round Back on the left, title centred, an empty spacer on the right */}
+            <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2">
+              <button type="button" onClick={back} aria-label="Back" title="Back" className="icon-btn !h-10 !w-10 text-lg">
+                <span aria-hidden="true">←</span>
+              </button>
+              <h2 id="lock-title" className="font-display text-xl font-bold text-[var(--gold)] sm:text-2xl">
+                Build a snowman
+              </h2>
+              <span aria-hidden="true" />
+            </div>
+            <p className="mt-1 text-sm text-[var(--open-ink-soft)] sm:whitespace-nowrap" aria-live="polite">
+              Step {built + 1} of {steps.length} · drag the glowing piece onto the picture, or tap it
             </p>
-            <SnowmanSteps built={built} />
-            <div className="mt-2 flex justify-center gap-2" aria-hidden="true">
-              {steps.map((s, i) => (
-                <span key={s} className={`h-2 w-8 rounded-full ${i < built ? 'bg-[var(--gold)]' : 'bg-[var(--line)]'}`} />
-              ))}
-            </div>
-            <div className="mt-5 flex gap-3">
-              <button
-                type="button"
-                onClick={back}
-                className="btn btn--secondary"
-              >
-                ← Back
-              </button>
-              <button
-                ref={buildRef}
-                type="button"
-                onClick={build}
-                className="btn btn--primary flex-1"
-              >
-                {steps[built]}
-              </button>
-            </div>
+            <SnowmanSteps built={built} dropRef={dropRef} dropActive={drag?.over ?? false} />
+            <ul className="mt-4 grid grid-cols-3 gap-2" aria-label="Snowman pieces">
+              {steps.map((label, i) => {
+                const state = i < built ? 'done' : i === built ? 'current' : 'later'
+                return (
+                  <li key={label} className="relative">
+                    {state === 'current' && showHint && (
+                      <span className="drag-hint" aria-hidden="true">
+                        👆
+                      </span>
+                    )}
+                    <button
+                      ref={state === 'current' ? buildRef : undefined}
+                      type="button"
+                      disabled={state !== 'current'}
+                      onClick={() => {
+                        if (suppressClick.current) return
+                        build()
+                      }}
+                      onPointerDown={state === 'current' ? startDrag : undefined}
+                      onPointerMove={state === 'current' ? moveDrag : undefined}
+                      onPointerUp={state === 'current' ? endDrag : undefined}
+                      onPointerCancel={() => setDrag(null)}
+                      className={`snow-piece snow-piece--${state}`}
+                    >
+                      <span className="snow-piece__icon" aria-hidden="true">
+                        {state === 'done' ? '✓' : pieces[i]}
+                      </span>
+                      <span className="snow-piece__label">{label}</span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+            {/* The dragged piece is drawn on <body>, not inside the card: the card's zoom-in
+                transform would otherwise offset it from the pointer. */}
+            {drag?.moved &&
+              createPortal(
+                <span className="snow-piece__ghost" style={{ left: drag.x, top: drag.y }} aria-hidden="true">
+                  {pieces[built]}
+                </span>,
+                document.body,
+              )}
           </>
         )}
 
@@ -157,11 +239,27 @@ const STEP_IMAGES = [
   { src: 'snowman.jpg', alt: 'The finished snowman with top hat, carrot nose and red scarf' },
 ]
 
-/** Shows the picture for the current step, crossfading from one to the next. */
-function SnowmanSteps({ built }: { built: number }) {
+/**
+ * Shows the picture for the current step, crossfading from one to the next.
+ * It is the drop target for the dragged piece; tapping the picture itself does nothing.
+ */
+function SnowmanSteps({
+  built,
+  dropRef,
+  dropActive,
+}: {
+  built: number
+  dropRef: React.RefObject<HTMLDivElement>
+  dropActive: boolean
+}) {
   const current = STEP_IMAGES[Math.min(built, STEP_IMAGES.length - 1)]
   return (
-    <div className="snowman-steps relative mx-auto mt-4 aspect-square w-full max-w-[18rem] overflow-hidden rounded-2xl" role="img" aria-label={current.alt}>
+    <div
+      ref={dropRef}
+      className={`snowman-steps relative mx-auto mt-4 aspect-square w-full max-w-[18rem] overflow-hidden rounded-2xl ${dropActive ? 'is-drop-target' : ''}`}
+      role="img"
+      aria-label={current.alt}
+    >
       {STEP_IMAGES.map((img, i) => (
         <img
           key={img.src}

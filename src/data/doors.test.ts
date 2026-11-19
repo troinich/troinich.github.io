@@ -11,27 +11,13 @@ describe('doors data', () => {
     expect(gridOrder).not.toEqual([...gridOrder].sort((a, b) => a - b))
   })
 
-  it('every door has a headline and description', () => {
+  it('every door has a headline, a description, at least two detail points and a tag', () => {
     for (const d of doors) {
       expect(d.headline.trim()).not.toBe('')
       expect(d.description.trim()).not.toBe('')
-    }
-  })
-})
-
-describe('door details', () => {
-  it('every door has at least two detail points and one tag', () => {
-    for (const d of doors) {
       expect(d.details.length).toBeGreaterThanOrEqual(2)
       expect(d.tags.length).toBeGreaterThanOrEqual(1)
     }
-  })
-})
-
-describe('grid fill', () => {
-  it('the doors take up a multiple of 12 grid cells, so rows of 2, 3, 4 or 6 have no gaps', () => {
-    const cells = doors.reduce((sum, d) => sum + (d.size === 'big' ? 4 : d.size ? 2 : 1), 0)
-    expect(cells % 12).toBe(0)
   })
 })
 

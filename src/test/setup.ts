@@ -19,6 +19,19 @@ if (typeof globalThis.localStorage?.getItem !== 'function') {
   Object.defineProperty(globalThis, 'localStorage', { value: memoryStorage, configurable: true })
 }
 
+// jsdom has no PointerEvent, so pointer events lose their coordinates in tests. A MouseEvent
+// with a pointerId is enough for the drag-and-drop tests.
+if (typeof window.PointerEvent === 'undefined') {
+  class TestPointerEvent extends MouseEvent {
+    pointerId: number
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init)
+      this.pointerId = init.pointerId ?? 0
+    }
+  }
+  ;(window as unknown as { PointerEvent: unknown }).PointerEvent = TestPointerEvent
+}
+
 afterEach(() => {
   cleanup()
   localStorage.clear()

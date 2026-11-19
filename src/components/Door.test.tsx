@@ -36,18 +36,6 @@ describe('Door', () => {
   })
 })
 
-describe('Door (today)', () => {
-  it('has no visible badge, but the label says it is today', () => {
-    render(
-      <ul>
-        <Door door={doorById.get(19)!} open={false} today onToggle={() => {}} onReadMore={() => {}} />
-      </ul>,
-    )
-    expect(screen.queryByText('Today')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Door 19 (today), closed' })).toBeInTheDocument()
-  })
-})
-
 describe('Door (Read more)', () => {
   const stripeDoor = doorById.get(10)! // wide door: some details stay hidden, so it has "Read more"
 

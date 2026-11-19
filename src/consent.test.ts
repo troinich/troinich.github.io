@@ -11,11 +11,8 @@ describe('consent', () => {
     delete (window as Window & { goatcounter?: unknown }).goatcounter
   })
 
-  it('is unanswered by default', () => {
+  it('starts unanswered and stores the answer in a real cookie', () => {
     expect(readConsent()).toBeNull()
-  })
-
-  it('stores the answer in a real cookie', () => {
     writeConsent('yes')
     expect(document.cookie).toContain('cookie_consent=yes')
     expect(readConsent()).toBe('yes')

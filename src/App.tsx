@@ -10,7 +10,7 @@ import { CvView } from './components/CvView'
 import { DoorDetails } from './components/DoorDetails'
 import { Confetti } from './components/Confetti'
 import { BackToTop } from './components/BackToTop'
-import { CookiePrompt } from './components/CookiePrompt'
+import { CookieBanner } from './components/CookieBanner'
 import { SnowmanGame } from './components/SnowmanGame'
 import { isLocked, rememberUnlocked } from './data/lock'
 import { isMuted, jingle, setMuted } from './sound'
@@ -36,16 +36,21 @@ export default function App() {
   const [locked, setLocked] = useState(() => isLocked())
   const [showGame, setShowGame] = useState(locked)
 
-  // Cookie question: comes after the first thing the visitor sees (today's door card, or the
-  // "Too early!" message), when they close it or jump to the full CV, and only if they haven't
-  // answered before. "Cookie settings" in the footer asks again any time.
+  // Cookie question: a small non-blocking card. It appears 4 seconds after arrival or when the
+  // first door is opened (whichever comes first), only if the visitor hasn't answered before.
+  // "Not now" hides it for this visit; "Cookie settings" in the footer asks again any time.
   const [showCookie, setShowCookie] = useState(false)
-  const firstDialogOpen = useRef(locked)
-  const askCookieAfterFirstDialog = () => {
-    if (!firstDialogOpen.current) return
-    firstDialogOpen.current = false
-    if (readConsent() === null) setShowCookie(true)
+  // bumped by "Cookie settings" so the question always starts fresh, even mid fade-out
+  const [cookieKey, setCookieKey] = useState(0)
+  const cookieDismissed = useRef(false)
+  const offerCookie = () => {
+    if (!cookieDismissed.current && readConsent() === null) setShowCookie(true)
   }
+  useEffect(() => {
+    const t = window.setTimeout(offerCookie, 4000)
+    return () => window.clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (readConsent() === 'yes') startAnalytics()
@@ -57,37 +62,26 @@ export default function App() {
     else stopAnalytics()
   }, [])
 
-  const handleCookieDone = useCallback(() => setShowCookie(false), [])
+  const handleCookieDone = useCallback(() => {
+    cookieDismissed.current = true
+    setShowCookie(false)
+  }, [])
+  const handleCookieDismiss = useCallback(() => {
+    cookieDismissed.current = true // not saved: asked again next visit
+    setShowCookie(false)
+  }, [])
 
-  // Arrival: bring today's door into view and highlight it (it stays closed until the visitor
-  // opens it). Runs on page load (if unlocked) or right after the snowman unlocks the calendar.
-  // If the visitor clicks, taps, scrolls or presses a key first, the scrolling stops where it is.
+  // Arrival: highlight today's door (it stays closed until the visitor opens it). Runs on page load
+  // (if unlocked) or right after the snowman unlocks the calendar.
   const stopArrival = useRef<() => void>(() => {})
   const [highlightId, setHighlightId] = useState<number | null>(null)
   const startArrival = () => {
-    const el = document.getElementById(`door-${todayId}`)
-    el?.scrollIntoView?.({ block: 'center', behavior: reducedMotion ? 'auto' : 'smooth' })
-    const events = ['pointerdown', 'click', 'keydown', 'wheel', 'touchmove'] as const
-    const stop = () => events.forEach((e) => window.removeEventListener(e, onVisitorAction, true))
-    const onVisitorAction = () => {
-      stop()
-      // halt the smooth scroll toward today's door
-      try {
-        window.scrollTo({ top: window.scrollY, behavior: 'auto' })
-      } catch {
-        // not available (e.g. in tests)
-      }
-    }
-    events.forEach((e) => window.addEventListener(e, onVisitorAction, { capture: true, passive: true }))
+    // The page stays where it is (at the top); today's door is already in the first rows and
+    // stands out with its gold pulse and red ribbon.
     const unhighlight = window.setTimeout(() => setHighlightId(null), 4500)
     setHighlightId(todayId)
     setAnnouncement(`Today is door ${todayId}.`)
-    // the first card or CV the visitor closes brings the cookie question
-    firstDialogOpen.current = true
-    stopArrival.current = () => {
-      stop()
-      window.clearTimeout(unhighlight)
-    }
+    stopArrival.current = () => window.clearTimeout(unhighlight)
   }
 
   useEffect(() => {
@@ -102,7 +96,6 @@ export default function App() {
   const handleWait = useCallback(() => {
     setShowGame(false)
     setShowCv(true)
-    askCookieAfterFirstDialog()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleBuilt = useCallback(() => {
@@ -128,7 +121,10 @@ export default function App() {
     toggle(id)
     const door = doorById.get(id)!
     setAnnouncement(opening ? `Door ${id}: ${door.headline}. ${door.description}` : `Door ${id} closed.`)
-    if (opening) jingle()
+    if (opening) {
+      jingle()
+      offerCookie()
+    }
     if (opening && id === 24 && !reducedMotion) setConfetti(true)
   }
 
@@ -149,17 +145,15 @@ export default function App() {
   const closeCv = useCallback(() => {
     setShowCv(false)
     if (locked) setShowGame(true)
-    else askCookieAfterFirstDialog()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locked])
   const closeDetails = () => {
     setDetailId(null)
-    askCookieAfterFirstDialog()
   }
 
   return (
     <>
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6" aria-hidden={showCv || showCookie || showGame || detailId !== null || undefined}>
+      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6" aria-hidden={showCv || showGame || detailId !== null || undefined}>
         <Header
           openedCount={shownOpen.size}
           total={total}
@@ -187,8 +181,15 @@ export default function App() {
         <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--ink-soft)]">
           <p>Made with React, TypeScript and an unreasonable amount of 🎄 in Gothenburg.</p>
           <div className="flex items-center gap-4">
-            <button type="button" onClick={() => setShowCookie(true)} className="underline underline-offset-2">
-              🍪 Cookie settings
+            <button
+              type="button"
+              onClick={() => {
+                setCookieKey((k) => k + 1)
+                setShowCookie(true)
+              }}
+              className="underline underline-offset-2"
+            >
+              Cookie settings
             </button>
             <a href={cv.linkedin} target="_blank" rel="noreferrer" className="underline underline-offset-2">
               Say hi on LinkedIn
@@ -207,7 +208,6 @@ export default function App() {
           onShowCv={() => {
             setDetailId(null)
             setShowCv(true)
-            askCookieAfterFirstDialog()
           }}
         />
       )}
@@ -217,7 +217,13 @@ export default function App() {
       )}
       {confetti && <Confetti onDone={endConfetti} />}
       {showCookie && (
-        <CookiePrompt reducedMotion={reducedMotion} onAnswer={handleConsent} onDone={handleCookieDone} />
+        <CookieBanner
+          key={cookieKey}
+          reducedMotion={reducedMotion}
+          onAnswer={handleConsent}
+          onDismiss={handleCookieDismiss}
+          onDone={handleCookieDone}
+        />
       )}
     </>
   )

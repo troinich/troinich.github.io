@@ -4,12 +4,6 @@
  */
 export const GOATCOUNTER_CODE = 'troinich'
 
-/**
- * Your own cookie picture: put the file in `public/` and write its name here,
- * e.g. 'my-cookie.png'. A square photo with the cookie filling the frame works best.
- * Leave empty to use the drawn chocolate-chip cookie.
- */
-export const COOKIE_IMAGE = ''
 
 /**
  * Optional real jingle-bell recording: put it in `public/` (e.g. 'jingle.mp3')
