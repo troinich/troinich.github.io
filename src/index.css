@@ -68,9 +68,6 @@ body {
   grid-auto-rows: minmax(9rem, auto);
   grid-auto-flow: dense;
 }
-@media (min-width: 360px) {
-  .calendar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
 @media (min-width: 640px) {
   .calendar { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
 }
@@ -80,6 +77,11 @@ body {
 .door--wide { grid-column: span 2; }
 .door--tall { grid-row: span 2; }
 .door--big { grid-column: span 2; grid-row: span 2; }
+/* Phones (2 columns): tall doors would be long and thin, so they go full width instead.
+   They still take 2 cells, so the grid keeps filling with no gaps. */
+@media (max-width: 639px) {
+  .door--tall { grid-column: span 2; grid-row: span 1; }
+}
 
 /* ---------- Door flip ---------- */
 .door {
@@ -205,26 +207,26 @@ body {
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(0);
-  animation: bite 180ms ease-out forwards;
+  animation: bite 250ms ease-out forwards;
 }
-.cookie .bite-1 { animation-delay: 150ms; }
-.cookie .bite-2 { animation-delay: 450ms; }
-.cookie .bite-3 { animation-delay: 750ms; }
+.cookie .bite-1 { animation-delay: 250ms; }
+.cookie .bite-2 { animation-delay: 750ms; }
+.cookie .bite-3 { animation-delay: 1250ms; }
 @keyframes bite { to { transform: scale(1); } }
 
 .cookie .crumb {
   opacity: 0;
-  animation: crumb 600ms ease-in forwards;
+  animation: crumb 900ms ease-in forwards;
 }
-.cookie .crumb-0, .cookie .crumb-1 { animation-delay: 180ms; }
-.cookie .crumb-2, .cookie .crumb-3 { animation-delay: 480ms; }
-.cookie .crumb-4, .cookie .crumb-5 { animation-delay: 780ms; }
+.cookie .crumb-0, .cookie .crumb-1 { animation-delay: 300ms; }
+.cookie .crumb-2, .cookie .crumb-3 { animation-delay: 800ms; }
+.cookie .crumb-4, .cookie .crumb-5 { animation-delay: 1300ms; }
 @keyframes crumb {
   0% { opacity: 1; transform: translate(0, 0); }
   100% { opacity: 0; transform: translate(10px, 70px); }
 }
 
-.cookie { animation: chomp 600ms ease-in-out 150ms 2 both; }
+.cookie { animation: chomp 1400ms ease-in-out 250ms 1 both; }
 @keyframes chomp {
   0%, 100% { transform: rotate(0); }
   15% { transform: rotate(-6deg); }
@@ -496,3 +498,26 @@ body {
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
 }
 .door--big .door__bow { width: 10rem; }
+
+/* Mobile Safari fix: it doesn't hide the front face's own layers (the glowing number,
+   the stars, the ribbon) when the door turns away, so the number shows mirrored through
+   the open card. Hide those layers explicitly, and hide the whole front once the flip
+   passes halfway (300ms of the 600ms flip); it reappears halfway through closing. */
+.door__front,
+.door__front *,
+.door__front::before,
+.door__front::after {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.door__front {
+  transform: rotateY(0deg);
+  visibility: visible;
+  transition: visibility 0s linear 300ms;
+}
+.door.is-open .door__front {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .door__front { transition: opacity 200ms linear; }
+}

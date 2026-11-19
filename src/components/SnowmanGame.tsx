@@ -45,7 +45,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
   }
 
   return (
-    <div className="details-backdrop fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm sm:items-center sm:p-6">
+    <div className="details-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6">
       <div
         ref={dialogRef}
         role="dialog"
@@ -63,7 +63,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
               Too early!
             </h2>
             <p className="mt-3 leading-relaxed text-[var(--ink)]">
-              The Advent calendar opens on <strong>1 December</strong>.
+              The Advent calendar opens on <strong>1&nbsp;December</strong>.
             </p>
             <p className="mt-2 text-sm text-[var(--open-ink-soft)]">Build a snowman in 3 clicks to unlock early.</p>
             <div className="mt-6 grid grid-cols-2 gap-3">

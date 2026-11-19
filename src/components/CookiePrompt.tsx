@@ -20,7 +20,7 @@ export function CookiePrompt({ reducedMotion, onAnswer, onDone }: Props) {
 
   useEffect(() => {
     if (!eating) return
-    const delay = result === 'yes' ? (reducedMotion ? 1200 : 1700) : 2200
+    const delay = result === 'yes' ? (reducedMotion ? 1500 : 2400) : 2200
     const t = window.setTimeout(onDone, delay)
     return () => window.clearTimeout(t)
   }, [eating, result, onDone, reducedMotion])

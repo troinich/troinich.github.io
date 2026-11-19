@@ -24,12 +24,44 @@ export function writeConsent(value: Consent) {
   }
 }
 
+type GoatCounter = { no_onload?: boolean; count?: (...args: unknown[]) => void }
+type WithGoatCounter = Window & { goatcounter?: GoatCounter }
+
+/** GoatCounter's own opt-out flag: when set, its script never counts in this browser. */
+const SKIP_KEY = 'skipgc'
+
 /** Loads GoatCounter, which records this visit. Only ever called after a "yes". */
 export function startAnalytics(code: string = GOATCOUNTER_CODE) {
-  if (!code || document.querySelector('script[data-goatcounter]')) return
+  if (!code) return
+  // undo an earlier "no" in this browser
+  try {
+    localStorage.removeItem(SKIP_KEY)
+  } catch {
+    // ignore
+  }
+  const gc = (window as WithGoatCounter).goatcounter
+  if (gc) delete gc.no_onload
+  if (document.querySelector('script[data-goatcounter]')) return
   const s = document.createElement('script')
   s.async = true
   s.src = 'https://gc.zgo.at/count.js'
   s.dataset.goatcounter = `https://${code}.goatcounter.com/count`
   document.head.appendChild(s)
+}
+
+/**
+ * Switches GoatCounter off after a "no" (including a "yes" changed to "no"):
+ * removes the script, stops a script that is still loading from counting,
+ * makes any later count call do nothing, and sets GoatCounter's own opt-out flag.
+ * Visits already counted stay in the stats as anonymous totals.
+ */
+export function stopAnalytics() {
+  document.querySelectorAll('script[data-goatcounter]').forEach((s) => s.remove())
+  const w = window as WithGoatCounter
+  w.goatcounter = { ...(w.goatcounter ?? {}), no_onload: true, count: () => {} }
+  try {
+    localStorage.setItem(SKIP_KEY, 't')
+  } catch {
+    // ignore: the script is removed and disabled anyway
+  }
 }

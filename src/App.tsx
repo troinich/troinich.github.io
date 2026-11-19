@@ -13,7 +13,7 @@ import { CookiePrompt } from './components/CookiePrompt'
 import { SnowmanGame } from './components/SnowmanGame'
 import { isLocked, rememberUnlocked } from './data/lock'
 import { isMuted, jingle, setMuted } from './sound'
-import { readConsent, startAnalytics, writeConsent, type Consent } from './consent'
+import { readConsent, startAnalytics, stopAnalytics, writeConsent, type Consent } from './consent'
 
 export default function App() {
   const reducedMotion = useReducedMotion()
@@ -53,6 +53,7 @@ export default function App() {
   const handleConsent = useCallback((value: Consent) => {
     writeConsent(value)
     if (value === 'yes') startAnalytics()
+    else stopAnalytics()
   }, [])
 
   const handleCookieDone = useCallback(() => setShowCookie(false), [])

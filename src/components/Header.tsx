@@ -36,15 +36,15 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
         <div>
           <p className="text-sm font-medium tracking-widest text-[var(--gold)] uppercase">✨ Meet me · Advent edition</p>
           <h1 className="mt-2 font-display text-4xl font-bold text-[var(--ink)] [text-shadow:0_0_30px_rgba(232,192,106,0.35)] sm:text-6xl">{cv.name}</h1>
-          <ul className="mt-2 space-y-0.5 text-lg text-[var(--ink)]">
+          <ul className="mt-2 space-y-0.5 text-[15px] leading-snug text-[var(--ink)] sm:text-lg sm:leading-normal">
             {[
               'Fullstack Web Engineer with 7+ years of experience',
               'TypeScript · React · C# / .NET · Node.js',
               'Ex-tax lawyer',
               'Professional door opener',
             ].map((line) => (
-              <li key={line} className="flex items-center gap-2">
-                <span className="w-[18px] shrink-0 text-center text-[15px] leading-none" aria-hidden="true">
+              <li key={line} className="flex items-start gap-2">
+                <span className="mt-[0.3em] w-[16px] shrink-0 text-center text-[12px] leading-none sm:w-[18px] sm:text-[15px]" aria-hidden="true">
                   🎄
                 </span>
                 <span>{line}</span>

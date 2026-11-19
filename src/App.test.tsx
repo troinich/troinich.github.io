@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import App from './App'
 
 function clearCookie() {
@@ -133,6 +133,28 @@ describe('Cookie question', () => {
     openDoorCard(5, 'TypeScript migration')
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('"Yes" then "No" from Cookie settings: GoatCounter is switched off and not loaded on the next visit', () => {
+    arrive(DEC_5, { answered: false })
+    openDoorCard(5, 'TypeScript migration')
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Yes!' }))
+    act(() => vi.advanceTimersByTime(3000))
+    expect(document.cookie).toContain('cookie_consent=yes')
+    expect(document.querySelector('script[data-goatcounter]')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /Cookie settings/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'No' }))
+    expect(document.cookie).toContain('cookie_consent=no')
+    expect(document.querySelector('script[data-goatcounter]')).not.toBeInTheDocument()
+    expect(localStorage.getItem('skipgc')).toBe('t')
+    act(() => vi.advanceTimersByTime(3000))
+    cleanup()
+
+    // next visit
+    render(<App />)
+    expect(document.querySelector('script[data-goatcounter]')).not.toBeInTheDocument()
   })
 
   it('can be reopened from Cookie settings', () => {
