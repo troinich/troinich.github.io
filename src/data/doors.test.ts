@@ -88,19 +88,15 @@ describe("today's door near the top", () => {
 })
 
 describe('phone order', () => {
-  it("puts today's door first, then every other door in order 1–24", () => {
-    expect(phoneOrder(1)).toEqual(Array.from({ length: 24 }, (_, i) => i + 1))
-    expect(phoneOrder(5)).toEqual([5, 1, 2, 3, 4, ...Array.from({ length: 19 }, (_, i) => i + 6)])
+  it('is 1–24 in order', () => {
+    expect(phoneOrder).toEqual(Array.from({ length: 24 }, (_, i) => i + 1))
   })
 
-  it('leaves no gaps on any day and keeps the doors in reading order', () => {
-    for (let today = 1; today <= 24; today++) {
-      const order = phoneOrder(today)
-      const { empty, rowOf } = layout(order, 2, phoneFullWidth(order))
-      expect({ today, empty }).toEqual({ today, empty: 0 })
-      // every door starts on the same row as the one before it, or a later row: nothing jumps back
-      const rows = order.map((id) => rowOf.get(id)!)
-      expect({ today, rows }).toEqual({ today, rows: [...rows].sort((a, b) => a - b) })
-    }
+  it('leaves no gaps and keeps the doors in reading order', () => {
+    const { empty, rowOf } = layout(phoneOrder, 2, phoneFullWidth(phoneOrder))
+    expect(empty).toBe(0)
+    // every door starts on the same row as the one before it, or a later row: nothing jumps back
+    const rows = phoneOrder.map((id) => rowOf.get(id)!)
+    expect(rows).toEqual([...rows].sort((a, b) => a - b))
   })
 })

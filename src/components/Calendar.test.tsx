@@ -27,12 +27,13 @@ describe('Calendar order', () => {
     window.matchMedia = original
   })
 
-  it("on phones: today's door first, then 1, 2, 3… in order", () => {
+  it("on phones: 1, 2, 3… 24 in order, with today's door highlighted in place", () => {
     setPhone(true)
-    renderCalendar(5)
-    expect(doorIds()).toEqual([5, 1, 2, 3, 4, ...Array.from({ length: 19 }, (_, i) => i + 6)])
-    // door 5 would sit alone next to wide door 1, so it fills its row
-    expect(document.getElementById('door-5')).toHaveClass('door--phone-full')
+    renderCalendar(19)
+    expect(doorIds()).toEqual(Array.from({ length: 24 }, (_, i) => i + 1))
+    expect(document.getElementById('door-19')).toHaveClass('is-today')
+    // door 11 would sit alone between wide doors 10 and 12, so it fills its row
+    expect(document.getElementById('door-11')).toHaveClass('door--phone-full')
     expect(document.getElementById('door-2')).not.toHaveClass('door--phone-full')
   })
 

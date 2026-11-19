@@ -10,9 +10,20 @@ interface Props {
   onOpenAll: () => void
   onCloseAll: () => void
   onShowCv: () => void
+  /** Phones only: a shortcut that scrolls to today's door without opening it (left out while locked). */
+  onGoToToday?: () => void
 }
 
-export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, onCloseAll, onShowCv }: Props) {
+export function Header({
+  openedCount,
+  total,
+  muted,
+  onToggleMuted,
+  onOpenAll,
+  onCloseAll,
+  onShowCv,
+  onGoToToday,
+}: Props) {
   const allOpen = openedCount === total
   const [zoomed, setZoomed] = useState(false)
   return (
@@ -79,6 +90,11 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
         {openedCount > 0 && (
           <button type="button" onClick={onCloseAll} className="btn btn--secondary">
             Close all doors
+          </button>
+        )}
+        {onGoToToday && (
+          <button type="button" onClick={onGoToToday} className="btn btn--secondary sm:hidden">
+            Go to today's door
           </button>
         )}
         <button type="button" onClick={onShowCv} className="btn btn--secondary">

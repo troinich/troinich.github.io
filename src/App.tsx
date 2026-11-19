@@ -87,22 +87,48 @@ export default function App() {
     setShowCookie(false)
   }, [])
 
-  // Arrival: highlight today's door (it stays closed until the visitor opens it). Runs on page load
-  // (if unlocked) or right after the snowman unlocks the calendar.
-  const stopArrival = useRef<() => void>(() => {})
+  // Arrival: today's door pulses gold (it stays closed until the visitor opens it). Runs on page load
+  // (if unlocked) or right after the snowman unlocks the calendar. The page isn't scrolled.
   const [highlightId, setHighlightId] = useState<number | null>(null)
+  // Bumped to queue a pulse. Wider screens pulse right away (today's door is in the first rows).
+  // Phones, where the doors go 1–24, wait until the visitor actually gets to it: by scrolling down
+  // or with "Go to today's door".
+  const [pulseRequest, setPulseRequest] = useState(0)
   const startArrival = () => {
-    // The page stays where it is (at the top); today's door is already in the first rows and
-    // stands out with its gold pulse and red ribbon.
-    const unhighlight = window.setTimeout(() => setHighlightId(null), 4500)
-    setHighlightId(todayId)
     setAnnouncement(`Today is door ${todayId}.`)
-    stopArrival.current = () => window.clearTimeout(unhighlight)
+    setPulseRequest((n) => n + 1)
   }
 
   useEffect(() => {
+    if (pulseRequest === 0) return
+    let unhighlight: number | undefined
+    const pulse = () => {
+      setHighlightId(todayId)
+      unhighlight = window.setTimeout(() => setHighlightId(null), 4500)
+    }
+    const door = document.getElementById(`door-${todayId}`)
+    const phone = window.matchMedia?.('(max-width: 639px)').matches
+    if (!phone || !door || typeof IntersectionObserver === 'undefined') {
+      pulse()
+      return () => window.clearTimeout(unhighlight)
+    }
+    const watch = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return
+        watch.disconnect()
+        pulse()
+      },
+      { threshold: 0.6 },
+    )
+    watch.observe(door)
+    return () => {
+      watch.disconnect()
+      window.clearTimeout(unhighlight)
+    }
+  }, [pulseRequest, todayId])
+
+  useEffect(() => {
     if (!locked) startArrival()
-    return () => stopArrival.current()
     // Runs once, on page load.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -145,6 +171,15 @@ export default function App() {
     if (opening && id === 24 && !reducedMotion) setConfetti(true)
   }
 
+  // Phones only (the doors there are in plain order, so today's door can be far down):
+  // scroll to today's door, which pulses when it arrives on screen; opening it is left to the visitor.
+  const goToToday = () => {
+    const door = document.getElementById(`door-${todayId}`)
+    door?.scrollIntoView?.({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' })
+    setHighlightId(null) // off first, so the pulse restarts even if it was still running
+    setPulseRequest((n) => n + 1)
+  }
+
   const handleOpenAll = () => {
     if (locked) return setShowGame(true)
     openAll()
@@ -182,6 +217,7 @@ export default function App() {
           onOpenAll={handleOpenAll}
           onCloseAll={handleCloseAll}
           onShowCv={() => setShowCv(true)}
+          onGoToToday={locked ? undefined : goToToday}
         />
         <main>
           <h2 className="sr-only">Calendar doors</h2>

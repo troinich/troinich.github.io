@@ -67,6 +67,63 @@ describe('Arrival', () => {
   })
 })
 
+describe('Phones: "Go to today\'s door" shortcut', () => {
+  it("scrolls to today's door but leaves it closed", () => {
+    const scroll = vi.fn()
+    Element.prototype.scrollIntoView = scroll
+    arrive(DEC_5)
+    act(() => vi.advanceTimersByTime(5000)) // the arrival pulse is over
+    expect(document.getElementById('door-5')).not.toHaveClass('is-highlighted')
+    fireEvent.click(screen.getByRole('button', { name: "Go to today's door" }))
+    expect(scroll).toHaveBeenCalledTimes(1)
+    expect(scroll.mock.contexts[0]).toBe(document.getElementById('door-5'))
+    act(() => vi.advanceTimersByTime(1000))
+    expect(screen.getByRole('button', { name: 'Door 5 (today), closed' })).toHaveAttribute('aria-expanded', 'false')
+    // it pulses again, since the arrival pulse played while it was off-screen
+    expect(document.getElementById('door-5')).toHaveClass('is-highlighted')
+    act(() => vi.advanceTimersByTime(5000))
+    expect(document.getElementById('door-5')).not.toHaveClass('is-highlighted')
+  })
+
+  it("pulses only once today's door is on screen, not while it is further down", () => {
+    // a stand-in for the browser's IntersectionObserver that lets the test say when the door shows up
+    let show: (visible: boolean) => void = () => {}
+    const original = window.IntersectionObserver
+    const originalMatchMedia = window.matchMedia
+    window.matchMedia = ((query: string) => ({
+      matches: query.includes('max-width: 639px'), // a phone
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof window.matchMedia
+    window.IntersectionObserver = class {
+      constructor(cb: (entries: { isIntersecting: boolean }[]) => void) {
+        show = (visible) => act(() => cb([{ isIntersecting: visible }]))
+      }
+      observe() {}
+      disconnect() {}
+    } as unknown as typeof IntersectionObserver
+    try {
+      arrive(DEC_5)
+      const door = document.getElementById('door-5')!
+      act(() => vi.advanceTimersByTime(5000))
+      expect(door).not.toHaveClass('is-highlighted') // still off-screen: no pulse yet
+      show(true) // the visitor scrolls down to it
+      expect(door).toHaveClass('is-highlighted')
+      act(() => vi.advanceTimersByTime(5000))
+      expect(door).not.toHaveClass('is-highlighted')
+    } finally {
+      window.IntersectionObserver = original
+      window.matchMedia = originalMatchMedia
+    }
+  })
+
+  it('is not shown while the calendar is locked', () => {
+    arrive(NOV_19)
+    expect(screen.queryByRole('button', { name: /today's door/ })).not.toBeInTheDocument()
+  })
+})
+
 describe('Cookie question', () => {
   const banner = () => screen.queryByRole('region', { name: 'Btw, cookie?' })
 

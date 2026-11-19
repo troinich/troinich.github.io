@@ -361,7 +361,7 @@ export const doors: Door[] = [
 
 /** Fixed shuffled order for the grid, like a real advent calendar. */
 export const gridOrder: number[] = [
-  7, 13, 2, 18, 10, 21, 4, 15, 23, 1, 9, 16, 24, 5, 20, 11, 3, 17, 12, 8, 22, 14, 6, 19,
+  7, 13, 2, 3, 10, 21, 4, 15, 23, 1, 9, 16, 24, 5, 20, 11, 18, 17, 12, 8, 22, 14, 6, 19,
 ]
 
 export const doorById = new Map(doors.map((d) => [d.id, d]))
@@ -379,10 +379,8 @@ export function orderWithTodayFirst(order: number[], todayId: number): number[] 
   return order.map((id) => (id === todayId ? swapWith : id === swapWith ? todayId : id))
 }
 
-/** Phones show the doors in plain order: today's door first, then 1, 2, 3… 24 without it. */
-export function phoneOrder(todayId: number): number[] {
-  return [todayId, ...doors.map((d) => d.id).filter((id) => id !== todayId)]
-}
+/** Phones show the doors in plain order, 1–24, the same every day (today's door is highlighted in place). */
+export const phoneOrder: number[] = doors.map((d) => d.id)
 
 /**
  * On phones (2 columns), the normal doors that would sit alone in a row in this order, because the

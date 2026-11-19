@@ -695,9 +695,9 @@ body {
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
 }
 
-/* Today's door on arrival: a few gold pulses, then it stays with its normal "Today" glow */
+/* Today's door on arrival: two gold pulses, then it stays with its normal "Today" glow */
 .door.is-highlighted .door__face {
-  animation: today-pulse 1.4s ease-in-out 3;
+  animation: today-pulse 1.4s ease-in-out 2;
 }
 @keyframes today-pulse {
   0%,
