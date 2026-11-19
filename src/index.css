@@ -205,26 +205,26 @@ body {
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(0);
-  animation: bite 250ms ease-out forwards;
+  animation: bite 180ms ease-out forwards;
 }
-.cookie .bite-1 { animation-delay: 300ms; }
-.cookie .bite-2 { animation-delay: 1000ms; }
-.cookie .bite-3 { animation-delay: 1700ms; }
+.cookie .bite-1 { animation-delay: 150ms; }
+.cookie .bite-2 { animation-delay: 450ms; }
+.cookie .bite-3 { animation-delay: 750ms; }
 @keyframes bite { to { transform: scale(1); } }
 
 .cookie .crumb {
   opacity: 0;
-  animation: crumb 900ms ease-in forwards;
+  animation: crumb 600ms ease-in forwards;
 }
-.cookie .crumb-0, .cookie .crumb-1 { animation-delay: 350ms; }
-.cookie .crumb-2, .cookie .crumb-3 { animation-delay: 1050ms; }
-.cookie .crumb-4, .cookie .crumb-5 { animation-delay: 1750ms; }
+.cookie .crumb-0, .cookie .crumb-1 { animation-delay: 180ms; }
+.cookie .crumb-2, .cookie .crumb-3 { animation-delay: 480ms; }
+.cookie .crumb-4, .cookie .crumb-5 { animation-delay: 780ms; }
 @keyframes crumb {
   0% { opacity: 1; transform: translate(0, 0); }
   100% { opacity: 0; transform: translate(10px, 70px); }
 }
 
-.cookie { animation: chomp 1400ms ease-in-out 300ms 2 both; }
+.cookie { animation: chomp 600ms ease-in-out 150ms 2 both; }
 @keyframes chomp {
   0%, 100% { transform: rotate(0); }
   15% { transform: rotate(-6deg); }
