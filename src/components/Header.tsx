@@ -14,11 +14,12 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
   const allOpen = openedCount === total
   return (
     <header className="flex flex-col gap-6 pb-8 pt-10 sm:pt-14">
-      <div>
+      {/* A soft, frosted panel behind the intro so it reads clearly over the patterned background */}
+      <div className="intro-panel -mx-4 rounded-3xl px-4 py-5 sm:mx-0 sm:w-fit sm:max-w-3xl sm:px-7 sm:py-6">
         <p className="text-sm font-medium tracking-widest text-[var(--gold)] uppercase">🎄 Meet me · Advent edition</p>
         <h1 className="mt-2 font-display text-4xl font-bold text-[var(--ink)] [text-shadow:0_0_30px_rgba(232,192,106,0.35)] sm:text-6xl">{cv.name}</h1>
-        <p className="mt-2 text-lg text-[var(--ink-soft)]">Fullstack Web Engineer · Ex-tax lawyer · Professional door opener</p>
-        <p className="mt-3 max-w-2xl text-[var(--ink-soft)]">
+        <p className="mt-2 text-lg text-[var(--ink)]">Fullstack Web Engineer · Ex-tax lawyer · Professional door opener</p>
+        <p className="mt-3 max-w-2xl text-[#e3dccb]">
           A PDF can't surprise you. Twenty-four doors can. Open them one by one, or skip the suspense.
         </p>
       </div>
