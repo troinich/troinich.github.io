@@ -80,7 +80,7 @@ export function Door({ door, open, today = false, highlight = false, locked = fa
           {door.category && (
             <div className="flex justify-end">
               <span
-                className="rounded-full border px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase"
+                className="rounded-full border px-2 py-0.5 text-[0.7rem] font-semibold tracking-wide uppercase"
                 style={{ color: tagColor[door.category], borderColor: tagColor[door.category] }}
               >
                 {door.category}
@@ -98,7 +98,7 @@ export function Door({ door, open, today = false, highlight = false, locked = fa
           <h3 className={`mt-1 font-display font-bold leading-tight ${big ? 'text-xl sm:text-2xl' : 'text-base'}`}>
             {door.headline}
           </h3>
-          <p className={`mt-1.5 leading-snug ${big ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>
+          <p className={`mt-1.5 leading-snug text-[var(--ink-2)] ${big ? 'text-sm sm:text-base' : 'text-sm'}`}>
             {door.description}
           </p>
           {door.highlight && <p className="door__highlight my-2">{door.highlight}</p>}
@@ -108,7 +108,7 @@ export function Door({ door, open, today = false, highlight = false, locked = fa
             </div>
           )}
           {inlineDetails.length > 0 && (
-            <ul className={`door__details space-y-1 leading-snug ${big ? 'text-sm' : 'text-xs sm:text-sm'}`}>
+            <ul className="door__details space-y-1 text-sm leading-snug">
               {inlineDetails.map((d) => (
                 <li key={d} className="flex gap-1.5">
                   <span className="text-[var(--gold)]" aria-hidden="true">
@@ -122,7 +122,7 @@ export function Door({ door, open, today = false, highlight = false, locked = fa
           {inlineTags.length > 0 && (
             <ul className="flex flex-wrap gap-1.5 pt-1" aria-label="Tools and topics">
               {inlineTags.map((t) => (
-                <li key={t} className="door__tag rounded-full border px-2 py-0.5 text-[0.7rem] font-medium">
+                <li key={t} className="door__tag rounded-full border px-2 py-0.5 text-xs font-medium">
                   {t}
                 </li>
               ))}

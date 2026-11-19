@@ -18,25 +18,34 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
   return (
     <header className="flex flex-col gap-6 pb-8 pt-10 sm:pt-14">
       {/* A soft, frosted panel behind the intro so it reads clearly over the patterned background */}
-      <div className="intro-panel -mx-4 flex flex-col items-start gap-4 rounded-3xl px-4 py-5 sm:mx-0 sm:w-fit sm:max-w-4xl sm:flex-row sm:items-center sm:gap-7 sm:px-7 sm:py-6">
+      {/* Phones: name with a small photo to its right, details full width below.
+          Desktop: text on the left, bigger photo on the right. (Layout in index.css: .intro-grid) */}
+      <div className="intro-panel intro-grid rounded-3xl px-5 py-5 sm:w-fit sm:max-w-4xl sm:px-7 sm:py-6">
         <button
           type="button"
           onClick={() => setZoomed(true)}
           aria-label="Zoom in on photo"
-          className="group shrink-0 cursor-zoom-in rounded-full sm:order-last"
+          className="intro-grid__photo group shrink-0 cursor-zoom-in rounded-full"
         >
           <img
             src={`${import.meta.env.BASE_URL}me.jpg`}
             alt=""
             width={160}
             height={160}
-            className="h-24 w-24 rounded-full border-2 border-[var(--gold)] object-cover shadow-[0_0_30px_-6px_rgba(232,192,106,0.6)] transition duration-300 group-hover:scale-105 sm:h-40 sm:w-40"
+            className="h-20 w-20 rounded-full border-2 border-[var(--gold)] object-cover shadow-[0_0_30px_-6px_rgba(232,192,106,0.6)] transition duration-300 group-hover:scale-105 sm:h-40 sm:w-40"
           />
         </button>
-        <div>
-          <p className="text-sm font-medium tracking-widest text-[var(--gold)] uppercase">✨ Meet me · Advent edition</p>
-          <h1 className="mt-2 font-display text-4xl font-bold text-[var(--ink)] [text-shadow:0_0_30px_rgba(232,192,106,0.35)] sm:text-6xl">{cv.name}</h1>
-          <ul className="mt-2 space-y-0.5 text-[15px] leading-snug text-[var(--ink)] sm:text-lg sm:leading-normal">
+        <div className="intro-grid__title">
+          <p className="eyebrow whitespace-nowrap max-sm:tracking-[0.12em] max-[379px]:text-[0.6875rem] max-[379px]:tracking-[0.08em]">
+            {/* phones: "MEET ME ADVENT EDITION" on one line; the sparkle and dot only show on wider screens */}
+            <span className="hidden sm:inline" aria-hidden="true">✨ </span>Meet me<span className="hidden sm:inline"> ·</span> Advent edition
+          </p>
+          <h1 className="mt-1 font-display text-[2rem] leading-[1.05] font-bold text-[var(--ink)] [text-shadow:0_0_30px_rgba(232,192,106,0.35)] sm:mt-2 sm:text-6xl sm:leading-tight">
+            {cv.name}
+          </h1>
+        </div>
+        <div className="intro-grid__body">
+          <ul className="space-y-0.5 text-[15px] leading-snug text-[var(--ink)] sm:text-lg sm:leading-normal">
             {[
               'Fullstack Web Engineer with 7+ years of experience',
               'TypeScript · React · C# / .NET · Node.js',
@@ -51,7 +60,7 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
               </li>
             ))}
           </ul>
-          <p className="mt-3 max-w-2xl text-[#e3dccb]">
+          <p className="mt-3 max-w-2xl text-[var(--ink-2)]">
             A PDF can't surprise you. Twenty-four doors can. Open them one by one, or skip the suspense.
           </p>
         </div>
@@ -61,7 +70,7 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
           <button
             type="button"
             onClick={onOpenAll}
-            className="rounded-full bg-[var(--gold)] px-5 py-2.5 font-semibold text-[#2a1a08] shadow-[0_0_20px_-4px_rgba(232,192,106,0.7)] transition hover:brightness-110"
+            className="btn btn--primary"
           >
             🎁 Open all doors
           </button>
@@ -70,7 +79,7 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
           <button
             type="button"
             onClick={onCloseAll}
-            className="rounded-full border border-[var(--line)] px-5 py-2.5 font-semibold text-[var(--ink)] transition hover:border-[var(--gold)]"
+            className="btn btn--secondary"
           >
             Close all doors
           </button>
@@ -78,7 +87,7 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
         <button
           type="button"
           onClick={onShowCv}
-          className="rounded-full border border-[var(--gold)] px-5 py-2.5 font-semibold text-[var(--ink)] transition hover:bg-[var(--surface)]"
+          className="btn btn--secondary"
         >
           Show full CV
         </button>
@@ -88,7 +97,7 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
           aria-pressed={!muted}
           aria-label="Jingle sound"
           title={muted ? 'Turn jingle on' : 'Turn jingle off'}
-          className="grid h-10 w-10 place-items-center rounded-full border border-[var(--line)] text-lg transition hover:border-[var(--gold)]"
+          className="icon-btn text-lg"
         >
           <span aria-hidden="true">{muted ? '🔕' : '🔔'}</span>
         </button>
@@ -97,7 +106,7 @@ export function Header({ openedCount, total, muted, onToggleMuted, onOpenAll, on
           {allOpen ? ' 🎅 Ho ho ho!' : ''}
         </p>
       </div>
-      {zoomed && <PhotoZoom onClose={() => setZoomed(false)} />}
+      {zoomed && <PhotoZoom onClose={() => setZoomed(false)} onShowCv={onShowCv} />}
     </header>
   )
 }

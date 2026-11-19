@@ -1,4 +1,4 @@
-import { doorById, gridOrder } from '../data/doors'
+import { doorById, gridOrder, orderWithTodayFirst } from '../data/doors'
 import { Door } from './Door'
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 export function Calendar({ opened, todayId, highlightId = null, locked = false, onToggle, onReadMore, onShowCv }: Props) {
   return (
     <ul className="calendar" aria-label="Advent calendar, 24 doors">
-      {gridOrder.map((id) => {
+      {orderWithTodayFirst(gridOrder, todayId).map((id) => {
         const door = doorById.get(id)!
         return (
           <Door

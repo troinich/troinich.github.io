@@ -26,6 +26,36 @@ describe('Header photo zoom', () => {
     )
   })
 
+  it('shows Email me, LinkedIn and Full CV under the intro; Full CV closes the photo and opens the CV', () => {
+    const onShowCv = vi.fn()
+    render(
+      <Header
+        openedCount={0}
+        total={24}
+        muted={false}
+        onToggleMuted={() => {}}
+        onOpenAll={() => {}}
+        onCloseAll={() => {}}
+        onShowCv={onShowCv}
+      />,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Zoom in on photo' }))
+    const dialog = screen.getByRole('dialog', { name: 'Photo of Natalia Troinich' })
+    expect(dialog.querySelector('a[href="https://www.linkedin.com/in/troinicz"]')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Email me/ })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Full CV' }))
+    expect(onShowCv).toHaveBeenCalled()
+    expect(screen.queryByRole('dialog', { name: 'Photo of Natalia Troinich' })).not.toBeInTheDocument()
+  })
+
+  it('clicking a contact button does not close the photo', () => {
+    renderHeader()
+    fireEvent.click(screen.getByRole('button', { name: 'Zoom in on photo' }))
+    fireEvent.click(screen.getByRole('link', { name: 'LinkedIn' }))
+    expect(screen.getByRole('dialog', { name: 'Photo of Natalia Troinich' })).toBeInTheDocument()
+  })
+
   it('closes with Escape, the ✕ button, or a click', () => {
     renderHeader()
     const zoom = () => fireEvent.click(screen.getByRole('button', { name: 'Zoom in on photo' }))

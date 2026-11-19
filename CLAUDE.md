@@ -30,6 +30,10 @@ There is no linter configured. If the dev server suddenly renders without layout
 - **Doors.** `components/Door.tsx` uses a CSS 3D flip with both faces stacked in one grid cell. A transparent full-size `.door__hit` button sits above the door; when a door is open, `.door.is-open .door__inner` is raised above it (z-index in `index.css`) so buttons on the open card ("Read more", door 24's Email/LinkedIn/Full CV) are clickable. Inner buttons must `stopPropagation`, because clicking the open card itself closes the door. jsdom tests cannot catch z-index/hit-testing regressions; check in a real browser. Mobile Safari ignores `backface-visibility` on the front face's own layers (glowing number, stars, ribbon), which showed the number mirrored through open doors; `index.css` hides those layers explicitly and sets the front face to `visibility: hidden` halfway through the flip. Keep that when changing the door markup.
 - **Persistence.** Opened doors live in localStorage `amazing-me:opened-doors` (`hooks/useOpenedDoors.ts`); all storage access is wrapped in try/catch.
 
+## UI conventions
+
+`src/index.css` defines the palette as CSS variables on `:root` (the page is always dark) and shared component classes in `@layer components`: `.btn` with `.btn--primary` (gold) / `.btn--secondary` (gold outline) / `.btn--sm`, `.icon-btn` (44px round), `.eyebrow` (small gold capitals above a title) and `.modal-backdrop` (centred, dimmed, blurred). Pop-up cards use `.door-details` for the green-and-gold frame. Use these and the colour variables (`--gold`, `--on-gold`, `--ink`, `--ink-2`, `--ink-soft`, …) instead of one-off Tailwind colours or button paddings, keep touch targets at least 40–44px, and keep body text on cards at 14px or larger.
+
 ## Content and assets
 
 - Door content is data in `src/data/doors.ts`; CV view content is `src/data/cv.ts` (a copy of the PDF in `public/`). Door `size` (`wide`/`tall`/`big`) drives the grid: the total must stay a multiple of 12 cells (big = 4, wide/tall = 2, normal = 1) so rows of 2/3/4/6 have no gaps. A test in `doors.test.ts` enforces it.

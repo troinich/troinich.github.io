@@ -25,7 +25,7 @@ export function DoorDetails({ door, today = false, onClose, onShowCv }: Props) {
 
   return (
     <div
-      className="details-backdrop fixed inset-0 z-40 flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm sm:items-center sm:p-6"
+      className="details-backdrop modal-backdrop z-40"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -44,17 +44,17 @@ export function DoorDetails({ door, today = false, onClose, onShowCv }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 grid h-9 w-9 place-items-center rounded-full border border-[var(--line)] text-[var(--ink-soft)] hover:border-[var(--gold)] hover:text-[var(--ink)]"
+          className="icon-btn absolute top-4 right-4"
         >
           ✕
         </button>
 
-        <div className="flex items-center gap-3 pr-10">
+        <div className="flex items-center gap-3 pr-12">
           <span className="text-4xl" aria-hidden="true">
             {door.emoji}
           </span>
           <div>
-            <p className="text-xs font-semibold tracking-widest text-[var(--ink-soft)] uppercase">
+            <p className="eyebrow text-[var(--ink-soft)]">
               {today && <span className="mr-2 rounded-full bg-[var(--accent)] px-2 py-0.5 text-[#2a0a0e]">Today</span>}
               Door {door.id}
               {door.category && (
@@ -77,7 +77,7 @@ export function DoorDetails({ door, today = false, onClose, onShowCv }: Props) {
             className="mx-auto mt-5 h-36 w-36 rounded-full border-2 border-[var(--gold)] object-cover shadow-[0_0_30px_-6px_rgba(232,192,106,0.6)]"
           />
         )}
-        <p className="mt-4 leading-relaxed text-[var(--ink)]">{door.description}</p>
+        <p className="mt-4 leading-relaxed text-[var(--ink-2)]">{door.description}</p>
         {door.highlight && <p className="door__highlight mt-5 mb-1">{door.highlight}</p>}
         {door.hireMe && (
           <div className="mt-4">

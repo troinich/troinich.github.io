@@ -12,6 +12,8 @@
   --accent: #ff6b6b; /* bright cranberry, readable on dark */
   --gold: #e8c06a;
   --gold-deep: #b8862f;
+  --on-gold: #2a1a08; /* text on gold buttons */
+  --ink-2: #e3dccb; /* body text on dark panels, between --ink and --ink-soft */
   --door-ink: #fbf3e2;
 
 
@@ -58,6 +60,72 @@ body {
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
+}
+
+/* ---------- Shared UI pieces: one look for every button, label and pop-up ---------- */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 44px; /* comfortable touch target */
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: background-color 150ms ease, border-color 150ms ease, filter 150ms ease;
+  }
+  .btn--sm { min-height: 40px; padding: 0.5rem 0.9rem; font-size: 0.875rem; }
+  .btn--primary {
+    background: var(--gold);
+    color: var(--on-gold);
+    box-shadow: 0 0 20px -4px rgba(232, 192, 106, 0.7);
+  }
+  .btn--primary:hover { filter: brightness(1.1); }
+  .btn--secondary {
+    border: 1px solid var(--gold);
+    color: var(--ink);
+  }
+  .btn--secondary:hover { background: rgba(232, 192, 106, 0.12); }
+  .icon-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 9999px;
+    border: 1px solid rgba(232, 192, 106, 0.45);
+    color: var(--ink-soft);
+    transition: border-color 150ms ease, color 150ms ease;
+  }
+  .icon-btn:hover { border-color: var(--gold); color: var(--ink); }
+  /* small capital label above a title */
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  @media (min-width: 640px) {
+    .eyebrow { font-size: 0.8125rem; }
+  }
+  /* dimmed, blurred layer behind every pop-up card */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  @media (min-width: 640px) {
+    .modal-backdrop { padding: 1.5rem; }
+  }
 }
 
 /* ---------- Calendar grid ---------- */
@@ -520,4 +588,46 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .door__front { transition: opacity 200ms linear; }
+}
+
+/* Phones: floating "back to top" button */
+.back-to-top {
+  width: 48px;
+  height: 48px;
+  margin-bottom: env(safe-area-inset-bottom);
+  background: var(--surface);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.8), 0 0 18px -6px rgba(232, 192, 106, 0.6);
+  animation: fade-in 200ms ease both;
+}
+.back-to-top:hover { color: var(--ink); }
+
+/* Header intro layout.
+   Phones: [label + name | photo] on top, bullets and description full width below.
+   Desktop: label + name + bullets on the left, the bigger photo on the right. */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'title photo'
+    'body body';
+  column-gap: 1rem;
+  row-gap: 1rem;
+  align-items: center;
+}
+.intro-grid__photo { grid-area: photo; }
+.intro-grid__title { grid-area: title; min-width: 0; }
+.intro-grid__body { grid-area: body; }
+@media (min-width: 640px) {
+  .intro-grid {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'title photo'
+      'body photo';
+    column-gap: 1.75rem;
+    row-gap: 0.5rem;
+  }
+  .intro-grid__title { align-self: end; }
+  .intro-grid__body { align-self: start; }
 }

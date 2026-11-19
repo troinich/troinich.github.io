@@ -9,6 +9,7 @@ import { Calendar } from './components/Calendar'
 import { CvView } from './components/CvView'
 import { DoorDetails } from './components/DoorDetails'
 import { Confetti } from './components/Confetti'
+import { BackToTop } from './components/BackToTop'
 import { CookiePrompt } from './components/CookiePrompt'
 import { SnowmanGame } from './components/SnowmanGame'
 import { isLocked, rememberUnlocked } from './data/lock'
@@ -182,6 +183,7 @@ export default function App() {
             }}
           />
         </main>
+        {!showCv && !showCookie && !showGame && detailId === null && <BackToTop reducedMotion={reducedMotion} />}
         <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--ink-soft)]">
           <p>Made with React, TypeScript and an unreasonable amount of 🎄 in Gothenburg.</p>
           <div className="flex items-center gap-4">

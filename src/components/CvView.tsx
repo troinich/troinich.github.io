@@ -58,14 +58,14 @@ export function CvView({ onClose }: { onClose: () => void }) {
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="rounded-full border border-[var(--ink)] px-4 py-2 text-sm font-semibold hover:bg-[var(--surface)]"
+            className="btn btn--secondary btn--sm"
           >
             ← Back to calendar
           </button>
           <a
             href={cv.pdf}
             download
-            className="rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-semibold text-[var(--bg)] hover:opacity-90"
+            className="btn btn--primary btn--sm"
           >
             Download PDF
           </a>

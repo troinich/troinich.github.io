@@ -6,7 +6,7 @@ type Status = 'idle' | 'copied' | 'show-address'
 
 /** "Email me", "LinkedIn" and "Full CV" call-to-action buttons for door 24. */
 export function HireMeButtons({ size = 'md', onShowCv }: { size?: 'sm' | 'md'; onShowCv?: () => void }) {
-  const pad = size === 'sm' ? 'px-3.5 py-2 text-sm' : 'px-5 py-2.5'
+  const sz = size === 'sm' ? 'btn--sm' : ''
   const [status, setStatus] = useState<Status>('idle')
   const reset = useRef<number>(undefined)
   useEffect(() => () => window.clearTimeout(reset.current), [])
@@ -28,7 +28,7 @@ export function HireMeButtons({ size = 'md', onShowCv }: { size?: 'sm' | 'md'; o
       <button
         type="button"
         onClick={() => openEmail(onNoEmailApp)}
-        className={`rounded-full bg-[var(--gold)] font-semibold text-[#2a1a08] shadow-[0_0_20px_-4px_rgba(232,192,106,0.7)] hover:brightness-110 ${pad}`}
+        className={`btn btn--primary ${sz}`}
       >
         {status === 'copied' ? '✓ Email copied' : '✉️ Email me'}
       </button>
@@ -36,7 +36,7 @@ export function HireMeButtons({ size = 'md', onShowCv }: { size?: 'sm' | 'md'; o
         href={cv.linkedin}
         target="_blank"
         rel="noreferrer"
-        className={`rounded-full border border-[var(--gold)] font-semibold text-[var(--ink)] hover:bg-[var(--surface)] ${pad}`}
+        className={`btn btn--secondary ${sz}`}
       >
         LinkedIn
       </a>
@@ -44,7 +44,7 @@ export function HireMeButtons({ size = 'md', onShowCv }: { size?: 'sm' | 'md'; o
         <button
           type="button"
           onClick={onShowCv}
-          className={`rounded-full border border-[var(--gold)] font-semibold text-[var(--ink)] hover:bg-[var(--surface)] ${pad}`}
+          className={`btn btn--secondary ${sz}`}
         >
           Full CV
         </button>

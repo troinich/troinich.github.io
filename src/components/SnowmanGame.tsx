@@ -45,7 +45,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
   }
 
   return (
-    <div className="details-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6">
+    <div className="details-backdrop modal-backdrop z-50">
       <div
         ref={dialogRef}
         role="dialog"
@@ -55,22 +55,22 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
       >
         {phase === 'intro' && (
           <>
-            <p className="mb-4 text-sm font-semibold tracking-widest text-[var(--gold)] uppercase">
+            <p className="eyebrow mb-4">
               Welcome to my Advent CV Calendar 🎄
             </p>
             <SeasonIcon season={season} className="mx-auto" />
             <h2 id="lock-title" className="mt-3 font-display text-3xl font-bold text-[var(--gold)]">
               Too early!
             </h2>
-            <p className="mt-3 leading-relaxed text-[var(--ink)]">
+            <p className="mt-3 leading-relaxed text-[var(--ink-2)]">
               The Advent calendar opens on <strong>1&nbsp;December</strong>.
             </p>
             <p className="mt-2 text-sm text-[var(--open-ink-soft)]">Build a snowman in 3 clicks to unlock early.</p>
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-6 flex flex-col-reverse gap-3 sm:grid sm:grid-cols-2">
               <button
                 type="button"
                 onClick={onWait}
-                className="rounded-full border border-[var(--line)] px-4 py-2.5 font-semibold text-[var(--ink)] hover:border-[var(--gold)]"
+                className="btn btn--secondary"
               >
                 No, I'll wait
               </button>
@@ -81,7 +81,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
                   setPhase('build')
                   window.setTimeout(() => buildRef.current?.focus(), 0)
                 }}
-                className="rounded-full bg-[var(--gold)] px-4 py-2.5 font-semibold text-[#2a1a08] hover:brightness-110"
+                className="btn btn--primary"
               >
                 Yes, let's do it! ⛄
               </button>
@@ -107,7 +107,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
               <button
                 type="button"
                 onClick={back}
-                className="rounded-full border border-[var(--line)] px-5 py-3 font-semibold text-[var(--ink)] hover:border-[var(--gold)]"
+                className="btn btn--secondary"
               >
                 ← Back
               </button>
@@ -115,7 +115,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
                 ref={buildRef}
                 type="button"
                 onClick={build}
-                className="flex-1 rounded-full bg-[var(--gold)] px-5 py-3 font-semibold text-[#2a1a08] hover:brightness-110 disabled:opacity-60"
+                className="btn btn--primary flex-1"
               >
                 {steps[built]}
               </button>
@@ -138,7 +138,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
               ref={openRef}
               type="button"
               onClick={onUnlock}
-              className="mt-5 w-full rounded-full bg-[var(--gold)] px-5 py-3 font-semibold text-[#2a1a08] hover:brightness-110"
+              className="btn btn--primary mt-5 w-full"
             >
               🎁 Open the calendar
             </button>
