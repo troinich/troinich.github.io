@@ -17,18 +17,25 @@ interface Props {
   onUnlock: () => void
   /** Called once when the last piece goes on, e.g. to play a sound. */
   onBuilt?: () => void
+  /**
+   * 'unlock' (default): the "Too early!" lockout that unlocks the calendar.
+   * 'replay': just for fun, from the footer. Starts straight at building and changes nothing:
+   * onUnlock and onWait both only close the game.
+   */
+  mode?: 'unlock' | 'replay'
 }
 
-/** "Too early!" message plus a build-a-snowman-in-3-clicks game that unlocks the calendar. */
-export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
-  const [phase, setPhase] = useState<Phase>('intro')
+/** "Too early!" message plus a build-a-snowman-in-3-clicks game that unlocks the calendar (or a replay). */
+export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Props) {
+  const replay = mode === 'replay'
+  const [phase, setPhase] = useState<Phase>(replay ? 'build' : 'intro')
   const [season] = useState(() => seasonOf())
   const [built, setBuilt] = useState(0) // 0–3 clicks so far
   const dialogRef = useRef<HTMLDivElement>(null)
   const firstRef = useRef<HTMLButtonElement>(null)
   const buildRef = useRef<HTMLButtonElement>(null)
   const openRef = useRef<HTMLButtonElement>(null)
-  useModal(dialogRef, firstRef, onWait)
+  useModal(dialogRef, replay ? buildRef : firstRef, onWait)
 
   const build = () => {
     const next = built + 1
@@ -92,8 +99,9 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
     }
   }, [showHint])
 
-  // One step back; from the first step, back to the "Too early!" message
+  // One step back; from the first step, back to the "Too early!" message (or close, when replaying)
   const back = () => {
+    if (built === 0 && replay) return onWait()
     if (built > 0) setBuilt(built - 1)
     else setPhase('intro')
     window.setTimeout(() => (built > 0 ? buildRef : firstRef).current?.focus(), 0)
@@ -213,16 +221,18 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt }: Props) {
               className="mx-auto w-full max-w-[18rem] rounded-2xl"
             />
             <h2 id="lock-title" className="mt-4 font-display text-2xl font-bold text-[var(--gold)]">
-              You've built your way in!
+              {replay ? 'What a snowman!' : "You've built your way in!"}
             </h2>
-            <p className="mt-2 text-sm text-[var(--open-ink-soft)]">The calendar is unlocked for you, whatever the date.</p>
+            {!replay && (
+              <p className="mt-2 text-sm text-[var(--open-ink-soft)]">The calendar is unlocked for you, whatever the date.</p>
+            )}
             <button
               ref={openRef}
               type="button"
               onClick={onUnlock}
               className="btn btn--primary mt-5 w-full"
             >
-              🎁 Open the calendar
+              {replay ? 'Back to the calendar' : '🎁 Open the calendar'}
             </button>
           </>
         )}

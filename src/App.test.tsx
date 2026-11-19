@@ -148,10 +148,21 @@ describe('Cookie question', () => {
     expect(banner()).not.toBeInTheDocument()
   })
 
-  it('also shows over the lockout, so locked visitors are asked too', () => {
+  it('is not shown while the calendar is locked, only 3 seconds after the snowman unlocks it', () => {
     arrive(NOV_19, { answered: false })
-    act(() => vi.advanceTimersByTime(4000))
+    act(() => vi.advanceTimersByTime(10_000))
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toBeInTheDocument()
+    expect(banner()).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: 'Roll some snow' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Find buttons' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Dress him up' }))
+    expect(banner()).not.toBeInTheDocument() // not during the game either
+    fireEvent.click(screen.getByRole('button', { name: /Open the calendar/ }))
+    act(() => vi.advanceTimersByTime(2900))
+    expect(banner()).not.toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(200))
     expect(banner()).toBeInTheDocument()
   })
 
@@ -197,6 +208,22 @@ describe('Cookie question', () => {
     fireEvent.click(screen.getByRole('button', { name: /Cookie settings/ }))
     act(() => vi.advanceTimersByTime(1000)) // the old card's fade-out timer must not close the new one
     expect(banner()).toBeInTheDocument()
+  })
+
+  it('appears on the CV page for visitors who choose "No, I\'ll wait", and steps aside for the game', () => {
+    arrive(NOV_19, { answered: false })
+    fireEvent.click(screen.getByRole('button', { name: "No, I'll wait" }))
+    expect(screen.getByRole('dialog', { name: 'Natalia Troinich' })).toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(2900))
+    expect(banner()).not.toBeInTheDocument()
+    act(() => vi.advanceTimersByTime(200))
+    expect(banner()).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /Back to calendar/ })) // -> "Too early!" again
+    expect(screen.getByRole('dialog', { name: 'Too early!' })).toBeInTheDocument()
+    expect(banner()).not.toBeInTheDocument() // hidden while the game is showing
+    fireEvent.click(screen.getByRole('button', { name: "No, I'll wait" })) // back to the CV
+    expect(banner()).toBeInTheDocument() // still waiting for an answer
   })
 
   it('can be reopened from Cookie settings', () => {
@@ -252,6 +279,39 @@ describe('Read more', () => {
 
     fireEvent.keyDown(document, { key: 'Escape' })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})
+
+describe('Build a snowman (footer replay)', () => {
+  it('replays the game straight from the building step and changes nothing', () => {
+    arrive(DEC_5)
+    fireEvent.click(screen.getByRole('button', { name: 'Door 5 (today), closed' })) // one door open
+    fireEvent.click(screen.getByRole('button', { name: '⛄ Build a snowman' }))
+    expect(screen.queryByRole('dialog', { name: 'Too early!' })).not.toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Roll some snow' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Find buttons' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Dress him up' }))
+    expect(screen.getByRole('dialog', { name: 'What a snowman!' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the calendar' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    // the door that was open stays open, and nothing was unlocked or reset
+    expect(screen.getByRole('button', { name: 'Door 5 (today), open' })).toBeInTheDocument()
+    expect(localStorage.getItem('meet-me:unlocked')).toBeNull()
+  })
+
+  it('"Back" on the first step closes the replay', () => {
+    arrive(DEC_5)
+    fireEvent.click(screen.getByRole('button', { name: '⛄ Build a snowman' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('is not offered while the calendar is locked (the lockout already has the game)', () => {
+    arrive(NOV_19)
+    expect(screen.queryByRole('button', { name: '⛄ Build a snowman', hidden: true })).not.toBeInTheDocument()
   })
 })
 

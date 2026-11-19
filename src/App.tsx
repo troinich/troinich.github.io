@@ -35,9 +35,13 @@ export default function App() {
   // Before December the calendar is locked until the visitor builds the snowman (or it's December).
   const [locked, setLocked] = useState(() => isLocked())
   const [showGame, setShowGame] = useState(locked)
+  // "Build a snowman" in the footer: the same game just for fun; it changes nothing
+  const [showReplay, setShowReplay] = useState(false)
+  const closeReplay = useCallback(() => setShowReplay(false), [])
 
   // Cookie question: a small non-blocking card. It appears 4 seconds after arrival or when the
-  // first door is opened (whichever comes first), only if the visitor hasn't answered before.
+  // first door is opened (whichever comes first), or 3 seconds after the snowman unlocks the
+  // calendar; only if the visitor hasn't answered before.
   // "Not now" hides it for this visit; "Cookie settings" in the footer asks again any time.
   const [showCookie, setShowCookie] = useState(false)
   // bumped by "Cookie settings" so the question always starts fresh, even mid fade-out
@@ -46,7 +50,19 @@ export default function App() {
   const offerCookie = () => {
     if (!cookieDismissed.current && readConsent() === null) setShowCookie(true)
   }
+  // Reading the full CV is a calm moment to ask, also for visitors who chose "No, I'll wait"
+  // and never unlock the calendar: offer the card 3 seconds after the CV opens.
   useEffect(() => {
+    if (!showCv) return
+    const t = window.setTimeout(offerCookie, 3000)
+    return () => window.clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCv])
+
+  // Not while the calendar is locked (the visitor is busy with "Too early!" and the snowman game):
+  // then it comes 3 seconds after "Open the calendar" instead (see handleUnlock).
+  useEffect(() => {
+    if (locked) return
     const t = window.setTimeout(offerCookie, 4000)
     return () => window.clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,6 +124,7 @@ export default function App() {
     setLocked(false)
     setShowGame(false)
     window.setTimeout(startArrival, 0)
+    window.setTimeout(offerCookie, 3000) // the cookie question waits until the calendar is open
   }
 
   const total = doors.length
@@ -153,7 +170,7 @@ export default function App() {
 
   return (
     <>
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6" aria-hidden={showCv || showGame || detailId !== null || undefined}>
+      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6" aria-hidden={showCv || showGame || showReplay || detailId !== null || undefined}>
         <Header
           openedCount={shownOpen.size}
           total={total}
@@ -177,10 +194,15 @@ export default function App() {
             }}
           />
         </main>
-        {!showCv && !showCookie && !showGame && detailId === null && <BackToTop reducedMotion={reducedMotion} />}
+        {!showCv && !showCookie && !showGame && !showReplay && detailId === null && <BackToTop reducedMotion={reducedMotion} />}
         <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--ink-soft)]">
           <p>Made with React, TypeScript and an unreasonable amount of 🎄 in Gothenburg.</p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            {!locked && (
+              <button type="button" onClick={() => setShowReplay(true)} className="btn btn--secondary btn--sm">
+                ⛄ Build a snowman
+              </button>
+            )}
             <button
               type="button"
               onClick={() => {
@@ -212,11 +234,13 @@ export default function App() {
         />
       )}
       {showCv && <CvView onClose={closeCv} />}
+      {showReplay && <SnowmanGame mode="replay" onWait={closeReplay} onUnlock={closeReplay} onBuilt={handleBuilt} />}
       {showGame && (
         <SnowmanGame onWait={handleWait} onUnlock={handleUnlock} onBuilt={handleBuilt} />
       )}
       {confetti && <Confetti onDone={endConfetti} />}
-      {showCookie && (
+      {/* never on top of the snowman game; an unanswered card waits until the game is closed */}
+      {showCookie && !showGame && !showReplay && (
         <CookieBanner
           key={cookieKey}
           reducedMotion={reducedMotion}
