@@ -2,7 +2,7 @@
  * Your GoatCounter site code: the "natalia" in https://natalia.goatcounter.com.
  * Leave empty to turn visit counting off.
  */
-export const GOATCOUNTER_CODE = ''
+export const GOATCOUNTER_CODE = 'troinich'
 
 /**
  * Your own cookie picture: put the file in `public/` and write its name here,
