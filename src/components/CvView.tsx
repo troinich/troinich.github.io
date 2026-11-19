@@ -54,19 +54,10 @@ export function CvView({ onClose }: { onClose: () => void }) {
         className="mx-auto max-w-3xl px-4 pb-16 sm:px-8"
       >
         <div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 bg-[var(--bg)] py-4">
-          <button
-            ref={closeRef}
-            type="button"
-            onClick={onClose}
-            className="btn btn--secondary btn--sm"
-          >
+          <button ref={closeRef} type="button" onClick={onClose} className="btn btn--secondary btn--sm">
             ← Back to calendar
           </button>
-          <a
-            href={cv.pdf}
-            download
-            className="btn btn--primary btn--sm"
-          >
+          <a href={cv.pdf} download className="btn btn--primary btn--sm">
             Download PDF
           </a>
         </div>

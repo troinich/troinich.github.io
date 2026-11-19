@@ -34,7 +34,8 @@ export function PhotoZoom({ onClose, onShowCv }: { onClose: () => void; onShowCv
         />
         <div className="px-5 py-4 sm:px-6 sm:py-5">
           <p className="text-sm leading-relaxed text-[var(--ink)] sm:text-base">
-            <strong className="font-display text-lg font-bold text-[var(--gold)] sm:text-xl">Hej, it's me!</strong> {INTRO}
+            <strong className="font-display text-lg font-bold text-[var(--gold)] sm:text-xl">Hej, it's me!</strong>{' '}
+            {INTRO}
           </p>
           <div className="mt-4">
             <HireMeButtons

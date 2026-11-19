@@ -25,27 +25,14 @@ export function HireMeButtons({ size = 'md', onShowCv }: { size?: 'sm' | 'md'; o
       // clicks here must not close the door underneath
       onClick={(e) => e.stopPropagation()}
     >
-      <button
-        type="button"
-        onClick={() => openEmail(onNoEmailApp)}
-        className={`btn btn--primary ${sz}`}
-      >
+      <button type="button" onClick={() => openEmail(onNoEmailApp)} className={`btn btn--primary ${sz}`}>
         {status === 'copied' ? '✓ Email copied' : '✉️ Email me'}
       </button>
-      <a
-        href={cv.linkedin}
-        target="_blank"
-        rel="noreferrer"
-        className={`btn btn--secondary ${sz}`}
-      >
+      <a href={cv.linkedin} target="_blank" rel="noreferrer" className={`btn btn--secondary ${sz}`}>
         LinkedIn
       </a>
       {onShowCv && (
-        <button
-          type="button"
-          onClick={onShowCv}
-          className={`btn btn--secondary ${sz}`}
-        >
+        <button type="button" onClick={onShowCv} className={`btn btn--secondary ${sz}`}>
           Full CV
         </button>
       )}

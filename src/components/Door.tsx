@@ -22,12 +22,28 @@ interface Props {
   onShowCv?: () => void
 }
 
-export function Door({ door, open, today = false, highlight = false, locked = false, onToggle, onReadMore, onShowCv }: Props) {
+export function Door({
+  door,
+  open,
+  today = false,
+  highlight = false,
+  locked = false,
+  onToggle,
+  onReadMore,
+  onShowCv,
+}: Props) {
   const panelId = `door-${door.id}-content`
   const sizeClass = door.size ? `door--${door.size}` : ''
   const big = door.size === 'big'
   // Bigger doors have room for more, so they show part of the "Read more" content inline.
-  const inlineDetails = door.size === 'big' ? door.details : door.size === 'tall' ? door.details.slice(0, 3) : door.size === 'wide' ? door.details.slice(0, 2) : []
+  const inlineDetails =
+    door.size === 'big'
+      ? door.details
+      : door.size === 'tall'
+        ? door.details.slice(0, 3)
+        : door.size === 'wide'
+          ? door.details.slice(0, 2)
+          : []
   const inlineTags = door.size === 'big' || door.size === 'tall' ? door.tags : []
   const everythingShown = inlineDetails.length === door.details.length && inlineTags.length === door.tags.length
 
@@ -65,7 +81,9 @@ export function Door({ door, open, today = false, highlight = false, locked = fa
               </svg>
             </span>
           )}
-          <span className={`door__number font-display font-bold leading-none ${big ? 'text-7xl sm:text-8xl' : 'text-5xl sm:text-6xl'}`}>
+          <span
+            className={`door__number font-display font-bold leading-none ${big ? 'text-7xl sm:text-8xl' : 'text-5xl sm:text-6xl'}`}
+          >
             {door.id}
           </span>
         </div>

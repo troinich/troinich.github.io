@@ -11,7 +11,12 @@ describe('seasons', () => {
   })
 
   it('shows the right picture for each season', () => {
-    const pictures = { autumn: 'seasons/autumn.png', winter: 'seasons/winter.jpg', spring: 'seasons/spring.jpg', summer: 'seasons/summer.jpg' }
+    const pictures = {
+      autumn: 'seasons/autumn.png',
+      winter: 'seasons/winter.jpg',
+      spring: 'seasons/spring.jpg',
+      summer: 'seasons/summer.jpg',
+    }
     for (const [s, src] of Object.entries(pictures)) {
       const { unmount } = render(<SeasonIcon season={s as keyof typeof pictures} />)
       expect(screen.getByRole('img')).toHaveAttribute('src', `/${src}`)

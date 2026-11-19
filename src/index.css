@@ -16,7 +16,6 @@
   --ink-2: #e3dccb; /* body text on dark panels, between --ink and --ink-soft */
   --door-ink: #fbf3e2;
 
-
   /* Opened doors: dark velvet cards with a gold edge */
   --open-bg: #102a21;
   --open-bg-2: #1a3a2e;
@@ -48,11 +47,16 @@ body {
   background-color: #212524;
   background-image:
     radial-gradient(ellipse 60% 40% at 50% 0%, rgba(232, 192, 106, 0.16), transparent 70%),
-    linear-gradient(rgba(10, 14, 13, 0.5), rgba(10, 14, 13, 0.5)),
-    url('/background.jpg');
-  background-size: auto, auto, 560px auto;
+    linear-gradient(rgba(10, 14, 13, 0.5), rgba(10, 14, 13, 0.5)), url('/background.jpg');
+  background-size:
+    auto,
+    auto,
+    560px auto;
   background-repeat: no-repeat, no-repeat, repeat;
-  background-position: top center, top left, top center;
+  background-position:
+    top center,
+    top left,
+    top center;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -74,20 +78,31 @@ body {
     border-radius: 9999px;
     font-weight: 600;
     line-height: 1.2;
-    transition: background-color 150ms ease, border-color 150ms ease, filter 150ms ease;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      filter 150ms ease;
   }
-  .btn--sm { min-height: 40px; padding: 0.5rem 0.9rem; font-size: 0.875rem; }
+  .btn--sm {
+    min-height: 40px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.875rem;
+  }
   .btn--primary {
     background: var(--gold);
     color: var(--on-gold);
     box-shadow: 0 0 20px -4px rgba(232, 192, 106, 0.7);
   }
-  .btn--primary:hover { filter: brightness(1.1); }
+  .btn--primary:hover {
+    filter: brightness(1.1);
+  }
   .btn--secondary {
     border: 1px solid var(--gold);
     color: var(--ink);
   }
-  .btn--secondary:hover { background: rgba(232, 192, 106, 0.12); }
+  .btn--secondary:hover {
+    background: rgba(232, 192, 106, 0.12);
+  }
   .icon-btn {
     display: inline-grid;
     place-items: center;
@@ -97,9 +112,14 @@ body {
     border-radius: 9999px;
     border: 1px solid rgba(232, 192, 106, 0.45);
     color: var(--ink-soft);
-    transition: border-color 150ms ease, color 150ms ease;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease;
   }
-  .icon-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .icon-btn:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+  }
   /* small capital label above a title */
   .eyebrow {
     font-size: 0.75rem;
@@ -109,7 +129,9 @@ body {
     color: var(--gold);
   }
   @media (min-width: 640px) {
-    .eyebrow { font-size: 0.8125rem; }
+    .eyebrow {
+      font-size: 0.8125rem;
+    }
   }
   /* dimmed, blurred layer behind every pop-up card */
   .modal-backdrop {
@@ -124,7 +146,9 @@ body {
     -webkit-backdrop-filter: blur(4px);
   }
   @media (min-width: 640px) {
-    .modal-backdrop { padding: 1.5rem; }
+    .modal-backdrop {
+      padding: 1.5rem;
+    }
   }
 }
 
@@ -137,18 +161,33 @@ body {
   grid-auto-flow: dense;
 }
 @media (min-width: 640px) {
-  .calendar { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .calendar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
 }
 @media (min-width: 1024px) {
-  .calendar { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .calendar {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }
-.door--wide { grid-column: span 2; }
-.door--tall { grid-row: span 2; }
-.door--big { grid-column: span 2; grid-row: span 2; }
+.door--wide {
+  grid-column: span 2;
+}
+.door--tall {
+  grid-row: span 2;
+}
+.door--big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
 /* Phones (2 columns): tall doors would be long and thin, so they go full width instead.
    They still take 2 cells, so the grid keeps filling with no gaps. */
 @media (max-width: 639px) {
-  .door--tall { grid-column: span 2; grid-row: span 1; }
+  .door--tall {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
 }
 
 /* ---------- Door flip ---------- */
@@ -163,7 +202,9 @@ body {
   transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
   transform-style: preserve-3d;
 }
-.door.is-open .door__inner { transform: rotateY(180deg); }
+.door.is-open .door__inner {
+  transform: rotateY(180deg);
+}
 .door__face {
   grid-area: 1 / 1;
   backface-visibility: hidden;
@@ -197,15 +238,30 @@ body {
   cursor: pointer;
   background: transparent;
 }
-.door__hit:hover + .door__inner .door__front { filter: brightness(1.04); }
+.door__hit:hover + .door__inner .door__front {
+  filter: brightness(1.04);
+}
 
 /* Reduced motion: no flip, just a fade between faces */
 @media (prefers-reduced-motion: reduce) {
-  .door__inner { transform: none !important; transition: none; }
-  .door__face { backface-visibility: visible; transition: opacity 200ms linear; }
-  .door__back { transform: none; opacity: 0; }
-  .door.is-open .door__back { opacity: 1; }
-  .door.is-open .door__front { opacity: 0; }
+  .door__inner {
+    transform: none !important;
+    transition: none;
+  }
+  .door__face {
+    backface-visibility: visible;
+    transition: opacity 200ms linear;
+  }
+  .door__back {
+    transform: none;
+    opacity: 0;
+  }
+  .door.is-open .door__back {
+    opacity: 1;
+  }
+  .door.is-open .door__front {
+    opacity: 0;
+  }
 }
 
 /* ---------- Snow ---------- */
@@ -234,17 +290,27 @@ body {
   animation-direction: alternate, normal;
 }
 @keyframes snow-fall {
-  to { transform: translate3d(var(--drift, 20px), calc(100vh + 60px), 0); }
+  to {
+    transform: translate3d(var(--drift, 20px), calc(100vh + 60px), 0);
+  }
 }
 @keyframes snow-sway {
-  from { margin-left: -14px; }
-  to { margin-left: 14px; }
+  from {
+    margin-left: -14px;
+  }
+  to {
+    margin-left: 14px;
+  }
 }
 @keyframes snow-spin {
-  to { rotate: var(--spin, 360deg); }
+  to {
+    rotate: var(--spin, 360deg);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .snow { display: none; }
+  .snow {
+    display: none;
+  }
 }
 
 /* ---------- Confetti ---------- */
@@ -262,13 +328,21 @@ body {
   animation: burst 1400ms cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 @keyframes burst {
-  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
-  100% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)) scale(1); opacity: 0; }
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)) scale(1);
+    opacity: 0;
+  }
 }
 
 /* ---------- Today's door ---------- */
 .door.is-today .door__face {
-  box-shadow: 0 0 0 3px var(--accent), 0 10px 30px -12px var(--accent);
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 10px 30px -12px var(--accent);
 }
 /* ---------- Cookie being eaten ---------- */
 .cookie .bite {
@@ -277,36 +351,84 @@ body {
   transform: scale(0);
   animation: bite 250ms ease-out forwards;
 }
-.cookie .bite-1 { animation-delay: 250ms; }
-.cookie .bite-2 { animation-delay: 750ms; }
-.cookie .bite-3 { animation-delay: 1250ms; }
-@keyframes bite { to { transform: scale(1); } }
+.cookie .bite-1 {
+  animation-delay: 250ms;
+}
+.cookie .bite-2 {
+  animation-delay: 750ms;
+}
+.cookie .bite-3 {
+  animation-delay: 1250ms;
+}
+@keyframes bite {
+  to {
+    transform: scale(1);
+  }
+}
 
 .cookie .crumb {
   opacity: 0;
   animation: crumb 900ms ease-in forwards;
 }
-.cookie .crumb-0, .cookie .crumb-1 { animation-delay: 300ms; }
-.cookie .crumb-2, .cookie .crumb-3 { animation-delay: 800ms; }
-.cookie .crumb-4, .cookie .crumb-5 { animation-delay: 1300ms; }
+.cookie .crumb-0,
+.cookie .crumb-1 {
+  animation-delay: 300ms;
+}
+.cookie .crumb-2,
+.cookie .crumb-3 {
+  animation-delay: 800ms;
+}
+.cookie .crumb-4,
+.cookie .crumb-5 {
+  animation-delay: 1300ms;
+}
 @keyframes crumb {
-  0% { opacity: 1; transform: translate(0, 0); }
-  100% { opacity: 0; transform: translate(10px, 70px); }
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(10px, 70px);
+  }
 }
 
-.cookie { animation: chomp 1400ms ease-in-out 250ms 1 both; }
+.cookie {
+  animation: chomp 1400ms ease-in-out 250ms 1 both;
+}
 @keyframes chomp {
-  0%, 100% { transform: rotate(0); }
-  15% { transform: rotate(-6deg); }
-  30% { transform: rotate(4deg); }
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  15% {
+    transform: rotate(-6deg);
+  }
+  30% {
+    transform: rotate(4deg);
+  }
 }
 
-.cookie--static, .cookie--static .bite, .cookie--static .crumb { animation: none; }
-.cookie--static .bite { transform: scale(1); }
-.cookie--static .crumb { opacity: 0; }
+.cookie--static,
+.cookie--static .bite,
+.cookie--static .crumb {
+  animation: none;
+}
+.cookie--static .bite {
+  transform: scale(1);
+}
+.cookie--static .crumb {
+  opacity: 0;
+}
 @media (prefers-reduced-motion: reduce) {
-  .cookie, .cookie .bite, .cookie .crumb { animation: none; }
-  .cookie .bite { transform: scale(1); }
+  .cookie,
+  .cookie .bite,
+  .cookie .crumb {
+    animation: none;
+  }
+  .cookie .bite {
+    transform: scale(1);
+  }
 }
 
 /* ---------- Christmas: starry-night doors ---------- */
@@ -315,13 +437,19 @@ body {
     radial-gradient(ellipse at 50% 120%, rgba(232, 192, 106, 0.12), transparent 60%),
     linear-gradient(165deg, #142c3f 0%, #0f2230 55%, #0d1f22 100%);
   border-color: rgba(232, 192, 106, 0.22) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 10px 24px -14px rgba(0, 0, 0, 0.8);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 10px 24px -14px rgba(0, 0, 0, 0.8);
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 .door__hit:hover + .door__inner .door__front {
   filter: none;
   border-color: rgba(232, 192, 106, 0.5) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 0 24px -6px rgba(232, 192, 106, 0.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 24px -6px rgba(232, 192, 106, 0.35);
 }
 /* Two layers of tiny stars; --sx/--sy shift them so every door's sky is different */
 .door__front::before,
@@ -357,12 +485,16 @@ body {
   transform: translateX(calc(var(--sx, 0px) / 3 - 16px));
 }
 .door--big .door__front::after,
-.door--wide .door__front::after { font-size: 0.9rem; }
+.door--wide .door__front::after {
+  font-size: 0.9rem;
+}
 .door__number {
   position: relative;
   z-index: 1;
   color: var(--gold);
-  text-shadow: 0 0 12px rgba(232, 192, 106, 0.65), 0 0 32px rgba(232, 192, 106, 0.35);
+  text-shadow:
+    0 0 12px rgba(232, 192, 106, 0.65),
+    0 0 32px rgba(232, 192, 106, 0.35);
 }
 .door__back {
   color: var(--open-ink);
@@ -373,13 +505,18 @@ body {
     linear-gradient(135deg, var(--gold), var(--gold-deep)) border-box;
   border: 2px solid transparent !important;
 }
-.door__back p { color: var(--open-ink-soft) !important; }
+.door__back p {
+  color: var(--open-ink-soft) !important;
+}
 .door.is-today .door__face {
-  box-shadow: 0 0 0 3px var(--gold), 0 0 28px 2px rgba(232, 192, 106, 0.55);
+  box-shadow:
+    0 0 0 3px var(--gold),
+    0 0 28px 2px rgba(232, 192, 106, 0.55);
 }
 
-
-.door__back h3 { color: var(--gold); }
+.door__back h3 {
+  color: var(--gold);
+}
 
 /* ---------- "Read more" ---------- */
 .door__more {
@@ -394,7 +531,9 @@ body {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.door__more:hover { filter: brightness(1.15); }
+.door__more:hover {
+  filter: brightness(1.15);
+}
 .door-details {
   color: var(--open-ink);
   background:
@@ -406,16 +545,26 @@ body {
 }
 
 /* Inline details on bigger doors */
-.door__back .door__details { color: var(--open-ink-soft); padding-top: 0.25rem; }
-.door__back .door__tag { color: var(--open-ink-soft); border-color: var(--line); }
+.door__back .door__details {
+  color: var(--open-ink-soft);
+  padding-top: 0.25rem;
+}
+.door__back .door__tag {
+  color: var(--open-ink-soft);
+  border-color: var(--line);
+}
 
 /* An open door's card sits above the click area so "Read more" can be clicked */
 .door.is-open .door__inner {
   position: relative;
   z-index: 3;
 }
-.door.is-open .door__back { cursor: pointer; }
-.door__more { cursor: pointer; }
+.door.is-open .door__back {
+  cursor: pointer;
+}
+.door__more {
+  cursor: pointer;
+}
 
 /* The "Read more" arrow is a Christmas tree lying on its side, pointing right */
 .door__more-tree {
@@ -423,15 +572,33 @@ body {
   transform: rotate(90deg);
   transition: transform 200ms ease;
 }
-.door__more:hover .door__more-tree { transform: rotate(90deg) translateY(-3px); }
+.door__more:hover .door__more-tree {
+  transform: rotate(90deg) translateY(-3px);
+}
 
 /* The "Read more" card zooms in from the door */
-.details-backdrop { animation: fade-in 250ms ease both; }
-.door-details { animation: zoom-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1.1) both; }
-@keyframes fade-in { from { opacity: 0; } }
-@keyframes zoom-in { from { opacity: 0; transform: scale(0.85); } }
+.details-backdrop {
+  animation: fade-in 250ms ease both;
+}
+.door-details {
+  animation: zoom-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1.1) both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .details-backdrop, .door-details { animation: none; }
+  .details-backdrop,
+  .door-details {
+    animation: none;
+  }
 }
 
 /* Frosted panel behind the header intro text */
@@ -451,7 +618,10 @@ body {
   box-shadow: 0 0 24px -6px rgba(232, 192, 106, 0.6);
 }
 @media (min-width: 640px) {
-  .door__photo { width: 8rem; height: 8rem; }
+  .door__photo {
+    width: 8rem;
+    height: 8rem;
+  }
 }
 .door__highlight {
   align-self: flex-start;
@@ -466,9 +636,13 @@ body {
 }
 
 /* Header photo zoom */
-.photo-zoom { animation: zoom-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1.1) both; }
+.photo-zoom {
+  animation: zoom-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1.1) both;
+}
 @media (prefers-reduced-motion: reduce) {
-  .photo-zoom { animation: none; }
+  .photo-zoom {
+    animation: none;
+  }
 }
 
 /* ---------- Snowman game: one picture per step, crossfading ---------- */
@@ -481,9 +655,13 @@ body {
   opacity: 0;
   transition: opacity 600ms ease;
 }
-.snowman-steps__img.is-current { opacity: 1; }
+.snowman-steps__img.is-current {
+  opacity: 1;
+}
 @media (prefers-reduced-motion: reduce) {
-  .snowman-steps__img { transition: none; }
+  .snowman-steps__img {
+    transition: none;
+  }
 }
 
 /* Locked doors */
@@ -518,13 +696,24 @@ body {
   animation: today-pulse 1.4s ease-in-out 3;
 }
 @keyframes today-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px var(--gold), 0 0 28px 2px rgba(232, 192, 106, 0.55); }
-  50% { box-shadow: 0 0 0 5px var(--gold), 0 0 60px 14px rgba(232, 192, 106, 0.85); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px var(--gold),
+      0 0 28px 2px rgba(232, 192, 106, 0.55);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px var(--gold),
+      0 0 60px 14px rgba(232, 192, 106, 0.85);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .door.is-highlighted .door__face {
     animation: none;
-    box-shadow: 0 0 0 5px var(--gold), 0 0 40px 8px rgba(232, 192, 106, 0.7);
+    box-shadow:
+      0 0 0 5px var(--gold),
+      0 0 40px 8px rgba(232, 192, 106, 0.7);
   }
 }
 
@@ -536,8 +725,22 @@ body {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent calc(50% - 9px), #c8323c calc(50% - 9px), #a8232d 50%, #c8323c calc(50% + 9px), transparent calc(50% + 9px)),
-    linear-gradient(0deg, transparent calc(70% - 9px), #c8323c calc(70% - 9px), #a8232d 70%, #c8323c calc(70% + 9px), transparent calc(70% + 9px));
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 9px),
+      #c8323c calc(50% - 9px),
+      #a8232d 50%,
+      #c8323c calc(50% + 9px),
+      transparent calc(50% + 9px)
+    ),
+    linear-gradient(
+      0deg,
+      transparent calc(70% - 9px),
+      #c8323c calc(70% - 9px),
+      #a8232d 70%,
+      #c8323c calc(70% + 9px),
+      transparent calc(70% + 9px)
+    );
 }
 .door__bow {
   position: absolute;
@@ -547,7 +750,9 @@ body {
   transform: translate(-50%, -60%);
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
 }
-.door--big .door__bow { width: 10rem; }
+.door--big .door__bow {
+  width: 10rem;
+}
 
 /* Mobile Safari fix: it doesn't hide the front face's own layers (the glowing number,
    the stars, the ribbon) when the door turns away, so the number shows mirrored through
@@ -569,7 +774,9 @@ body {
   visibility: hidden;
 }
 @media (prefers-reduced-motion: reduce) {
-  .door__front { transition: opacity 200ms linear; }
+  .door__front {
+    transition: opacity 200ms linear;
+  }
 }
 
 /* Phones: floating ↑ / ↓ buttons */
@@ -579,10 +786,14 @@ body {
   background: var(--surface);
   border-color: var(--gold);
   color: var(--gold);
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.8), 0 0 18px -6px rgba(232, 192, 106, 0.6);
+  box-shadow:
+    0 8px 24px -8px rgba(0, 0, 0, 0.8),
+    0 0 18px -6px rgba(232, 192, 106, 0.6);
   animation: fade-in 200ms ease both;
 }
-.back-to-top:hover { color: var(--ink); }
+.back-to-top:hover {
+  color: var(--ink);
+}
 
 /* Header intro layout.
    Phones: [label + name | photo] on top, bullets and description full width below.
@@ -597,9 +808,16 @@ body {
   row-gap: 1rem;
   align-items: center;
 }
-.intro-grid__photo { grid-area: photo; }
-.intro-grid__title { grid-area: title; min-width: 0; }
-.intro-grid__body { grid-area: body; }
+.intro-grid__photo {
+  grid-area: photo;
+}
+.intro-grid__title {
+  grid-area: title;
+  min-width: 0;
+}
+.intro-grid__body {
+  grid-area: body;
+}
 @media (min-width: 640px) {
   .intro-grid {
     grid-template-columns: 1fr auto;
@@ -609,14 +827,20 @@ body {
     column-gap: 1.75rem;
     row-gap: 0.5rem;
   }
-  .intro-grid__title { align-self: end; }
-  .intro-grid__body { align-self: start; }
+  .intro-grid__title {
+    align-self: end;
+  }
+  .intro-grid__body {
+    align-self: start;
+  }
 }
 
 /* The snowman picture is the drop target: a thin gold frame that lights up while a piece is over it */
 .snowman-steps {
   box-shadow: 0 0 0 2px rgba(232, 192, 106, 0.35);
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
 }
 
 /* ---------- Snowman piece tray: tap or drag the glowing piece onto the picture ---------- */
@@ -638,9 +862,16 @@ body {
   touch-action: none; /* dragging a piece shouldn't scroll the page */
   user-select: none;
   -webkit-user-select: none;
-  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
 }
-.snow-piece__icon { font-size: 1.6rem; line-height: 1; }
+.snow-piece__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
 .snow-piece--current {
   border-color: var(--gold);
   color: var(--ink);
@@ -648,13 +879,28 @@ body {
   cursor: grab;
   animation: piece-glow 1.6s ease-in-out infinite;
 }
-.snow-piece--current:active { cursor: grabbing; transform: scale(0.97); }
-.snow-piece--done { opacity: 0.55; }
-.snow-piece--done .snow-piece__icon { color: var(--gold); font-size: 1.3rem; }
-.snow-piece--later { opacity: 0.35; }
+.snow-piece--current:active {
+  cursor: grabbing;
+  transform: scale(0.97);
+}
+.snow-piece--done {
+  opacity: 0.55;
+}
+.snow-piece--done .snow-piece__icon {
+  color: var(--gold);
+  font-size: 1.3rem;
+}
+.snow-piece--later {
+  opacity: 0.35;
+}
 @keyframes piece-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 192, 106, 0); }
-  50% { box-shadow: 0 0 18px 2px rgba(232, 192, 106, 0.55); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 192, 106, 0);
+  }
+  50% {
+    box-shadow: 0 0 18px 2px rgba(232, 192, 106, 0.55);
+  }
 }
 /* the piece following the finger / mouse while dragging */
 .snow-piece__ghost {
@@ -668,12 +914,19 @@ body {
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5));
 }
 .snowman-steps.is-drop-target {
-  box-shadow: 0 0 0 3px var(--gold), 0 0 36px 0 rgba(232, 192, 106, 0.8);
+  box-shadow:
+    0 0 0 3px var(--gold),
+    0 0 36px 0 rgba(232, 192, 106, 0.8);
   transform: scale(1.02);
 }
 @media (prefers-reduced-motion: reduce) {
-  .snow-piece--current { animation: none; box-shadow: 0 0 14px 1px rgba(232, 192, 106, 0.5); }
-  .snowman-steps.is-drop-target { transform: none; }
+  .snow-piece--current {
+    animation: none;
+    box-shadow: 0 0 14px 1px rgba(232, 192, 106, 0.5);
+  }
+  .snowman-steps.is-drop-target {
+    transform: none;
+  }
 }
 
 /* Step 1 hint: a small 👆 that starts on the glowing piece and slides diagonally up and to the
@@ -690,17 +943,37 @@ body {
   animation: drag-hint 1.7s ease-in-out 2 both;
 }
 @keyframes drag-hint {
-  0% { opacity: 0; transform: translate(-35%, 0); }
-  15% { opacity: 1; transform: translate(-35%, 0) scale(0.9); }
-  70% { opacity: 1; transform: translate(calc(-35% + 5rem), -11rem) scale(0.9); }
-  100% { opacity: 0; transform: translate(calc(-35% + 5rem), -11rem); }
+  0% {
+    opacity: 0;
+    transform: translate(-35%, 0);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-35%, 0) scale(0.9);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(calc(-35% + 5rem), -11rem) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-35% + 5rem), -11rem);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   /* no movement: just point at the glowing piece for a moment */
-  .drag-hint { animation: drag-hint-still 3.2s ease both; }
+  .drag-hint {
+    animation: drag-hint-still 3.2s ease both;
+  }
   @keyframes drag-hint-still {
-    0%, 100% { opacity: 0; }
-    10%, 85% { opacity: 1; }
+    0%,
+    100% {
+      opacity: 0;
+    }
+    10%,
+    85% {
+      opacity: 1;
+    }
   }
 }
 
@@ -721,13 +994,26 @@ body {
   box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.85);
 }
 @media (min-width: 640px) {
-  .cookie-banner { left: auto; right: 1.25rem; bottom: 1.25rem; width: 22rem; }
+  .cookie-banner {
+    left: auto;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    width: 22rem;
+  }
 }
-.cookie-banner--animate { animation: cookie-slide-in 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.cookie-banner--animate {
+  animation: cookie-slide-in 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
 /* Closing by itself or with "Not now": fade and slide away */
-.cookie-banner--fading { animation: cookie-slide-out 300ms ease-in both; pointer-events: none; }
+.cookie-banner--fading {
+  animation: cookie-slide-out 300ms ease-in both;
+  pointer-events: none;
+}
 @keyframes cookie-slide-out {
-  to { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
 }
 /* Closing by tapping it: the card is erased from left to right while it crumbles into dust (see .dust) */
 .cookie-banner--dissolving {
@@ -739,10 +1025,23 @@ body {
   animation: cookie-dissolve 650ms ease-in both;
 }
 @keyframes cookie-dissolve {
-  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; filter: blur(0); }
-  to { -webkit-mask-position: 0% 0; mask-position: 0% 0; filter: blur(1px); }
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+    filter: blur(0);
+  }
+  to {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+    filter: blur(1px);
+  }
 }
-.dust { position: fixed; inset: 0; z-index: 56; pointer-events: none; }
+.dust {
+  position: fixed;
+  inset: 0;
+  z-index: 56;
+  pointer-events: none;
+}
 .dust span {
   position: absolute;
   border-radius: 1px;
@@ -750,16 +1049,35 @@ body {
   animation: dust-drift 600ms ease-out both;
 }
 @keyframes dust-drift {
-  0% { opacity: 0; transform: translate(0, 0) scale(1); }
-  15% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.4); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(1);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.4);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cookie-banner--dissolving, .cookie-banner--fading { -webkit-mask-image: none; mask-image: none; animation: none; opacity: 0; }
-  .dust { display: none; }
+  .cookie-banner--dissolving,
+  .cookie-banner--fading {
+    -webkit-mask-image: none;
+    mask-image: none;
+    animation: none;
+    opacity: 0;
+  }
+  .dust {
+    display: none;
+  }
 }
 @keyframes cookie-slide-in {
-  from { opacity: 0; transform: translateY(24px); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
 }
 .cookie-banner__close {
   position: absolute;
@@ -772,10 +1090,18 @@ body {
   border-radius: 9999px;
   color: var(--ink-soft);
 }
-.cookie-banner__close:hover { color: var(--ink); background: rgba(232, 192, 106, 0.12); }
+.cookie-banner__close:hover {
+  color: var(--ink);
+  background: rgba(232, 192, 106, 0.12);
+}
 
 /* "No thanks": the marshmallow-bath photo pops in */
-.cookie-bath { animation: cookie-bath 500ms cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+.cookie-bath {
+  animation: cookie-bath 500ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
 @keyframes cookie-bath {
-  from { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+  }
 }

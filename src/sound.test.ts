@@ -6,5 +6,4 @@ describe('sound', () => {
     setMuted(true)
     expect(isMuted()).toBe(true)
   })
-
 })

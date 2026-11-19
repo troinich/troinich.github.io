@@ -4,7 +4,6 @@
  */
 export const GOATCOUNTER_CODE = 'troinich'
 
-
 /**
  * Optional real jingle-bell recording: put it in `public/` (e.g. 'jingle.mp3')
  * and write its name here. Leave empty to use the built-in synthesized sleigh bells.

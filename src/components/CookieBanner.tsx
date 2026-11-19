@@ -55,78 +55,95 @@ export function CookieBanner({ reducedMotion, onAnswer, onDismiss, onDone }: Pro
 
   return (
     <>
-    <section
-      ref={cardRef}
-      className={`cookie-banner ${reducedMotion ? '' : 'cookie-banner--animate'} ${leaving === 'dust' ? 'cookie-banner--dissolving' : leaving === 'fade' ? 'cookie-banner--fading' : ''}`}
-      aria-labelledby="cookie-title"
-      aria-live="polite"
-    >
-      {result === 'yes' ? (
-        <div className="flex cursor-pointer items-center gap-3" role="status" onClick={() => leave(onDone, 'dust')} title="Tap to close">
-          <Gingerbread state="eaten" reducedMotion={reducedMotion} className="h-14 w-14 shrink-0" />
-          <p className="text-sm text-[var(--ink-2)]">
-            <strong className="font-display text-base text-[var(--gold)]">Nom nom nom.</strong> Thank you, that was delicious.
-          </p>
-        </div>
-      ) : result === 'no' ? (
-        <div className="flex cursor-pointer items-center justify-between gap-3" role="status" onClick={() => leave(onDone, 'dust')} title="Tap to close">
-          <p className="font-display text-2xl font-bold text-[var(--gold)]">Phew!</p>
-          <img
-            src={`${import.meta.env.BASE_URL}marshmallow-bath.jpg`}
-            alt="The gingerbread man relaxing in a bathtub full of marshmallows"
-            className={`h-24 w-24 shrink-0 rounded-xl object-cover ${reducedMotion ? '' : 'cookie-bath'}`}
-          />
-        </div>
-      ) : (
-        <>
-          <div className="flex items-start gap-3 pr-8">
-            <Gingerbread decorative className="h-11 w-11 shrink-0" />
-            <div>
-              <h2 id="cookie-title" className="font-display text-lg font-bold text-[var(--gold)]">
-                Btw, cookie?
-              </h2>
-              <p className="mt-1 text-sm leading-snug text-[var(--ink-2)]">
-                Say yes and I'll anonymously count your visit with GoatCounter. No names, no ads, no tracking across
-                sites.
-              </p>
-            </div>
+      <section
+        ref={cardRef}
+        className={`cookie-banner ${reducedMotion ? '' : 'cookie-banner--animate'} ${leaving === 'dust' ? 'cookie-banner--dissolving' : leaving === 'fade' ? 'cookie-banner--fading' : ''}`}
+        aria-labelledby="cookie-title"
+        aria-live="polite"
+      >
+        {result === 'yes' ? (
+          <div
+            className="flex cursor-pointer items-center gap-3"
+            role="status"
+            onClick={() => leave(onDone, 'dust')}
+            title="Tap to close"
+          >
+            <Gingerbread state="eaten" reducedMotion={reducedMotion} className="h-14 w-14 shrink-0" />
+            <p className="text-sm text-[var(--ink-2)]">
+              <strong className="font-display text-base text-[var(--gold)]">Nom nom nom.</strong> Thank you, that was
+              delicious.
+            </p>
           </div>
-          <button type="button" onClick={() => leave(onDismiss)} aria-label="Not now" title="Not now" className="cookie-banner__close">
-            ✕
-          </button>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => answer('no')} className="btn btn--secondary btn--sm">
-              No thanks
-            </button>
-            <button type="button" onClick={() => answer('yes')} className="btn btn--secondary btn--sm">
-              Sure!
-            </button>
-          </div>
-        </>
-      )}
-    </section>
-    {/* the dust is drawn on <body>, outside the card, so the card's dissolve mask doesn't hide it */}
-    {dust &&
-      createPortal(
-        <div className="dust" aria-hidden="true">
-          {dust.map((d, i) => (
-            <span
-              key={i}
-              style={{
-                left: d.x,
-                top: d.y,
-                width: d.size,
-                height: d.size,
-                background: d.color,
-                animationDelay: `${d.delay}ms`,
-                ['--dx' as string]: `${d.dx}px`,
-                ['--dy' as string]: `${d.dy}px`,
-              }}
+        ) : result === 'no' ? (
+          <div
+            className="flex cursor-pointer items-center justify-between gap-3"
+            role="status"
+            onClick={() => leave(onDone, 'dust')}
+            title="Tap to close"
+          >
+            <p className="font-display text-2xl font-bold text-[var(--gold)]">Phew!</p>
+            <img
+              src={`${import.meta.env.BASE_URL}marshmallow-bath.jpg`}
+              alt="The gingerbread man relaxing in a bathtub full of marshmallows"
+              className={`h-24 w-24 shrink-0 rounded-xl object-cover ${reducedMotion ? '' : 'cookie-bath'}`}
             />
-          ))}
-        </div>,
-        document.body,
-      )}
+          </div>
+        ) : (
+          <>
+            <div className="flex items-start gap-3 pr-8">
+              <Gingerbread decorative className="h-11 w-11 shrink-0" />
+              <div>
+                <h2 id="cookie-title" className="font-display text-lg font-bold text-[var(--gold)]">
+                  Btw, cookie?
+                </h2>
+                <p className="mt-1 text-sm leading-snug text-[var(--ink-2)]">
+                  Say yes and I'll anonymously count your visit with GoatCounter. No names, no ads, no tracking across
+                  sites.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => leave(onDismiss)}
+              aria-label="Not now"
+              title="Not now"
+              className="cookie-banner__close"
+            >
+              ✕
+            </button>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button type="button" onClick={() => answer('no')} className="btn btn--secondary btn--sm">
+                No thanks
+              </button>
+              <button type="button" onClick={() => answer('yes')} className="btn btn--secondary btn--sm">
+                Sure!
+              </button>
+            </div>
+          </>
+        )}
+      </section>
+      {/* the dust is drawn on <body>, outside the card, so the card's dissolve mask doesn't hide it */}
+      {dust &&
+        createPortal(
+          <div className="dust" aria-hidden="true">
+            {dust.map((d, i) => (
+              <span
+                key={i}
+                style={{
+                  left: d.x,
+                  top: d.y,
+                  width: d.size,
+                  height: d.size,
+                  background: d.color,
+                  animationDelay: `${d.delay}ms`,
+                  ['--dx' as string]: `${d.dx}px`,
+                  ['--dy' as string]: `${d.dy}px`,
+                }}
+              />
+            ))}
+          </div>,
+          document.body,
+        )}
     </>
   )
 }

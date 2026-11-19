@@ -52,7 +52,7 @@ describe('Arrival', () => {
     expect(document.getElementById('door-5')).not.toHaveClass('is-highlighted')
   })
 
-  it('does not scroll the page to today\'s door (on any screen)', () => {
+  it("does not scroll the page to today's door (on any screen)", () => {
     const scroll = vi.fn()
     Element.prototype.scrollIntoView = scroll
     arrive(DEC_5)
@@ -99,7 +99,10 @@ describe('Cookie question', () => {
     arrive(DEC_5, { answered: false })
     act(() => vi.advanceTimersByTime(4000))
     fireEvent.click(screen.getByRole('button', { name: 'No thanks' }))
-    expect(screen.getByRole('img', { name: /relaxing in a bathtub full of marshmallows/ })).toHaveAttribute('src', '/marshmallow-bath.jpg')
+    expect(screen.getByRole('img', { name: /relaxing in a bathtub full of marshmallows/ })).toHaveAttribute(
+      'src',
+      '/marshmallow-bath.jpg',
+    )
     expect(document.cookie).toContain('cookie_consent=no')
     act(() => vi.advanceTimersByTime(1900))
     expect(document.querySelector('.cookie-banner--fading')).not.toBeInTheDocument() // still showing
@@ -275,7 +278,10 @@ describe('Read more', () => {
     expect(dialog).toHaveTextContent('Today')
     expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus()
     // the door stays open behind the card
-    expect(screen.getByRole('button', { name: 'Door 10 (today), open', hidden: true })).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('button', { name: 'Door 10 (today), open', hidden: true })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    )
 
     fireEvent.keyDown(document, { key: 'Escape' })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -319,7 +325,9 @@ describe('Locked before December', () => {
   it('greets the visitor with "Too early!" and opens nothing', () => {
     arrive(NOV_19, { answered: false })
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toHaveTextContent('Welcome to my Advent CV Calendar')
-    expect(screen.getByRole('dialog', { name: 'Too early!' })).toHaveTextContent('Build a snowman in 3 clicks to unlock early.')
+    expect(screen.getByRole('dialog', { name: 'Too early!' })).toHaveTextContent(
+      'Build a snowman in 3 clicks to unlock early.',
+    )
     expect(screen.getByRole('img', { name: /autumn maple leaf/ })).toBeInTheDocument() // November
     expect(document.querySelector('.snow')).not.toBeInTheDocument() // no falling snow while locked
     act(() => vi.advanceTimersByTime(3000))
@@ -400,7 +408,9 @@ describe('Locked before December', () => {
   it('tapping the picture does not build; only the pieces do', () => {
     arrive(NOV_19)
     fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
-    expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toHaveTextContent('Step 1 of 3 · drag the glowing piece onto the picture, or tap it')
+    expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toHaveTextContent(
+      'Step 1 of 3 · drag the glowing piece onto the picture, or tap it',
+    )
 
     fireEvent.click(screen.getByRole('img', { name: /snowy winter forest/ }))
     expect(screen.getByRole('img', { name: /snowy winter forest/ })).toBeInTheDocument()
@@ -439,7 +449,8 @@ describe('Locked before December', () => {
     arrive(NOV_19)
     fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
     const picture = screen.getByRole('img', { name: /snowy winter forest/ })
-    picture.getBoundingClientRect = () => ({ left: 0, top: 0, right: 300, bottom: 300, width: 300, height: 300, x: 0, y: 0, toJSON() {} }) as DOMRect
+    picture.getBoundingClientRect = () =>
+      ({ left: 0, top: 0, right: 300, bottom: 300, width: 300, height: 300, x: 0, y: 0, toJSON() {} }) as DOMRect
 
     const piece = screen.getByRole('button', { name: 'Roll some snow' })
     // dropped outside the picture: nothing happens

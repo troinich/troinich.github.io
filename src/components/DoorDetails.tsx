@@ -86,14 +86,16 @@ export function DoorDetails({ door, today = false, onClose, onShowCv }: Props) {
         )}
 
         <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[var(--open-ink-soft)]">
-          {door.details.filter((d) => d !== door.description).map((d) => (
-            <li key={d} className="flex gap-2">
-              <span className="mt-0.5 text-[var(--gold)]" aria-hidden="true">
-                ✦
-              </span>
-              <span>{d}</span>
-            </li>
-          ))}
+          {door.details
+            .filter((d) => d !== door.description)
+            .map((d) => (
+              <li key={d} className="flex gap-2">
+                <span className="mt-0.5 text-[var(--gold)]" aria-hidden="true">
+                  ✦
+                </span>
+                <span>{d}</span>
+              </li>
+            ))}
         </ul>
 
         {door.tags.length > 0 && (

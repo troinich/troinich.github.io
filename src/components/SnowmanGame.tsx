@@ -55,7 +55,14 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
   // Dragging the current piece onto the picture (mouse, pen or finger). A short press without
   // moving counts as a tap and is handled by the button's click instead.
   const dropRef = useRef<HTMLDivElement>(null)
-  const [drag, setDrag] = useState<{ x: number; y: number; startX: number; startY: number; moved: boolean; over: boolean } | null>(null)
+  const [drag, setDrag] = useState<{
+    x: number
+    y: number
+    startX: number
+    startY: number
+    moved: boolean
+    over: boolean
+  } | null>(null)
   const suppressClick = useRef(false)
   const overDrop = (x: number, y: number) => {
     const r = dropRef.current?.getBoundingClientRect()
@@ -119,9 +126,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
         {phase === 'intro' && (
           <>
             {/* balanced lines, and the tree stays with "Calendar" so it's never alone on a line */}
-            <p className="eyebrow mb-4 [text-wrap:balance]">
-              Welcome to my Advent CV Calendar&nbsp;🎄
-            </p>
+            <p className="eyebrow mb-4 [text-wrap:balance]">Welcome to my Advent CV Calendar&nbsp;🎄</p>
             <SeasonIcon season={season} className="mx-auto" />
             <h2 id="lock-title" className="mt-3 font-display text-3xl font-bold text-[var(--gold)]">
               Too early!
@@ -129,13 +134,11 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
             <p className="mt-3 leading-relaxed text-[var(--ink-2)]">
               The Advent calendar opens on <strong>1&nbsp;December</strong>.
             </p>
-            <p className="mt-2 text-sm text-[var(--open-ink-soft)] [text-wrap:balance]">Build a snowman in 3 clicks to unlock early.</p>
+            <p className="mt-2 text-sm text-[var(--open-ink-soft)] [text-wrap:balance]">
+              Build a snowman in 3 clicks to unlock early.
+            </p>
             <div className="mt-6 flex flex-col-reverse gap-3 sm:grid sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={onWait}
-                className="btn btn--secondary"
-              >
+              <button type="button" onClick={onWait} className="btn btn--secondary">
                 No, I'll wait
               </button>
               <button
@@ -157,7 +160,13 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
           <>
             {/* title row: small round Back on the left, title centred, an empty spacer on the right */}
             <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2">
-              <button type="button" onClick={back} aria-label="Back" title="Back" className="icon-btn !h-10 !w-10 text-lg">
+              <button
+                type="button"
+                onClick={back}
+                aria-label="Back"
+                title="Back"
+                className="icon-btn !h-10 !w-10 text-lg"
+              >
                 <span aria-hidden="true">←</span>
               </button>
               <h2 id="lock-title" className="font-display text-xl font-bold text-[var(--gold)] sm:text-2xl">
@@ -225,14 +234,11 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
               {replay ? 'What a snowman!' : "You've built your way in!"}
             </h2>
             {!replay && (
-              <p className="mt-2 text-sm text-[var(--open-ink-soft)]">The calendar is unlocked for you, whatever the date.</p>
+              <p className="mt-2 text-sm text-[var(--open-ink-soft)]">
+                The calendar is unlocked for you, whatever the date.
+              </p>
             )}
-            <button
-              ref={openRef}
-              type="button"
-              onClick={onUnlock}
-              className="btn btn--primary mt-5 w-full"
-            >
+            <button ref={openRef} type="button" onClick={onUnlock} className="btn btn--primary mt-5 w-full">
               {replay ? 'Back to the calendar' : '🎁 Open the calendar'}
             </button>
           </>
@@ -246,7 +252,10 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
 const STEP_IMAGES = [
   { src: 'snowman-steps/forest.jpg', alt: 'A snowy winter forest framed by holly, waiting for a snowman' },
   { src: 'snowman-steps/hatless.jpg', alt: 'A smiling snowman with twig arms, still without his hat and scarf' },
-  { src: 'snowman-steps/buttons.jpg', alt: 'The snowman now has three coal buttons, still without his nose, hat and scarf' },
+  {
+    src: 'snowman-steps/buttons.jpg',
+    alt: 'The snowman now has three coal buttons, still without his nose, hat and scarf',
+  },
   { src: 'snowman.jpg', alt: 'The finished snowman with top hat, carrot nose and red scarf' },
 ]
 

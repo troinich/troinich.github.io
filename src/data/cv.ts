@@ -58,11 +58,23 @@ export const cv = {
     },
   ] as Role[],
   skills: [
-    ['Languages & frameworks', 'TypeScript, JavaScript, React, Node.js, HTML, CSS, C# / .NET, ASP.NET Core, EF Core, Vue.js'],
-    ['Frontend', 'Tailwind CSS, Catalyst, React Query, react-hook-form, Vite, state management, design systems, accessibility (a11y), WCAG, performance optimisation'],
+    [
+      'Languages & frameworks',
+      'TypeScript, JavaScript, React, Node.js, HTML, CSS, C# / .NET, ASP.NET Core, EF Core, Vue.js',
+    ],
+    [
+      'Frontend',
+      'Tailwind CSS, Catalyst, React Query, react-hook-form, Vite, state management, design systems, accessibility (a11y), WCAG, performance optimisation',
+    ],
     ['Backend & APIs', 'RESTful APIs, API design, OpenAPI / Swagger, GraphQL, server-side validation'],
-    ['Testing & delivery', 'automated testing, Playwright, Cypress, Vitest, CI/CD, continuous delivery, Git, Sentry (production error monitoring), debugging, code reviews'],
-    ['AI & developer experience', 'AI agents, Claude Code, Claude.ai, LLM-assisted development, developer tooling, type-safe API clients'],
+    [
+      'Testing & delivery',
+      'automated testing, Playwright, Cypress, Vitest, CI/CD, continuous delivery, Git, Sentry (production error monitoring), debugging, code reviews',
+    ],
+    [
+      'AI & developer experience',
+      'AI agents, Claude Code, Claude.ai, LLM-assisted development, developer tooling, type-safe API clients',
+    ],
     ['Payments', 'Stripe (Stripe API, Stripe Tax, Payment Element, Address Element)'],
     ['Collaboration', 'Figma, product and design collaboration, knowledge sharing'],
   ] as [string, string][],
@@ -96,8 +108,18 @@ export const cv = {
       period: '2018 – 2020',
       bullets: ['Final project: built a complete full-stack web application with a Node.js backend.'],
     },
-    { title: 'Master of Laws', company: 'Taras Shevchenko National University of Kyiv', period: '2009 – 2011', bullets: [] },
-    { title: 'Bachelor of Laws', company: 'Taras Shevchenko National University of Kyiv', period: '2005 – 2009', bullets: [] },
+    {
+      title: 'Master of Laws',
+      company: 'Taras Shevchenko National University of Kyiv',
+      period: '2009 – 2011',
+      bullets: [],
+    },
+    {
+      title: 'Bachelor of Laws',
+      company: 'Taras Shevchenko National University of Kyiv',
+      period: '2005 – 2009',
+      bullets: [],
+    },
   ] as Role[],
   languages: ['English', 'Swedish', 'Ukrainian', 'Polish'],
 }

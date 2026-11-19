@@ -62,7 +62,6 @@ describe('Door (Read more)', () => {
     await userEvent.click(screen.getByRole('heading', { name: 'Stripe payments, end to end' }))
     expect(onToggle).toHaveBeenCalledWith(10)
   })
-
 })
 
 describe('Door 24 (open)', () => {
@@ -71,7 +70,12 @@ describe('Door 24 (open)', () => {
   beforeEach(() => {
     hrefs = []
     Object.defineProperty(window, 'location', {
-      value: { ...realLocation, set href(v: string) { hrefs.push(v) } },
+      value: {
+        ...realLocation,
+        set href(v: string) {
+          hrefs.push(v)
+        },
+      },
       configurable: true,
     })
   })

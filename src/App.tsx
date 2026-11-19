@@ -170,7 +170,10 @@ export default function App() {
 
   return (
     <>
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6" aria-hidden={showCv || showGame || showReplay || detailId !== null || undefined}>
+      <div
+        className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6"
+        aria-hidden={showCv || showGame || showReplay || detailId !== null || undefined}
+      >
         <Header
           openedCount={shownOpen.size}
           total={total}
@@ -194,7 +197,9 @@ export default function App() {
             }}
           />
         </main>
-        {!showCv && !showCookie && !showGame && !showReplay && detailId === null && <BackToTop reducedMotion={reducedMotion} />}
+        {!showCv && !showCookie && !showGame && !showReplay && detailId === null && (
+          <BackToTop reducedMotion={reducedMotion} />
+        )}
         <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--ink-soft)]">
           <p>Made with React, TypeScript and an unreasonable amount of 🎄 in Gothenburg.</p>
           <div className="flex flex-wrap items-center gap-4">
@@ -235,9 +240,7 @@ export default function App() {
       )}
       {showCv && <CvView onClose={closeCv} />}
       {showReplay && <SnowmanGame mode="replay" onWait={closeReplay} onUnlock={closeReplay} onBuilt={handleBuilt} />}
-      {showGame && (
-        <SnowmanGame onWait={handleWait} onUnlock={handleUnlock} onBuilt={handleBuilt} />
-      )}
+      {showGame && <SnowmanGame onWait={handleWait} onUnlock={handleUnlock} onBuilt={handleBuilt} />}
       {confetti && <Confetti onDone={endConfetti} />}
       {/* never on top of the snowman game; an unanswered card waits until the game is closed */}
       {showCookie && !showGame && !showReplay && (
