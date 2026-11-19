@@ -27,3 +27,10 @@ describe('door details', () => {
     }
   })
 })
+
+describe('grid fill', () => {
+  it('the doors take up a multiple of 12 grid cells, so rows of 2, 3, 4 or 6 have no gaps', () => {
+    const cells = doors.reduce((sum, d) => sum + (d.size === 'big' ? 4 : d.size ? 2 : 1), 0)
+    expect(cells % 12).toBe(0)
+  })
+})

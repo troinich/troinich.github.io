@@ -15,4 +15,4 @@ export const COOKIE_IMAGE = ''
  * Optional real jingle-bell recording: put it in `public/` (e.g. 'jingle.mp3')
  * and write its name here. Leave empty to use the built-in synthesized sleigh bells.
  */
-export const JINGLE_SOUND = 'freesound_community-jingle-bells-107671.mp3'
+export const JINGLE_SOUND = 'jingle-bells.mp3'

@@ -60,7 +60,7 @@ export function CookiePrompt({ reducedMotion, onAnswer, onDone }: Props) {
         {result === 'no' ? (
           <div role="status">
             <img
-              src={`${import.meta.env.BASE_URL}broken%20cookie.avif`}
+              src={`${import.meta.env.BASE_URL}cookie-broken.avif`}
               alt="A broken cookie"
               className={`mx-auto h-64 w-auto object-contain ${reducedMotion ? '' : 'cookie-sad'}`}
             />
@@ -81,7 +81,7 @@ export function CookiePrompt({ reducedMotion, onAnswer, onDone }: Props) {
               className="-mx-6 -mt-6 mb-1 block aspect-[3/2] w-[calc(100%+3rem)] max-w-none rounded-t-3xl object-cover"
             />
             <h2 id="cookie-title" className="mt-3 font-display text-3xl font-bold">
-              Cookie?
+              Btw, cookie?
             </h2>
             <p id="cookie-desc" className="mt-2 text-sm text-[var(--ink-soft)]">
               Say yes and I'll anonymously count your visit with GoatCounter, so I know someone stopped by. No names, no

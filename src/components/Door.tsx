@@ -1,6 +1,7 @@
 import type { Door as DoorData } from '../data/doors'
+import { HireMeButtons } from './HireMeButtons'
 
-const tagColor: Record<DoorData['category'], string> = {
+const tagColor: Record<NonNullable<DoorData['category']>, string> = {
   Skill: 'var(--tag-skill)',
   Achievement: 'var(--tag-achievement)',
   Fact: 'var(--tag-fact)',
@@ -11,11 +12,17 @@ interface Props {
   open: boolean
   /** This is today's door: it gets a badge and a ring. */
   today?: boolean
+  /** Pulse gold to draw the eye (today's door on arrival). */
+  highlight?: boolean
+  /** The calendar is locked: show a padlock; clicking asks to build the snowman. */
+  locked?: boolean
   onToggle: (id: number) => void
   onReadMore: (id: number) => void
+  /** Opens the full CV page (used by door 24's "Full CV" button). */
+  onShowCv?: () => void
 }
 
-export function Door({ door, open, today = false, onToggle, onReadMore }: Props) {
+export function Door({ door, open, today = false, highlight = false, locked = false, onToggle, onReadMore, onShowCv }: Props) {
   const panelId = `door-${door.id}-content`
   const sizeClass = door.size ? `door--${door.size}` : ''
   const big = door.size === 'big'
@@ -27,15 +34,14 @@ export function Door({ door, open, today = false, onToggle, onReadMore }: Props)
   return (
     <li
       id={`door-${door.id}`}
-      className={`door ${sizeClass} ${open ? 'is-open' : ''} ${today ? 'is-today' : ''}`}
+      className={`door ${sizeClass} ${open ? 'is-open' : ''} ${today ? 'is-today' : ''} ${highlight ? 'is-highlighted' : ''}`}
     >
-      {today && <span className="door__today-badge">Today</span>}
       <button
         type="button"
         className="door__hit"
         aria-expanded={open}
         aria-controls={panelId}
-        aria-label={`Door ${door.id}${today ? ' (today)' : ''}, ${open ? 'open' : 'closed'}`}
+        aria-label={`Door ${door.id}${today ? ' (today)' : ''}, ${locked ? 'locked until December' : open ? 'open' : 'closed'}`}
         onClick={() => onToggle(door.id)}
       />
       <div className="door__inner">
@@ -48,6 +54,17 @@ export function Door({ door, open, today = false, onToggle, onReadMore }: Props)
           }}
           aria-hidden="true"
         >
+          {locked && <span className="door__lock">🔒</span>}
+          {today && !open && !locked && (
+            <span className="door__ribbon">
+              <svg className="door__bow" viewBox="0 0 80 50">
+                <path d="M40 25C28 6 8 4 6 16s16 18 34 9z" fill="#c8323c" stroke="#8e1f2a" strokeWidth="2" />
+                <path d="M40 25C52 6 72 4 74 16s-16 18-34 9z" fill="#c8323c" stroke="#8e1f2a" strokeWidth="2" />
+                <path d="M36 28l-10 20 8-3 4 5 2-22zM44 28l10 20-8-3-4 5-2-22z" fill="#b12a33" />
+                <ellipse cx="40" cy="25" rx="7" ry="6" fill="#a8232d" />
+              </svg>
+            </span>
+          )}
           <span className={`door__number font-display font-bold leading-none ${big ? 'text-7xl sm:text-8xl' : 'text-5xl sm:text-6xl'}`}>
             {door.id}
           </span>
@@ -60,20 +77,36 @@ export function Door({ door, open, today = false, onToggle, onReadMore }: Props)
           aria-hidden={!open}
           onClick={() => open && onToggle(door.id)}
         >
-          <div className="flex justify-end">
-            <span
-              className="rounded-full border px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase"
-              style={{ color: tagColor[door.category], borderColor: tagColor[door.category] }}
-            >
-              {door.category}
-            </span>
-          </div>
+          {door.category && (
+            <div className="flex justify-end">
+              <span
+                className="rounded-full border px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase"
+                style={{ color: tagColor[door.category], borderColor: tagColor[door.category] }}
+              >
+                {door.category}
+              </span>
+            </div>
+          )}
+          {door.photo && (
+            <img
+              src={`${import.meta.env.BASE_URL}${door.photo}`}
+              alt="Natalia Troinich"
+              loading="lazy"
+              className="door__photo mx-auto mt-1 mb-4 rounded-full object-cover"
+            />
+          )}
           <h3 className={`mt-1 font-display font-bold leading-tight ${big ? 'text-xl sm:text-2xl' : 'text-base'}`}>
             {door.headline}
           </h3>
           <p className={`mt-1.5 leading-snug ${big ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>
             {door.description}
           </p>
+          {door.highlight && <p className="door__highlight my-2">{door.highlight}</p>}
+          {door.hireMe && open && (
+            <div className="pt-1 pb-1">
+              <HireMeButtons size="sm" onShowCv={onShowCv} />
+            </div>
+          )}
           {inlineDetails.length > 0 && (
             <ul className={`door__details space-y-1 leading-snug ${big ? 'text-sm' : 'text-xs sm:text-sm'}`}>
               {inlineDetails.map((d) => (

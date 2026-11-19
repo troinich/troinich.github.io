@@ -2,8 +2,9 @@ import { useRef } from 'react'
 import type { Door } from '../data/doors'
 import { useModal } from '../hooks/useModal'
 import { Snow } from './Snow'
+import { HireMeButtons } from './HireMeButtons'
 
-const tagColor: Record<Door['category'], string> = {
+const tagColor: Record<NonNullable<Door['category']>, string> = {
   Skill: 'var(--tag-skill)',
   Achievement: 'var(--tag-achievement)',
   Fact: 'var(--tag-fact)',
@@ -55,8 +56,13 @@ export function DoorDetails({ door, today = false, onClose, onShowCv }: Props) {
           <div>
             <p className="text-xs font-semibold tracking-widest text-[var(--ink-soft)] uppercase">
               {today && <span className="mr-2 rounded-full bg-[var(--accent)] px-2 py-0.5 text-[#2a0a0e]">Today</span>}
-              Door {door.id} ·{' '}
-              <span style={{ color: tagColor[door.category] }}>{door.category}</span>
+              Door {door.id}
+              {door.category && (
+                <>
+                  {' · '}
+                  <span style={{ color: tagColor[door.category] }}>{door.category}</span>
+                </>
+              )}
             </p>
             <h2 id="door-details-title" className="font-display text-2xl font-bold text-[var(--gold)] sm:text-3xl">
               {door.headline}
@@ -64,7 +70,20 @@ export function DoorDetails({ door, today = false, onClose, onShowCv }: Props) {
           </div>
         </div>
 
+        {door.photo && (
+          <img
+            src={`${import.meta.env.BASE_URL}${door.photo}`}
+            alt="Natalia Troinich"
+            className="mx-auto mt-5 h-36 w-36 rounded-full border-2 border-[var(--gold)] object-cover shadow-[0_0_30px_-6px_rgba(232,192,106,0.6)]"
+          />
+        )}
         <p className="mt-4 leading-relaxed text-[var(--ink)]">{door.description}</p>
+        {door.highlight && <p className="door__highlight mt-5 mb-1">{door.highlight}</p>}
+        {door.hireMe && (
+          <div className="mt-4">
+            <HireMeButtons onShowCv={onShowCv} />
+          </div>
+        )}
 
         <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[var(--open-ink-soft)]">
           {door.details.filter((d) => d !== door.description).map((d) => (

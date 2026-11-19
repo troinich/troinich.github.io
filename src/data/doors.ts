@@ -2,7 +2,8 @@ export type Category = 'Skill' | 'Achievement' | 'Fact'
 
 export interface Door {
   id: number
-  category: Category
+  /** Skill, Achievement or Fact; leave out to show no tag. */
+  category?: Category
   emoji: string
   headline: string
   description: string
@@ -10,6 +11,12 @@ export interface Door {
   details: string[]
   /** Tools and topics shown as small tags in the "Read more" card. */
   tags: string[]
+  /** Optional photo (file in public/), shown on the open door and in its card. */
+  photo?: string
+  /** Optional short highlighted fact, e.g. availability. */
+  highlight?: string
+  /** Show the "Email me" / "LinkedIn" call-to-action buttons (door 24). */
+  hireMe?: boolean
   /** Visual size in the grid, so the calendar looks hand-made. */
   size?: 'wide' | 'tall' | 'big'
 }
@@ -135,14 +142,15 @@ export const doors: Door[] = [
     id: 9,
     category: 'Skill',
     emoji: '🔌',
-    headline: "REST and GraphQL",
+    headline: "API design",
     description:
-      "Integrated RESTful and GraphQL APIs into frontend components for dynamic data and real-time UI updates.",
+      "Designs the API contracts behind features together with backend engineers: request and response models, validation rules and error handling.",
     details: [
-      "Integrated RESTful and GraphQL APIs into frontend components for dynamic data and real-time UI updates.",
-      "Defined API contracts with backend engineers: request and response models, validation rules and error handling.",
+      "Shaped the API contracts behind the checkout and back-office tools.",
+      "Designs REST endpoints in ASP.NET Core, from routes and request validation to clear error responses.",
+      "Maps backend errors, such as Stripe API errors, to clear, actionable messages for users.",
     ],
-    tags: ["REST", "GraphQL", "API design"],
+    tags: ["REST", "API design", "Validation", "Error handling"],
   },
   {
     id: 10,
@@ -203,6 +211,7 @@ export const doors: Door[] = [
       "Used by real-estate agencies across the platform's markets.",
     ],
     tags: ["React", "TypeScript", "Meta & Google Ads"],
+    size: 'tall',
   },
   {
     id: 14,
@@ -343,16 +352,17 @@ export const doors: Door[] = [
   },
   {
     id: 24,
-    category: 'Achievement',
     emoji: '🎁',
-    headline: "The final gift: hire her",
+    headline: "All I want for Christmas is a new challenge",
     description:
       "Fullstack engineer, former tax lawyer and AI enabler who owns features end to end. The full CV is one click away.",
+    photo: "me.jpg",
+    highlight: "Notice period: 1 month",
+    hireMe: true,
     details: [
       "Fullstack web engineer: TypeScript, React, C# / .NET.",
       "7+ years in production on a B2B SaaS platform used in 10+ European markets.",
       "Owns features end to end and improves how teams work, from type-safe APIs to AI-assisted engineering.",
-      "Open the full CV or say hi on LinkedIn.",
     ],
     tags: ["Fullstack", "TypeScript", "React", "C# / .NET", "Claude Code"],
     size: 'big',

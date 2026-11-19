@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { Door } from './Door'
@@ -37,13 +37,13 @@ describe('Door', () => {
 })
 
 describe('Door (today)', () => {
-  it('shows a Today badge and mentions it in the label', () => {
+  it('has no visible badge, but the label says it is today', () => {
     render(
       <ul>
         <Door door={doorById.get(19)!} open={false} today onToggle={() => {}} onReadMore={() => {}} />
       </ul>,
     )
-    expect(screen.getByText('Today')).toBeInTheDocument()
+    expect(screen.queryByText('Today')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Door 19 (today), closed' })).toBeInTheDocument()
   })
 })
@@ -75,4 +75,66 @@ describe('Door (Read more)', () => {
     expect(onToggle).toHaveBeenCalledWith(10)
   })
 
+})
+
+describe('Door 24 (open)', () => {
+  const realLocation = window.location
+  let hrefs: string[]
+  beforeEach(() => {
+    hrefs = []
+    Object.defineProperty(window, 'location', {
+      value: { ...realLocation, set href(v: string) { hrefs.push(v) } },
+      configurable: true,
+    })
+  })
+  afterEach(() => {
+    Object.defineProperty(window, 'location', { value: realLocation, configurable: true })
+    vi.useRealTimers()
+  })
+
+  function renderOpenDoor24(onToggle = vi.fn()) {
+    render(
+      <ul>
+        <Door door={doorById.get(24)!} open onToggle={onToggle} onReadMore={() => {}} />
+      </ul>,
+    )
+    return onToggle
+  }
+
+  it('"Email me" opens an email to the CV address and does not close the door', () => {
+    const onToggle = renderOpenDoor24()
+    fireEvent.click(screen.getByRole('button', { name: /Email me/ }))
+    expect(hrefs[0]).toMatch(new RegExp(`^mailto:${atob('dHJvaW5pY3pAZ21haWwuY29t')}\\?`))
+    expect(onToggle).not.toHaveBeenCalled()
+  })
+
+  it('if no email app opens, copies the address and says "Email copied"', async () => {
+    vi.useFakeTimers()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    renderOpenDoor24()
+    fireEvent.click(screen.getByRole('button', { name: /Email me/ }))
+    await act(async () => {
+      vi.advanceTimersByTime(1300)
+    })
+    expect(writeText).toHaveBeenCalledWith(atob('dHJvaW5pY3pAZ21haWwuY29t'))
+    expect(screen.getByRole('button', { name: '✓ Email copied' })).toBeInTheDocument()
+    await act(async () => {
+      vi.advanceTimersByTime(3100)
+    })
+    expect(screen.getByRole('button', { name: /Email me/ })).toBeInTheDocument()
+  })
+
+  it('does not copy when the email app takes over the window', async () => {
+    vi.useFakeTimers()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    renderOpenDoor24()
+    fireEvent.click(screen.getByRole('button', { name: /Email me/ }))
+    fireEvent.blur(window)
+    await act(async () => {
+      vi.advanceTimersByTime(1300)
+    })
+    expect(writeText).not.toHaveBeenCalled()
+  })
 })

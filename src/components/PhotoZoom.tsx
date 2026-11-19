@@ -1,0 +1,46 @@
+import { useRef } from 'react'
+import { useModal } from '../hooks/useModal'
+
+/** First sentence of the CV profile, shown under the zoomed photo. */
+const INTRO =
+  'Fullstack web engineer with 7+ years building production web applications in TypeScript, React and JavaScript, with hands-on backend development in C# (.NET) and Node.js, on a B2B SaaS platform used in 10+ European markets.'
+
+/** Full-screen view of the header photo with a short intro. Closes on click, ✕ or Escape. */
+export function PhotoZoom({ onClose }: { onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  useModal(dialogRef, closeRef, onClose)
+
+  return (
+    <div
+      className="details-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Photo of Natalia Troinich"
+        className="photo-zoom relative flex max-h-[92vh] w-fit max-w-[min(90vw,34rem)] flex-col overflow-y-auto rounded-3xl border-2 border-[var(--gold)] bg-[var(--surface)] shadow-[0_0_60px_-10px_rgba(232,192,106,0.6)]"
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}me-large.jpg`}
+          alt="Natalia Troinich standing between tall autumn hedges by a long pond"
+          className="block max-h-[62vh] w-full object-cover"
+        />
+        <p className="px-5 py-4 text-sm leading-relaxed text-[var(--ink)] sm:px-6 sm:py-5 sm:text-base">
+          <strong className="font-display text-lg font-bold text-[var(--gold)] sm:text-xl">Hej, it's me!</strong> {INTRO}
+        </p>
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={onClose}
+          aria-label="Close photo"
+          className="absolute top-3 right-3 grid h-10 w-10 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  )
+}

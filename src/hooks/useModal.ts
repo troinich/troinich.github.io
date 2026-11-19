@@ -16,6 +16,9 @@ export function useModal(
     document.body.style.overflow = 'hidden'
 
     const onKey = (e: KeyboardEvent) => {
+      // Another dialog is open on top of this one: leave its keys alone.
+      const topDialog = (e.target as Element | null)?.closest?.('[aria-modal="true"]')
+      if (topDialog && topDialog !== container.current) return
       if (e.key === 'Escape') {
         e.preventDefault()
         onClose()

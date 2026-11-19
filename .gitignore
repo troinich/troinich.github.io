@@ -6,3 +6,7 @@ dist
 
 # Feature specs stay local
 _specs/
+
+# Original images (sources for the web copies in public/) stay local.
+# design/ also holds my original photo, which has GPS location in its metadata.
+design/
