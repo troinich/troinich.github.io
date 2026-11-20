@@ -61,6 +61,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Keep the scrollbar's space when a pop-up locks page scroll (useModal), so the page doesn't jump sideways */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Scrolling to the end of a pop-up's content shouldn't carry on scrolling the page behind it */
+[aria-modal='true'] {
+  overscroll-behavior: contain;
+}
+
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
@@ -298,12 +308,13 @@ body {
     transform: translate3d(var(--drift, 20px), calc(100vh + 60px), 0);
   }
 }
+/* translate, not margin-left, so the sway runs on the compositor instead of re-laying out every frame */
 @keyframes snow-sway {
   from {
-    margin-left: -14px;
+    translate: -14px 0;
   }
   to {
-    margin-left: 14px;
+    translate: 14px 0;
   }
 }
 @keyframes snow-spin {
