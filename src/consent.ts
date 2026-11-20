@@ -18,7 +18,9 @@ export function readConsent(): Consent | null {
 
 export function writeConsent(value: Consent) {
   try {
-    document.cookie = `${COOKIE}=${value}; max-age=${ONE_YEAR}; path=/; SameSite=Lax`
+    // Secure on the live (HTTPS) site; left off on http://localhost, where some browsers would drop it
+    const secure = location.protocol === 'https:' ? '; Secure' : ''
+    document.cookie = `${COOKIE}=${value}; max-age=${ONE_YEAR}; path=/; SameSite=Lax${secure}`
   } catch {
     // Cookies blocked: we simply ask again next time.
   }
