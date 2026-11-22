@@ -10,10 +10,10 @@ export function seasonOf(date: Date = new Date()): Season {
 }
 
 const images: Record<Season, { src: string; alt: string; cutout?: boolean }> = {
-  autumn: { src: 'seasons/autumn.png', alt: 'A painted autumn maple leaf in red, orange and yellow', cutout: true },
-  winter: { src: 'seasons/winter.jpg', alt: 'A kitten asleep in a colourful knitted blanket' },
-  spring: { src: 'seasons/spring.jpg', alt: 'Snowdrops flowering through the snow' },
-  summer: { src: 'seasons/summer.jpg', alt: 'A striped beach umbrella on white sand by a turquoise sea' },
+  autumn: { src: 'seasons/autumn.webp', alt: 'A painted autumn maple leaf in red, orange and yellow', cutout: true },
+  winter: { src: 'seasons/winter.webp', alt: 'A kitten asleep in a colourful knitted blanket' },
+  spring: { src: 'seasons/spring.webp', alt: 'Snowdrops flowering through the snow' },
+  summer: { src: 'seasons/summer.webp', alt: 'A striped beach umbrella on white sand by a turquoise sea' },
 }
 
 /** A picture for the "Too early!" message, matching the time of year. */

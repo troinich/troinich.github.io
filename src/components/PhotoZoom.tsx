@@ -28,7 +28,7 @@ export function PhotoZoom({ onClose, onShowCv }: { onClose: () => void; onShowCv
         className="photo-zoom relative flex max-h-[92vh] w-fit max-w-[min(90vw,34rem)] flex-col overflow-y-auto rounded-[var(--radius-card)] border-2 border-[var(--gold)] bg-[var(--surface)] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
       >
         <img
-          src={`${import.meta.env.BASE_URL}me-large.jpg`}
+          src={`${import.meta.env.BASE_URL}me-large.webp`}
           alt="Natalia Troinich standing between tall autumn hedges by a long pond"
           className="block max-h-[62vh] w-full object-cover"
         />

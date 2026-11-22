@@ -57,7 +57,7 @@ body {
      with a light dark wash so the doors stay readable. */
   background-color: #212524;
   background-image:
-    linear-gradient(rgba(10, 14, 13, 0.5), rgba(10, 14, 13, 0.5)), url('/background.jpg');
+    linear-gradient(rgba(10, 14, 13, 0.5), rgba(10, 14, 13, 0.5)), url('/background.webp');
   background-size:
     auto,
     560px auto;

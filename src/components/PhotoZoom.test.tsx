@@ -20,7 +20,7 @@ describe('Header photo zoom', () => {
     renderHeader()
     fireEvent.click(screen.getByRole('button', { name: 'Say hej: photo and intro' }))
     const dialog = screen.getByRole('dialog', { name: 'Photo of Natalia Troinich' })
-    expect(dialog.querySelector('img')).toHaveAttribute('src', '/me-large.jpg')
+    expect(dialog.querySelector('img')).toHaveAttribute('src', '/me-large.webp')
     expect(dialog).toHaveTextContent(
       "Hej, it's me! Fullstack web engineer with 7+ years building production web applications in TypeScript, React and JavaScript",
     )

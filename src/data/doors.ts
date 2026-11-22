@@ -278,7 +278,7 @@ export const doors: Door[] = [
     headline: 'All I want for Christmas is a new challenge',
     description:
       'I am a fullstack engineer and former tax lawyer who owns features end to end and helps teams work well with AI. My full CV is one click away.',
-    photo: 'me.jpg',
+    photo: 'me.webp',
     highlight: 'Notice period: 1 month',
     hireMe: true,
     details: [

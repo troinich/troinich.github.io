@@ -56,7 +56,7 @@ export function Header({
           className="intro-grid__photo group shrink-0 rounded-full"
         >
           <img
-            src={`${import.meta.env.BASE_URL}me.jpg`}
+            src={`${import.meta.env.BASE_URL}me.webp`}
             alt=""
             width={192}
             height={192}

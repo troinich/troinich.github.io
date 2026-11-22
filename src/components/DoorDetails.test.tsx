@@ -15,7 +15,7 @@ describe('Door 24', () => {
     const dialog = container.querySelector('[role="dialog"]')!
     expect(dialog).toHaveTextContent('All I want for Christmas is a new challenge')
     expect(dialog).toHaveTextContent('Notice period: 1 month')
-    expect(dialog.querySelector('img[alt="Natalia Troinich"]')).toHaveAttribute('src', '/me.jpg')
+    expect(dialog.querySelector('img[alt="Natalia Troinich"]')).toHaveAttribute('src', '/me.webp')
     expect([...dialog.querySelectorAll('button')].some((b) => b.textContent?.includes('Email me'))).toBe(true)
     expect([...dialog.querySelectorAll('button')].some((b) => b.textContent === 'Full CV')).toBe(true)
     expect(dialog.querySelector('a[href="https://www.linkedin.com/in/troinicz"]')).toBeInTheDocument()

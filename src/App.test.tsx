@@ -146,7 +146,7 @@ describe('Cookie question', () => {
     fireEvent.click(screen.getByRole('button', { name: 'No thanks' }))
     expect(screen.getByRole('img', { name: /relaxing in a bathtub full of marshmallows/ })).toHaveAttribute(
       'src',
-      '/marshmallow-bath.jpg',
+      '/marshmallow-bath.webp',
     )
     expect(document.cookie).toContain('cookie_consent=no')
     act(() => vi.advanceTimersByTime(1900))
@@ -452,7 +452,7 @@ describe('Locked before December', () => {
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument()
 
     const done = screen.getByRole('dialog', { name: "You've built your way in!" })
-    expect(done.querySelector('img')).toHaveAttribute('src', '/snowman.jpg')
+    expect(done.querySelector('img')).toHaveAttribute('src', '/snowman.webp')
     fireEvent.click(screen.getByRole('button', { name: /Open the calendar/ }))
     act(() => vi.advanceTimersByTime(100))
 

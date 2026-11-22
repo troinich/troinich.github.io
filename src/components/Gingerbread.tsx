@@ -5,12 +5,12 @@ const BROWN = '#b5713a' // crumbs
 
 /**
  * The gingerbread man with his candy cane: design/gingerbread-candy-cane.png trimmed to his outline
- * as public/gingerbread.png. Drawn on a 200×200 canvas so the bites can go on top.
+ * as public/gingerbread.webp. Drawn on a 200×200 canvas so the bites can go on top.
  */
 function Body() {
   return (
     <image
-      href={`${import.meta.env.BASE_URL}gingerbread.png`}
+      href={`${import.meta.env.BASE_URL}gingerbread.webp`}
       x="5"
       y="0"
       width="190"

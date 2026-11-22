@@ -83,7 +83,7 @@ export function CookieBanner({ reducedMotion, onAnswer, onDismiss, onDone }: Pro
           >
             <p className="font-display text-2xl font-bold text-[var(--gold)]">Phew!</p>
             <img
-              src={`${import.meta.env.BASE_URL}marshmallow-bath.jpg`}
+              src={`${import.meta.env.BASE_URL}marshmallow-bath.webp`}
               alt="The gingerbread man relaxing in a bathtub full of marshmallows"
               className={`h-24 w-24 shrink-0 rounded-[var(--radius-control)] object-cover ${reducedMotion ? '' : 'cookie-bath'}`}
             />

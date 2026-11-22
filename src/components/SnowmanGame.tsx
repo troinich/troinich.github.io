@@ -237,7 +237,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
         {phase === 'done' && (
           <>
             <img
-              src={`${import.meta.env.BASE_URL}snowman.jpg`}
+              src={`${import.meta.env.BASE_URL}snowman.webp`}
               alt="The finished snowman: top hat, red striped scarf and carrot nose, in a winter forest framed by holly"
               className="mx-auto w-full max-w-[18rem] rounded-[var(--radius-card)]"
             />
@@ -261,13 +261,13 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
 
 /** The pictures of the snowman being built: empty forest, plain snowman, with buttons, finished. */
 const STEP_IMAGES = [
-  { src: 'snowman-steps/forest.jpg', alt: 'A snowy winter forest framed by holly, waiting for a snowman' },
-  { src: 'snowman-steps/hatless.jpg', alt: 'A smiling snowman with twig arms, still without his hat and scarf' },
+  { src: 'snowman-steps/forest.webp', alt: 'A snowy winter forest framed by holly, waiting for a snowman' },
+  { src: 'snowman-steps/hatless.webp', alt: 'A smiling snowman with twig arms, still without his hat and scarf' },
   {
-    src: 'snowman-steps/buttons.jpg',
+    src: 'snowman-steps/buttons.webp',
     alt: 'The snowman now has three coal buttons, still without his nose, hat and scarf',
   },
-  { src: 'snowman.jpg', alt: 'The finished snowman with top hat, carrot nose and red scarf' },
+  { src: 'snowman.webp', alt: 'The finished snowman with top hat, carrot nose and red scarf' },
 ]
 
 /**
