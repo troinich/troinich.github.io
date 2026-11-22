@@ -561,6 +561,14 @@ describe('Locked before December', () => {
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toBeInTheDocument()
   })
 
+  it('the shared ?open link skips "Too early!" and goes straight to the calendar', () => {
+    window.history.replaceState(null, '', '/?open')
+    arrive(NOV_19)
+    expect(screen.queryByRole('dialog', { name: 'Too early!' })).not.toBeInTheDocument()
+    expect(document.getElementById('door-19')).toHaveClass('is-highlighted')
+    expect(window.location.search).toBe('')
+  })
+
   it('a visitor who already built the snowman is not locked out again', () => {
     localStorage.setItem('meet-me:unlocked', '1')
     arrive(NOV_19)

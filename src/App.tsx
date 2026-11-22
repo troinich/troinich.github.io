@@ -13,7 +13,7 @@ import { Confetti } from './components/Confetti'
 import { BackToTop } from './components/BackToTop'
 import { CookieBanner } from './components/CookieBanner'
 import { SnowmanGame } from './components/SnowmanGame'
-import { isLocked, rememberUnlocked } from './data/lock'
+import { isLocked, rememberUnlocked, unlockFromShareLink } from './data/lock'
 import { isMuted, jingle, setMuted } from './sound'
 import { readConsent, startAnalytics, stopAnalytics, writeConsent, type Consent } from './consent'
 
@@ -36,8 +36,12 @@ export default function App() {
     if (muted) setTimeout(() => jingle(), 0) // unmuting plays a little preview
   }
 
-  // Before December the calendar is locked until the visitor builds the snowman (or it's December).
-  const [locked, setLocked] = useState(() => isLocked())
+  // Before December the calendar is locked until the visitor builds the snowman (or it's December),
+  // unless they came through my shared link (?open).
+  const [locked, setLocked] = useState(() => {
+    unlockFromShareLink()
+    return isLocked()
+  })
   const [showGame, setShowGame] = useState(locked)
   // "Build a snowman" in the footer: the same game just for fun; it changes nothing
   const [showReplay, setShowReplay] = useState(false)
