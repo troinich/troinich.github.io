@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { STORAGE_KEY, useOpenedDoors } from './useOpenedDoors'
+import { OLD_STORAGE_KEY, STORAGE_KEY, useOpenedDoors } from './useOpenedDoors'
 
 const order = [3, 1, 2]
 
@@ -53,6 +53,15 @@ describe('useOpenedDoors', () => {
 
     const second = renderHook(() => useOpenedDoors(order, 0))
     expect(second.result.current.opened.has(1)).toBe(true)
+  })
+
+  it('keeps the doors saved under the old key, and moves them to the new one', () => {
+    localStorage.setItem(OLD_STORAGE_KEY, JSON.stringify([2]))
+    const { result } = renderHook(() => useOpenedDoors(order, 0))
+    expect(result.current.opened.has(2)).toBe(true)
+    expect(localStorage.getItem(OLD_STORAGE_KEY)).toBeNull()
+    act(() => result.current.toggle(3))
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual([2, 3])
   })
 
   it('ignores corrupt storage', () => {

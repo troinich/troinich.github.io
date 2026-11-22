@@ -463,7 +463,7 @@ describe('Locked before December', () => {
   })
 
   it('all doors are closed while locked and after unlocking, even if some were open before', () => {
-    localStorage.setItem('amazing-me:opened-doors', JSON.stringify([1, 2, 3, 19]))
+    localStorage.setItem('meet-me:opened-doors', JSON.stringify([1, 2, 3, 19]))
     arrive(NOV_19)
     expect(document.querySelectorAll('.door.is-open')).toHaveLength(0)
     expect(screen.getByText(/\/ 24 opened/, { ignore: false }).textContent).toMatch(/^0 \/ 24 opened/)
