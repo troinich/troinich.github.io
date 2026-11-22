@@ -389,6 +389,20 @@ describe('Build a snowman (footer replay)', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
+  it('a click outside the card closes the replay; a press that starts on the card does not', () => {
+    arrive(DEC_5)
+    fireEvent.click(screen.getByRole('button', { name: 'Build a snowman' }))
+    const backdrop = screen.getByRole('dialog', { name: 'Build a snowman' }).parentElement!
+
+    fireEvent.pointerDown(screen.getByRole('img', { name: /snowy winter forest/ }))
+    fireEvent.click(backdrop) // e.g. a drag that ends outside the card
+    expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toBeInTheDocument()
+
+    fireEvent.pointerDown(backdrop)
+    fireEvent.click(backdrop)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
   it('is not offered while the calendar is locked (the lockout already has the game)', () => {
     arrive(NOV_19)
     expect(screen.queryByRole('button', { name: 'Build a snowman', hidden: true })).not.toBeInTheDocument()
@@ -406,6 +420,14 @@ describe('Locked before December', () => {
     expect(document.querySelector('.snow')).not.toBeInTheDocument() // no falling snow while locked
     act(() => vi.advanceTimersByTime(3000))
     expect(document.querySelectorAll('.door.is-open')).toHaveLength(0)
+  })
+
+  it('a click outside the "Too early!" card does not close it (there is no calendar to go back to)', () => {
+    arrive(NOV_19)
+    const backdrop = screen.getByRole('dialog', { name: 'Too early!' }).parentElement!
+    fireEvent.pointerDown(backdrop)
+    fireEvent.click(backdrop)
+    expect(screen.getByRole('dialog', { name: 'Too early!' })).toBeInTheDocument()
   })
 
   it('"No, I\'ll wait" shows the full CV instead', () => {

@@ -114,8 +114,19 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
     window.setTimeout(() => (built > 0 ? buildRef : firstRef).current?.focus(), 0)
   }
 
+  // When replaying, a click on the dimmed area around the card closes the game. The press has to
+  // start there too, so a drag that begins on the card and ends outside it doesn't close it.
+  const pressedBackdrop = useRef(false)
+
   return (
-    <div className="details-backdrop modal-backdrop z-50">
+    <div
+      className="details-backdrop modal-backdrop z-50"
+      onPointerDown={(e) => (pressedBackdrop.current = e.target === e.currentTarget)}
+      onClick={(e) => {
+        if (replay && pressedBackdrop.current && e.target === e.currentTarget) onWait()
+        pressedBackdrop.current = false
+      }}
+    >
       <div
         ref={dialogRef}
         role="dialog"
