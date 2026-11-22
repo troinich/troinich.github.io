@@ -10,5 +10,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
+    // only the unit tests: e2e/ is Playwright's, and .claude/worktrees/ holds copies of old tests
+    include: ['src/**/*.test.{ts,tsx}'],
   },
 })

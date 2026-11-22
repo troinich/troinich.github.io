@@ -4,6 +4,10 @@ dist
 .DS_Store
 *.tsbuildinfo
 
+# Playwright output
+test-results/
+playwright-report/
+
 # Feature specs stay local
 _specs/
 
