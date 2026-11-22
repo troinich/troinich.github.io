@@ -17,6 +17,16 @@ import { isLocked, rememberUnlocked, unlockFromShareLink } from './data/lock'
 import { isMuted, jingle, setMuted } from './sound'
 import { readConsent, startAnalytics, stopAnalytics, writeConsent, type Consent } from './consent'
 
+/** The pop-up covering the calendar: the full CV, a door's "Read more" card, or the snowman game
+ * ('game' is the "Too early!" lockout, 'replay' the footer one that changes nothing). */
+type Overlay =
+  | { kind: 'none' }
+  | { kind: 'cv' }
+  | { kind: 'door'; id: number }
+  | { kind: 'game' }
+  | { kind: 'replay' }
+const NONE: Overlay = { kind: 'none' }
+
 export default function App() {
   const reducedMotion = useReducedMotion()
   const [todayId] = useState(() => todayDoorId())
@@ -24,8 +34,6 @@ export default function App() {
   const phone = useMediaQuery('(max-width: 639px)')
   const order = useMemo(() => displayOrder(phone, todayId), [phone, todayId])
   const { opened, opening, toggle, openAll, closeAll } = useOpenedDoors(order, reducedMotion ? 0 : 60)
-  const [showCv, setShowCv] = useState(false)
-  const [detailId, setDetailId] = useState<number | null>(null)
   const [confetti, setConfetti] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const [muted, setMutedState] = useState(isMuted)
@@ -42,10 +50,13 @@ export default function App() {
     unlockFromShareLink()
     return isLocked()
   })
-  const [showGame, setShowGame] = useState(locked)
-  // "Build a snowman" in the footer: the same game just for fun; it changes nothing
-  const [showReplay, setShowReplay] = useState(false)
-  const closeReplay = useCallback(() => setShowReplay(false), [])
+  // Which pop-up covers the calendar. Only one at a time: opening one replaces the other
+  // (e.g. "Full CV" on a door card closes the card). The cookie card is separate, see below.
+  const [overlay, setOverlay] = useState<Overlay>(() => (locked ? { kind: 'game' } : NONE))
+  const showCv = overlay.kind === 'cv'
+  const showGame = overlay.kind === 'game' || overlay.kind === 'replay'
+  const openCv = useCallback(() => setOverlay({ kind: 'cv' }), [])
+  const closeOverlay = useCallback(() => setOverlay(NONE), [])
 
   // Cookie question: a small non-blocking card. It appears 4 seconds after arrival or when the
   // first door is opened (whichever comes first), or 3 seconds after the snowman unlocks the
@@ -64,7 +75,6 @@ export default function App() {
     if (!showCv) return
     const t = window.setTimeout(offerCookie, 3000)
     return () => window.clearTimeout(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCv])
 
   // Not while the calendar is locked (the visitor is busy with "Too early!" and the snowman game):
@@ -143,11 +153,7 @@ export default function App() {
 
   // The snowman game
   // "No, I'll wait" (or Escape): show the full CV instead, so nobody leaves empty-handed
-  const handleWait = useCallback(() => {
-    setShowGame(false)
-    setShowCv(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const handleWait = openCv
   const handleBuilt = useCallback(() => {
     jingle({ volume: 0.07 })
     if (!reducedMotion) setConfetti(true)
@@ -156,7 +162,7 @@ export default function App() {
     rememberUnlocked()
     closeAll() // the calendar starts fresh: every door closed
     setLocked(false)
-    setShowGame(false)
+    setOverlay(NONE)
     window.setTimeout(startArrival, 0)
     window.setTimeout(offerCookie, 3000) // the cookie question waits until the calendar is open
   }
@@ -166,7 +172,7 @@ export default function App() {
   const shownOpen = locked ? NONE_OPEN : opened
 
   const handleToggle = (id: number) => {
-    if (locked) return setShowGame(true)
+    if (locked) return setOverlay({ kind: 'game' })
     setHighlightId(null)
     const opening = !opened.has(id)
     toggle(id)
@@ -189,7 +195,7 @@ export default function App() {
   }
 
   const handleOpenAll = () => {
-    if (locked) return setShowGame(true)
+    if (locked) return setOverlay({ kind: 'game' })
     openAll()
     jingle({ volume: 0.07 })
     setAnnouncement(`All ${total} doors opened.`)
@@ -202,20 +208,13 @@ export default function App() {
 
   const endConfetti = useCallback(() => setConfetti(false), [])
   // Leaving the CV goes back to the calendar; if it's still locked, offer the snowman game again
-  const closeCv = useCallback(() => {
-    setShowCv(false)
-    if (locked) setShowGame(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locked])
-  const closeDetails = () => {
-    setDetailId(null)
-  }
+  const closeCv = useCallback(() => setOverlay(locked ? { kind: 'game' } : NONE), [locked])
 
   return (
     <>
       <div
         className="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6"
-        aria-hidden={showCv || showGame || showReplay || detailId !== null || undefined}
+        aria-hidden={overlay.kind !== 'none' || undefined}
       >
         <Header
           openedCount={shownOpen.size}
@@ -225,7 +224,7 @@ export default function App() {
           onToggleMuted={toggleMuted}
           onOpenAll={handleOpenAll}
           onCloseAll={handleCloseAll}
-          onShowCv={() => setShowCv(true)}
+          onShowCv={openCv}
           onGoToToday={locked ? undefined : goToToday}
         />
         <main>
@@ -236,20 +235,18 @@ export default function App() {
             highlightId={highlightId}
             locked={locked}
             onToggle={handleToggle}
-            onShowCv={() => setShowCv(true)}
-            onReadMore={(id) => {
-              setDetailId(id)
-            }}
+            onShowCv={openCv}
+            onReadMore={(id) => setOverlay({ kind: 'door', id })}
           />
         </main>
-        {!showCv && !showCookie && !showGame && !showReplay && detailId === null && (
+        {overlay.kind === 'none' && !showCookie && (
           <BackToTop reducedMotion={reducedMotion} />
         )}
         <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--ink-soft)]">
           <p>Made with React, TypeScript and an unreasonable amount of 🎄 in Gothenburg.</p>
           <div className="flex flex-wrap items-center gap-4">
             {!locked && (
-              <button type="button" onClick={() => setShowReplay(true)} className="btn btn--secondary btn--sm btn--snow">
+              <button type="button" onClick={() => setOverlay({ kind: 'replay' })} className="btn btn--secondary btn--sm btn--snow">
                 Build a snowman
               </button>
             )}
@@ -272,22 +269,17 @@ export default function App() {
       <p className="sr-only" aria-live="polite">
         {announcement}
       </p>
-      {detailId !== null && (
-        <DoorDetails
-          door={doorById.get(detailId)!}
-          onClose={closeDetails}
-          onShowCv={() => {
-            setDetailId(null)
-            setShowCv(true)
-          }}
-        />
+      {overlay.kind === 'door' && (
+        <DoorDetails door={doorById.get(overlay.id)!} onClose={closeOverlay} onShowCv={openCv} />
       )}
-      {showCv && <CvView onClose={closeCv} />}
-      {showReplay && <SnowmanGame mode="replay" onWait={closeReplay} onUnlock={closeReplay} onBuilt={handleBuilt} />}
-      {showGame && <SnowmanGame onWait={handleWait} onUnlock={handleUnlock} onBuilt={handleBuilt} />}
+      {overlay.kind === 'cv' && <CvView onClose={closeCv} />}
+      {overlay.kind === 'replay' && (
+        <SnowmanGame mode="replay" onWait={closeOverlay} onUnlock={closeOverlay} onBuilt={handleBuilt} />
+      )}
+      {overlay.kind === 'game' && <SnowmanGame onWait={handleWait} onUnlock={handleUnlock} onBuilt={handleBuilt} />}
       {confetti && <Confetti onDone={endConfetti} />}
       {/* never on top of the snowman game; an unanswered card waits until the game is closed */}
-      {showCookie && !showGame && !showReplay && (
+      {showCookie && !showGame && (
         <CookieBanner
           key={cookieKey}
           reducedMotion={reducedMotion}
