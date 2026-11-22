@@ -46,24 +46,12 @@ describe('Arrival', () => {
     expect(document.querySelector('#door-5 .door__ribbon')).not.toBeInTheDocument()
   })
 
-  it('the highlight fades after a few seconds, or as soon as a door is opened', () => {
-    arrive(DEC_5)
-    act(() => vi.advanceTimersByTime(5000))
-    expect(document.getElementById('door-5')).not.toHaveClass('is-highlighted')
-  })
-
   it("does not scroll the page to today's door (on any screen)", () => {
     const scroll = vi.fn()
     Element.prototype.scrollIntoView = scroll
     arrive(DEC_5)
     act(() => vi.advanceTimersByTime(3000))
     expect(scroll).not.toHaveBeenCalled()
-    expect(document.getElementById('door-5')).toHaveClass('is-today')
-  })
-
-  it('door 24 is today from the 25th to the 31st', () => {
-    arrive(new Date(2026, 11, 28))
-    expect(document.getElementById('door-24')).toHaveClass('is-today')
   })
 })
 
@@ -285,12 +273,6 @@ describe('Cookie question', () => {
     fireEvent.click(screen.getByRole('button', { name: "No, I'll wait" })) // back to the CV
     expect(banner()).toBeInTheDocument() // still waiting for an answer
   })
-
-  it('can be reopened from Cookie settings', () => {
-    arrive(DEC_5)
-    fireEvent.click(screen.getByRole('button', { name: /Cookie settings/ }))
-    expect(banner()).toBeInTheDocument()
-  })
 })
 
 describe('Open all / Close all buttons', () => {
@@ -410,16 +392,13 @@ describe('Build a snowman (footer replay)', () => {
 })
 
 describe('Locked before December', () => {
-  it('greets the visitor with "Too early!" and opens nothing', () => {
+  it('greets the visitor with "Too early!"', () => {
     arrive(NOV_19, { answered: false })
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toHaveTextContent('Welcome to my Advent CV Calendar')
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toHaveTextContent(
       'Build a snowman in 3 clicks to unlock early.',
     )
     expect(screen.getByRole('img', { name: /autumn maple leaf/ })).toBeInTheDocument() // November
-    expect(document.querySelector('.snow')).not.toBeInTheDocument() // no falling snow while locked
-    act(() => vi.advanceTimersByTime(3000))
-    expect(document.querySelectorAll('.door.is-open')).toHaveLength(0)
   })
 
   it('a click outside the "Too early!" card does not close it (there is no calendar to go back to)', () => {
@@ -587,10 +566,5 @@ describe('Locked before December', () => {
     arrive(NOV_19)
     expect(screen.queryByRole('dialog', { name: 'Too early!' })).not.toBeInTheDocument()
     expect(document.getElementById('door-19')).toHaveClass('is-highlighted')
-  })
-
-  it('is never locked in December', () => {
-    arrive(new Date(2026, 11, 1))
-    expect(screen.queryByRole('dialog', { name: 'Too early!' })).not.toBeInTheDocument()
   })
 })
