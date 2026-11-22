@@ -1,11 +1,6 @@
+import { useLayoutEffect, useRef } from 'react'
 import type { Door as DoorData } from '../data/doors'
 import { HireMeButtons } from './HireMeButtons'
-
-const tagColor: Record<NonNullable<DoorData['category']>, string> = {
-  Skill: 'var(--tag-skill)',
-  Achievement: 'var(--tag-achievement)',
-  Fact: 'var(--tag-fact)',
-}
 
 interface Props {
   door: DoorData
@@ -36,6 +31,14 @@ export function Door({
   onShowCv,
 }: Props) {
   const panelId = `door-${door.id}-content`
+  // While closed, the card is inert: nothing on it can be focused, clicked or read out. This
+  // applies the moment the door closes, unlike visibility:hidden, which waits for the swing to
+  // finish (Tab could otherwise land on door 24's buttons for 0.7s). React 18 doesn't pass
+  // `inert` through as a prop, so it's set on the element.
+  const backRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    if (backRef.current) backRef.current.inert = !open
+  }, [open])
   const sizeClass = door.size ? `door--${door.size}` : ''
   const big = door.size === 'big'
   // Bigger doors have room for more, so they show part of the "Read more" content inline.
@@ -47,8 +50,8 @@ export function Door({
         : door.size === 'wide'
           ? door.details.slice(0, 2)
           : []
-  const inlineTags = door.size === 'big' || door.size === 'tall' ? door.tags : []
-  const everythingShown = inlineDetails.length === door.details.length && inlineTags.length === door.tags.length
+  // The tools line lives only in the "Read more" card, so a door with tools always offers it
+  const everythingShown = inlineDetails.length === door.details.length && !door.tools?.length
 
   return (
     <li
@@ -70,6 +73,8 @@ export function Door({
             // shift the star field per door so no two skies look the same
             ['--sx' as string]: `${(door.id * 37) % 100}px`,
             ['--sy' as string]: `${(door.id * 53) % 100}px`,
+            // a small, different tilt per door number (-1.2° to 1.2°), like slightly uneven printing
+            ['--tilt' as string]: `${(((door.id * 7) % 5) - 2) * 0.6}deg`,
           }}
           aria-hidden="true"
         >
@@ -93,21 +98,12 @@ export function Door({
         {/* When open, the card sits above the click area: clicking the card closes the door,
             clicking "Read more" opens the details. Keyboard users use the door button. */}
         <div
+          ref={backRef}
           id={panelId}
           className="door__face door__back flex flex-col gap-1.5 p-3 sm:p-4"
           aria-hidden={!open}
           onClick={() => open && onToggle(door.id)}
         >
-          {door.category && (
-            <div className="flex justify-end">
-              <span
-                className="rounded-full border px-2 py-0.5 text-[0.7rem] font-semibold tracking-wide uppercase"
-                style={{ color: tagColor[door.category], borderColor: tagColor[door.category] }}
-              >
-                {door.category}
-              </span>
-            </div>
-          )}
           {door.photo && (
             <img
               src={`${import.meta.env.BASE_URL}${door.photo}`}
@@ -116,42 +112,35 @@ export function Door({
               className="door__photo mx-auto mt-1 mb-4 rounded-full object-cover"
             />
           )}
-          <h3 className={`mt-1 font-display font-bold leading-tight ${big ? 'text-xl sm:text-2xl' : 'text-base'}`}>
+          <h3 className={`mt-1 font-display font-bold leading-tight ${big ? 'text-xl sm:text-2xl' : 'text-xl'}`}>
             {door.headline}
           </h3>
           <p className={`mt-1.5 leading-snug text-[var(--ink-2)] ${big ? 'text-sm sm:text-base' : 'text-sm'}`}>
             {door.description}
           </p>
           {door.highlight && <p className="door__highlight my-2">{door.highlight}</p>}
-          {door.hireMe && open && (
+          {/* Everything on the card is rendered even while the door is closed (the card is then
+              hidden and aria-hidden), so the door already has its open height and opening it
+              never pushes the rows below down */}
+          {door.hireMe && (
             <div className="pt-1 pb-1">
               <HireMeButtons size="sm" onShowCv={onShowCv} />
             </div>
           )}
           {inlineDetails.length > 0 && (
-            <ul className="door__details space-y-1 text-sm leading-snug">
+            <ul role="list" className="door__details space-y-1 text-sm leading-snug">
               {inlineDetails.map((d) => (
-                <li key={d} className="flex gap-1.5">
-                  <span className="text-[var(--gold)]" aria-hidden="true">
-                    ✦
-                  </span>
+                <li key={d} className="flex gap-2">
+                  <span className="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--gold)]" aria-hidden="true" />
                   <span>{d}</span>
                 </li>
               ))}
             </ul>
           )}
-          {inlineTags.length > 0 && (
-            <ul className="flex flex-wrap gap-1.5 pt-1" aria-label="Tools and topics">
-              {inlineTags.map((t) => (
-                <li key={t} className="door__tag rounded-full border px-2 py-0.5 text-xs font-medium">
-                  {t}
-                </li>
-              ))}
-            </ul>
-          )}
-          {open && !everythingShown && (
+          {!everythingShown && (
             <button
               type="button"
+              tabIndex={open ? undefined : -1}
               className="door__more"
               onClick={(e) => {
                 e.stopPropagation() // don't also close the door
@@ -159,7 +148,7 @@ export function Door({
               }}
               aria-label={`Read more about ${door.headline}`}
             >
-              Read more{' '}
+              <span className="door__more-label">Read more</span>
               <span className="door__more-tree" aria-hidden="true">
                 🎄
               </span>

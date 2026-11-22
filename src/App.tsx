@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { doorById, doors, gridOrder } from './data/doors'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { displayOrder, doorById, doors } from './data/doors'
 import { cv } from './data/cv'
 import { todayDoorId } from './data/today'
 import { useOpenedDoors } from './hooks/useOpenedDoors'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import { useMediaQuery } from './hooks/useMediaQuery'
 import { Header } from './components/Header'
 import { Calendar } from './components/Calendar'
 import { CvView } from './components/CvView'
@@ -18,7 +19,11 @@ import { readConsent, startAnalytics, stopAnalytics, writeConsent, type Consent 
 
 export default function App() {
   const reducedMotion = useReducedMotion()
-  const { opened, toggle, openAll, closeAll } = useOpenedDoors(gridOrder, reducedMotion ? 0 : 60)
+  const [todayId] = useState(() => todayDoorId())
+  // "Open all doors" cascades in the order the doors are on screen (the same order Calendar shows)
+  const phone = useMediaQuery('(max-width: 639px)')
+  const order = useMemo(() => displayOrder(phone, todayId), [phone, todayId])
+  const { opened, opening, toggle, openAll, closeAll } = useOpenedDoors(order, reducedMotion ? 0 : 60)
   const [showCv, setShowCv] = useState(false)
   const [detailId, setDetailId] = useState<number | null>(null)
   const [confetti, setConfetti] = useState(false)
@@ -30,7 +35,6 @@ export default function App() {
     setMutedState(!muted)
     if (muted) setTimeout(() => jingle(), 0) // unmuting plays a little preview
   }
-  const [todayId] = useState(() => todayDoorId())
 
   // Before December the calendar is locked until the visitor builds the snowman (or it's December).
   const [locked, setLocked] = useState(() => isLocked())
@@ -211,6 +215,7 @@ export default function App() {
       >
         <Header
           openedCount={shownOpen.size}
+          opening={opening}
           total={total}
           muted={muted}
           onToggleMuted={toggleMuted}
@@ -240,8 +245,8 @@ export default function App() {
           <p>Made with React, TypeScript and an unreasonable amount of 🎄 in Gothenburg.</p>
           <div className="flex flex-wrap items-center gap-4">
             {!locked && (
-              <button type="button" onClick={() => setShowReplay(true)} className="btn btn--secondary btn--sm">
-                ⛄ Build a snowman
+              <button type="button" onClick={() => setShowReplay(true)} className="btn btn--secondary btn--sm btn--snow">
+                Build a snowman
               </button>
             )}
             <button
@@ -250,11 +255,11 @@ export default function App() {
                 setCookieKey((k) => k + 1)
                 setShowCookie(true)
               }}
-              className="underline underline-offset-2"
+              className="underline underline-offset-2 transition-colors duration-150 hover:text-[var(--gold)]"
             >
               Cookie settings
             </button>
-            <a href={cv.linkedin} target="_blank" rel="noreferrer" className="underline underline-offset-2">
+            <a href={cv.linkedin} target="_blank" rel="noreferrer" className="underline underline-offset-2 transition-colors duration-150 hover:text-[var(--gold)]">
               Say hi on LinkedIn
             </a>
           </div>
@@ -266,7 +271,6 @@ export default function App() {
       {detailId !== null && (
         <DoorDetails
           door={doorById.get(detailId)!}
-          today={detailId === todayId}
           onClose={closeDetails}
           onShowCv={() => {
             setDetailId(null)

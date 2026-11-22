@@ -121,12 +121,12 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
         role="dialog"
         aria-modal="true"
         aria-labelledby="lock-title"
-        className="door-details relative z-10 max-h-[94vh] w-full max-w-md overflow-y-auto rounded-3xl p-6 text-center sm:max-w-lg sm:p-8"
+        className="door-details relative z-10 max-h-[94vh] w-full max-w-md overflow-y-auto rounded-[var(--radius-card)] p-6 text-center sm:max-w-lg sm:p-8"
       >
         {phase === 'intro' && (
           <>
             {/* balanced lines, and the tree stays with "Calendar" so it's never alone on a line */}
-            <p className="eyebrow mb-4 [text-wrap:balance]">Welcome to my Advent CV Calendar&nbsp;🎄</p>
+            <p className="eyebrow mb-4 [text-wrap:balance]">Welcome to my Advent CV Calendar</p>
             <SeasonIcon season={season} className="mx-auto" />
             <h2 id="lock-title" className="mt-3 font-display text-3xl font-bold text-[var(--gold)]">
               Too early!
@@ -150,7 +150,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
                 }}
                 className="btn btn--primary"
               >
-                Yes, let's do it! ⛄
+                Yes, let's do it!
               </button>
             </div>
           </>
@@ -228,7 +228,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
             <img
               src={`${import.meta.env.BASE_URL}snowman.jpg`}
               alt="The finished snowman: top hat, red striped scarf and carrot nose, in a winter forest framed by holly"
-              className="mx-auto w-full max-w-[18rem] rounded-2xl"
+              className="mx-auto w-full max-w-[18rem] rounded-[var(--radius-card)]"
             />
             <h2 id="lock-title" className="mt-4 font-display text-2xl font-bold text-[var(--gold)]">
               {replay ? 'What a snowman!' : "You've built your way in!"}
@@ -239,7 +239,7 @@ export function SnowmanGame({ onWait, onUnlock, onBuilt, mode = 'unlock' }: Prop
               </p>
             )}
             <button ref={openRef} type="button" onClick={onUnlock} className="btn btn--primary mt-5 w-full">
-              {replay ? 'Back to the calendar' : '🎁 Open the calendar'}
+              {replay ? 'Back to the calendar' : 'Open the calendar'}
             </button>
           </>
         )}
@@ -276,7 +276,7 @@ function SnowmanSteps({
   return (
     <div
       ref={dropRef}
-      className={`snowman-steps relative mx-auto mt-4 aspect-square w-full max-w-[18rem] overflow-hidden rounded-2xl ${dropActive ? 'is-drop-target' : ''}`}
+      className={`snowman-steps relative mx-auto mt-4 aspect-square w-full max-w-[18rem] overflow-hidden rounded-[var(--radius-card)] ${dropActive ? 'is-drop-target' : ''}`}
       role="img"
       aria-label={current.alt}
     >

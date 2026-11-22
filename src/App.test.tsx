@@ -214,7 +214,7 @@ describe('Cookie question', () => {
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toBeInTheDocument()
     expect(banner()).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     fireEvent.click(screen.getByRole('button', { name: 'Roll some snow' }))
     fireEvent.click(screen.getByRole('button', { name: 'Find buttons' }))
     fireEvent.click(screen.getByRole('button', { name: 'Dress him up' }))
@@ -310,6 +310,24 @@ describe('Open all / Close all buttons', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close all doors' }))
     expect(screen.queryByRole('button', { name: 'Close all doors' })).not.toBeInTheDocument()
   })
+
+  it('flips Open all to Close all at once, while the doors are still cascading open', () => {
+    arrive(DEC_5)
+    const openAll = screen.getByRole('button', { name: /Open all doors/ })
+    openAll.focus()
+    fireEvent.click(openAll)
+    act(() => vi.advanceTimersByTime(100)) // only the first doors are open so far
+    expect(screen.getAllByRole('button', { name: /, closed$/ }).length).toBeGreaterThan(0)
+    expect(screen.queryByRole('button', { name: /Open all doors/ })).not.toBeInTheDocument()
+    const closeAll = screen.getByRole('button', { name: 'Close all doors' })
+    expect(closeAll).toHaveFocus()
+
+    fireEvent.click(closeAll) // stops the cascade mid-way
+    expect(screen.queryByRole('button', { name: 'Close all doors' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Open all doors/ })).toHaveFocus()
+    act(() => vi.advanceTimersByTime(3000))
+    expect(screen.queryByRole('button', { name: 'Close all doors' })).not.toBeInTheDocument()
+  })
 })
 
 describe('Door 24 "Full CV" button', () => {
@@ -332,7 +350,6 @@ describe('Read more', () => {
     openDoorCard(10, 'Stripe payments, end to end')
     const dialog = screen.getByRole('dialog', { name: 'Stripe payments, end to end' })
     expect(dialog).toHaveTextContent('Set up automated Stripe Tax collection.')
-    expect(dialog).toHaveTextContent('Today')
     expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus()
     // the door stays open behind the card
     expect(screen.getByRole('button', { name: 'Door 10 (today), open', hidden: true })).toHaveAttribute(
@@ -349,7 +366,7 @@ describe('Build a snowman (footer replay)', () => {
   it('replays the game straight from the building step and changes nothing', () => {
     arrive(DEC_5)
     fireEvent.click(screen.getByRole('button', { name: 'Door 5 (today), closed' })) // one door open
-    fireEvent.click(screen.getByRole('button', { name: '⛄ Build a snowman' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Build a snowman' }))
     expect(screen.queryByRole('dialog', { name: 'Too early!' })).not.toBeInTheDocument()
     expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toBeInTheDocument()
 
@@ -367,14 +384,14 @@ describe('Build a snowman (footer replay)', () => {
 
   it('"Back" on the first step closes the replay', () => {
     arrive(DEC_5)
-    fireEvent.click(screen.getByRole('button', { name: '⛄ Build a snowman' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Build a snowman' }))
     fireEvent.click(screen.getByRole('button', { name: 'Back' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('is not offered while the calendar is locked (the lockout already has the game)', () => {
     arrive(NOV_19)
-    expect(screen.queryByRole('button', { name: '⛄ Build a snowman', hidden: true })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Build a snowman', hidden: true })).not.toBeInTheDocument()
   })
 })
 
@@ -421,7 +438,7 @@ describe('Locked before December', () => {
 
   it("building the snowman in 3 clicks unlocks the calendar for good and highlights today's door", () => {
     arrive(NOV_19)
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toBeInTheDocument()
 
     expect(screen.getByRole('img', { name: /snowy winter forest/ })).toBeInTheDocument()
@@ -450,7 +467,7 @@ describe('Locked before December', () => {
     expect(document.querySelectorAll('.door.is-open')).toHaveLength(0)
     expect(screen.getByText(/\/ 24 opened/, { ignore: false }).textContent).toMatch(/^0 \/ 24 opened/)
 
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     fireEvent.click(screen.getByRole('button', { name: 'Roll some snow' }))
     fireEvent.click(screen.getByRole('button', { name: 'Find buttons' }))
     fireEvent.click(screen.getByRole('button', { name: 'Dress him up' }))
@@ -464,7 +481,7 @@ describe('Locked before December', () => {
 
   it('tapping the picture does not build; only the pieces do', () => {
     arrive(NOV_19)
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     expect(screen.getByRole('dialog', { name: 'Build a snowman' })).toHaveTextContent(
       'Step 1 of 3 · drag the glowing piece onto the picture, or tap it',
     )
@@ -478,19 +495,19 @@ describe('Locked before December', () => {
 
   it('shows a 👆 drag hint on step 1 that goes away on the first touch and does not come back', () => {
     arrive(NOV_19)
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     expect(document.querySelector('.drag-hint')).toBeInTheDocument()
     fireEvent.pointerDown(window)
     expect(document.querySelector('.drag-hint')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Back' }))
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     expect(document.querySelector('.drag-hint')).not.toBeInTheDocument()
   })
 
   it('the tray shows done, current and upcoming pieces; only the current one can be used', () => {
     arrive(NOV_19)
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     expect(screen.getByRole('button', { name: 'Roll some snow' })).toBeEnabled()
     expect(screen.getByRole('button', { name: 'Find buttons' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Dress him up' })).toBeDisabled()
@@ -504,7 +521,7 @@ describe('Locked before December', () => {
 
   it('dragging the glowing piece onto the picture builds the next step; dropping elsewhere does nothing', () => {
     arrive(NOV_19)
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     const picture = screen.getByRole('img', { name: /snowy winter forest/ })
     picture.getBoundingClientRect = () =>
       ({ left: 0, top: 0, right: 300, bottom: 300, width: 300, height: 300, x: 0, y: 0, toJSON() {} }) as DOMRect
@@ -527,7 +544,7 @@ describe('Locked before December', () => {
 
   it('"Back" goes one step back, and from the first step back to "Too early!"', () => {
     arrive(NOV_19)
-    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it! ⛄" }))
+    fireEvent.click(screen.getByRole('button', { name: "Yes, let's do it!" }))
     fireEvent.click(screen.getByRole('button', { name: 'Roll some snow' }))
     fireEvent.click(screen.getByRole('button', { name: 'Find buttons' }))
     expect(screen.getByRole('img', { name: /three coal buttons/ })).toBeInTheDocument()

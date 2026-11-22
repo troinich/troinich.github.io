@@ -85,7 +85,7 @@ export function CookieBanner({ reducedMotion, onAnswer, onDismiss, onDone }: Pro
             <img
               src={`${import.meta.env.BASE_URL}marshmallow-bath.jpg`}
               alt="The gingerbread man relaxing in a bathtub full of marshmallows"
-              className={`h-24 w-24 shrink-0 rounded-xl object-cover ${reducedMotion ? '' : 'cookie-bath'}`}
+              className={`h-24 w-24 shrink-0 rounded-[var(--radius-control)] object-cover ${reducedMotion ? '' : 'cookie-bath'}`}
             />
           </div>
         ) : (

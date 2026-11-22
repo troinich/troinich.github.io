@@ -23,10 +23,13 @@ function save(opened: Set<number>) {
 
 /**
  * Tracks which doors are open and remembers them on this device.
- * `openAll` cascades through `order` with `staggerMs` between doors.
+ * `openAll` cascades through `order` with `staggerMs` between doors; `opening` is true until the
+ * last door of the cascade is open (or `closeAll` stops it), so the UI can treat the calendar as
+ * fully open straight away instead of waiting for the count to reach the total.
  */
 export function useOpenedDoors(order: number[], staggerMs = 60) {
   const [opened, setOpened] = useState<Set<number>>(load)
+  const [opening, setOpening] = useState(false)
   const timers = useRef<number[]>([])
 
   useEffect(() => save(opened), [opened])
@@ -56,17 +59,22 @@ export function useOpenedDoors(order: number[], staggerMs = 60) {
       setOpened(new Set(order))
       return
     }
+    setOpening(true)
     order.forEach((id, i) => {
       timers.current.push(
-        window.setTimeout(() => setOpened((prev) => (prev.has(id) ? prev : new Set(prev).add(id))), i * staggerMs),
+        window.setTimeout(() => {
+          setOpened((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
+          if (i === order.length - 1) setOpening(false)
+        }, i * staggerMs),
       )
     })
   }, [order, staggerMs])
 
   const closeAll = useCallback(() => {
     clearTimers()
+    setOpening(false)
     setOpened(new Set())
   }, [])
 
-  return { opened, toggle, open, openAll, closeAll }
+  return { opened, opening, toggle, open, openAll, closeAll }
 }

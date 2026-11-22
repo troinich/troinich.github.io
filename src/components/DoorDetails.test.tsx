@@ -19,13 +19,11 @@ describe('Snow', () => {
 })
 
 describe('Door 24', () => {
-  it('is the "hire me" door: headline, notice period, photo, contact buttons, no category, no email address in the page', () => {
+  it('is the "hire me" door: headline, notice period, photo, contact buttons, no email address in the page', () => {
     const { container } = render(<DoorDetails door={doorById.get(24)!} onClose={() => {}} onShowCv={() => {}} />)
     const dialog = container.querySelector('[role="dialog"]')!
     expect(dialog).toHaveTextContent('All I want for Christmas is a new challenge')
     expect(dialog).toHaveTextContent('Notice period: 1 month')
-    expect(dialog).toHaveTextContent('Door 24')
-    expect(dialog).not.toHaveTextContent('Achievement')
     expect(dialog.querySelector('img[alt="Natalia Troinich"]')).toHaveAttribute('src', '/me.jpg')
     expect([...dialog.querySelectorAll('button')].some((b) => b.textContent?.includes('Email me'))).toBe(true)
     expect([...dialog.querySelectorAll('button')].some((b) => b.textContent === 'Full CV')).toBe(true)

@@ -13,7 +13,7 @@ export const cv = {
   linkedin: 'https://www.linkedin.com/in/troinicz',
   pdf: `${import.meta.env.BASE_URL}Natalia_Troinich_CV_Fullstack.pdf`,
   profile: [
-    'Fullstack web engineer with 7+ years building production web applications in TypeScript, React and JavaScript, with hands-on backend development in C# (.NET) and Node.js, on a B2B SaaS platform used in 10+ European markets. I own features end to end, from technical design and API design through implementation, automated testing and release, and I care deeply about user-friendly, accessible web applications and a great developer experience.',
+    'Fullstack web engineer with 7+ years building production web applications in TypeScript, React and JavaScript, with hands-on backend development in C# (.NET) and Node.js, on a B2B SaaS platform used in 10+ markets. I own features end to end, from technical design and API design through implementation, automated testing and release, and I care deeply about user-friendly, accessible web applications and a great developer experience.',
     "I improve how engineering teams work. I introduced type-safe API clients generated from OpenAPI specs, delivered our JavaScript-to-TypeScript migration, and drive my team's adoption of AI agents with Claude Code, writing the project instructions, custom skills and workflows that keep AI-assisted work aligned with our architecture and engineering standards. I share knowledge, keep the team up to date on new tools, and collaborate closely with product, design, architects and backend engineers.",
     "My background as a tax attorney gives me an edge with complex business rules, and I pair it with an engineer's focus on clean, maintainable software that solves real user problems.",
   ],

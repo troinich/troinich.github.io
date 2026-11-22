@@ -62,7 +62,7 @@ export function CvView({ onClose }: { onClose: () => void }) {
           </a>
         </div>
 
-        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 sm:p-10">
+        <div className="rounded-[var(--radius-card)] border border-[var(--line)] bg-[var(--surface)] p-5 sm:p-10">
           <header className="text-center">
             <h2 id="cv-title" className="font-display text-3xl font-bold sm:text-4xl">
               {cv.name}

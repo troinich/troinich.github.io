@@ -4,7 +4,7 @@ import { HireMeButtons } from './HireMeButtons'
 
 /** First sentence of the CV profile, shown under the zoomed photo. */
 const INTRO =
-  'Fullstack web engineer with 7+ years building production web applications in TypeScript, React and JavaScript, with hands-on backend development in C# (.NET) and Node.js, on a B2B SaaS platform used in 10+ European markets.'
+  'Fullstack web engineer with 7+ years building production web applications in TypeScript, React and JavaScript, with hands-on backend development in C# (.NET) and Node.js, on a B2B SaaS platform used in 10+ markets.'
 
 /**
  * Full-screen view of the header photo with a short intro and contact buttons.
@@ -25,7 +25,7 @@ export function PhotoZoom({ onClose, onShowCv }: { onClose: () => void; onShowCv
         role="dialog"
         aria-modal="true"
         aria-label="Photo of Natalia Troinich"
-        className="photo-zoom relative flex max-h-[92vh] w-fit max-w-[min(90vw,34rem)] flex-col overflow-y-auto rounded-3xl border-2 border-[var(--gold)] bg-[var(--surface)] shadow-[0_0_60px_-10px_rgba(232,192,106,0.6)]"
+        className="photo-zoom relative flex max-h-[92vh] w-fit max-w-[min(90vw,34rem)] flex-col overflow-y-auto rounded-[var(--radius-card)] border-2 border-[var(--gold)] bg-[var(--surface)] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
       >
         <img
           src={`${import.meta.env.BASE_URL}me-large.jpg`}

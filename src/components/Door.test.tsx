@@ -18,11 +18,11 @@ describe('Door', () => {
     render(<Harness />)
     const button = screen.getByRole('button', { name: 'Door 7, closed' })
     expect(button).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('heading', { name: 'Happy 7' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: '7+ years in production' })).not.toBeInTheDocument()
 
     await userEvent.click(button)
     expect(screen.getByRole('button', { name: 'Door 7, open' })).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('heading', { name: 'Happy 7' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '7+ years in production' })).toBeInTheDocument()
   })
 
   it('toggles with Enter and Space', async () => {

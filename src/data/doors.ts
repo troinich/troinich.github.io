@@ -1,16 +1,11 @@
-export type Category = 'Skill' | 'Achievement' | 'Fact'
-
 export interface Door {
   id: number
-  /** Skill, Achievement or Fact; leave out to show no tag. */
-  category?: Category
-  emoji: string
   headline: string
   description: string
   /** Longer bullet points shown in the "Read more" card. */
   details: string[]
-  /** Tools and topics shown as small tags in the "Read more" card. */
-  tags: string[]
+  /** Tools used (no soft skills), shown as one plain "Tools:" line in the "Read more" card; leave out if none. */
+  tools?: string[]
   /** Optional photo (file in public/), shown on the open door and in its card. */
   photo?: string
   /** Optional short highlighted fact, e.g. availability. */
@@ -24,337 +19,273 @@ export interface Door {
 export const doors: Door[] = [
   {
     id: 1,
-    category: 'Fact',
-    emoji: '⚖️',
-    headline: 'Plot twist: ex-lawyer',
+    headline: 'Fullstack, from React to .NET',
     description:
-      'Six years as a tax attorney in Kyiv (2012–2018) before switching to software. Both have strict rules; only one has a compiler.',
+      'I build web applications across the whole stack: React and TypeScript in the browser, C# and ASP.NET Core on the server.',
     details: [
-      'Attorney (2012–2015), then Senior Attorney (2015–2018) at Oleksandr Peremezhko & Partners, Kyiv.',
-      'Moved to Gothenburg and retrained as a front-end developer at Medieinstitutet (2018–2020).',
-      'Joined Adfenix (now Realforce) as a Junior Frontend Engineer in 2019.',
+      'Frontend: React, TypeScript, Tailwind CSS, React Query, react-hook-form and Vite.',
+      'Backend: REST APIs in C# (ASP.NET Core) with EF Core, plus Node.js.',
+      'Comfortable working anywhere between the UI, the API contract and the database.',
     ],
-    tags: ['Tax law', 'Litigation', 'Career change'],
+    tools: ['TypeScript', 'React', 'C#', 'ASP.NET Core', 'EF Core', 'Node.js'],
     size: 'wide',
   },
   {
     id: 2,
-    category: 'Achievement',
-    emoji: '🏛️',
-    headline: 'Objection! Sustained.',
-    description: 'Represented clients in court in tax and commercial disputes worth over $5 million.',
+    headline: 'Court cases worth over $5 million',
+    description:
+      'For six years I was a tax attorney in Kyiv, representing clients in court in tax and commercial disputes worth over $5 million.',
     details: [
-      'Litigated tax and commercial disputes.',
-      'Represented clients in court in disputes worth over $5 million.',
+      'Attorney (2012–2015), then Senior Attorney (2015–2018), at Oleksandr Peremezhko & Partners, Kyiv.',
+      "Led the firm's tax practice and oversaw all of its tax cases.",
       'Supported clients on site and remotely during tax inspections.',
+      'Moved to Gothenburg in 2018 and switched to software.',
     ],
-    tags: ['Litigation', 'Negotiation', 'Risk assessment'],
   },
   {
     id: 3,
-    category: 'Fact',
-    emoji: '📚',
-    headline: 'Led a tax law practice',
+    headline: 'Junior to Software Engineer',
     description:
-      "As Senior Attorney, led the firm's tax practice and oversaw all of its tax cases, advising SMEs and large enterprises.",
+      'I joined Adfenix (now Realforce) as a Junior Frontend Engineer and grew into a fullstack Software Engineer, with more responsibility at every step.',
     details: [
-      "Led the firm's tax law practice and oversaw all of its tax cases.",
-      'Advised SMEs and large enterprises in film distribution, advertising and engineering on day-to-day tax matters.',
-      'Assessed tax risks in planned agreements and investment projects.',
-      'Advised individuals, including foreign nationals, on personal taxation.',
+      'Junior Frontend Engineer (2019–2021): feature work, API integrations and a first TypeScript migration.',
+      'Frontend Engineer (2021–2024): owned core product features and the move of the main codebase to TypeScript.',
+      'Software Engineer (2024–now): own features across frontend and backend, and drive AI adoption in the team.',
     ],
-    tags: ['Leadership', 'Tax advisory', 'Client work'],
   },
   {
     id: 4,
-    category: 'Fact',
-    emoji: '🎓',
-    headline: 'Law and code',
+    headline: 'Master of Laws, trained developer',
     description:
-      'Bachelor and Master of Laws from Taras Shevchenko National University of Kyiv, then Front-End Development at Medieinstitutet, Gothenburg (2018–2020).',
+      'I hold a Master of Laws (LL.M.) from Taras Shevchenko National University of Kyiv and studied Front-End Development in Gothenburg, writing production code before I graduated.',
     details: [
-      'Bachelor of Laws (2005–2009) and Master of Laws (2009–2011), Taras Shevchenko National University of Kyiv.',
+      'Master of Laws, LL.M. (2009–2011) and Bachelor of Laws (2005–2009), Taras Shevchenko National University of Kyiv.',
       'Front-End Development, Medieinstitutet, Gothenburg (2018–2020).',
       'Final project: a complete full-stack web application with a Node.js backend.',
+      'Designed and built this calendar: React, TypeScript, Tailwind CSS and Vite, tested and deployed on every push.',
     ],
-    tags: ['Law', 'Front-end development', 'Node.js'],
+    tools: ['Node.js', 'React', 'TypeScript', 'Tailwind CSS', 'Vite'],
     size: 'tall',
   },
   {
     id: 5,
-    category: 'Skill',
-    emoji: '🪄',
-    headline: 'TypeScript migration',
+    headline: 'JavaScript to TypeScript',
     description:
-      'Delivered the migration of the main production codebase from JavaScript to TypeScript, improving type safety and maintainability for the whole team.',
+      'I delivered the migration of our main production codebase from JavaScript to TypeScript, making it safer for the whole team to change.',
     details: [
-      'Migrated the main production codebase from JavaScript to TypeScript.',
+      'Migrated the main production codebase to TypeScript, improving type safety and maintainability for the whole team.',
       'Earlier, migrated an embeddable marketing widget (Preact) to TypeScript, making it easier and safer to extend.',
-      'Improved type safety and maintainability for the whole team.',
     ],
-    tags: ['TypeScript', 'JavaScript', 'Preact'],
+    tools: ['TypeScript', 'JavaScript', 'Preact'],
   },
   {
     id: 6,
-    category: 'Skill',
-    emoji: '⚛️',
-    headline: 'React at scale',
-    description: 'Builds the main customer-facing app in React and TypeScript, with reusable, accessible components.',
+    headline: 'React and TypeScript',
+    description:
+      'I build features in our main customer-facing React and TypeScript app, with reusable, accessible components.',
     details: [
-      'Builds features across the main customer-facing React app.',
-      'Created reusable, accessible React components for the new design system.',
-      'Works with React Query, react-hook-form and Vite.',
+      'Server state with React Query, forms with react-hook-form, builds with Vite.',
+      'Work on performance optimisation and state management.',
     ],
-    tags: ['React', 'TypeScript', 'React Query', 'react-hook-form', 'Vite'],
+    tools: ['React', 'TypeScript', 'React Query', 'react-hook-form', 'Vite'],
   },
   {
     id: 7,
-    category: 'Fact',
-    emoji: '🎂',
-    headline: 'Happy 7',
-    description: '7+ years building production web applications, owning features from technical design to release.',
+    headline: '7+ years in production',
+    description:
+      'I have built production web applications for more than seven years, and I own features end to end: technical design, API design, implementation, testing and release.',
     details: [
-      'Frontend Engineer and Software Engineer at Realforce (former Adfenix) since 2019.',
-      'Owns features end to end: technical design, API design, implementation, automated testing and release.',
-      'Cares about user-friendly, accessible web applications and a great developer experience.',
+      'At Realforce (formerly Adfenix) since 2019: Junior Frontend Engineer, Frontend Engineer and, since 2024, Software Engineer (fullstack).',
+      'Shipped features such as the Stripe checkout, the B2C self-service checkout and the Meta and Google marketing tool.',
+      'Before building: technical design and API contracts, checked with architects and backend engineers.',
+      'After building: automated tests in CI/CD, then Sentry to watch the feature in production.',
+      'Care about user-friendly, accessible web applications and a great developer experience.',
     ],
-    tags: ['Fullstack', 'End-to-end ownership'],
     size: 'big',
   },
   {
     id: 8,
-    category: 'Skill',
-    emoji: '🎹',
     headline: 'C# and .NET backend',
-    description:
-      'Builds and maintains REST APIs in C# / ASP.NET Core across several services, from endpoint design and validation to EF Core data access.',
+    description: 'I build and maintain REST APIs in C# and ASP.NET Core across several backend services.',
     details: [
-      'Builds and maintains REST APIs in C# (ASP.NET Core) across several services.',
-      'Covers endpoint design, request validation, EF Core domain models and data access.',
-      'Built secure server-side payment validation in .NET.',
+      'Build endpoints, request validation, EF Core domain models and data access.',
+      'Also hands-on with Node.js on the backend.',
     ],
-    tags: ['C#', 'ASP.NET Core', 'EF Core', 'REST'],
+    tools: ['C#', 'ASP.NET Core', 'EF Core', 'Node.js'],
   },
   {
     id: 9,
-    category: 'Skill',
-    emoji: '🔌',
     headline: 'API design',
     description:
-      'Designs the API contracts behind features together with backend engineers: request and response models, validation rules and error handling.',
+      'I design API contracts with backend engineers: request and response models, validation rules and error handling.',
     details: [
-      'Shaped the API contracts behind the checkout and back-office tools.',
-      'Designs REST endpoints in ASP.NET Core, from routes and request validation to clear error responses.',
-      'Maps backend errors, such as Stripe API errors, to clear, actionable messages for users.',
+      'Defined the API contracts behind the back-office tools.',
+      'Design REST endpoints in ASP.NET Core, from routes to clear error responses.',
     ],
-    tags: ['REST', 'API design', 'Validation', 'Error handling'],
+    tools: ['ASP.NET Core', 'REST', 'GraphQL'],
   },
   {
     id: 10,
-    category: 'Achievement',
-    emoji: '💳',
     headline: 'Stripe payments, end to end',
     description:
-      'Owns the Stripe payment features: React checkout, automated Stripe Tax and secure server-side validation in .NET. A former tax lawyer building tax collection, fittingly.',
+      'I own our Stripe payment features from technical design to release: the React checkout, automated Stripe Tax and secure server-side validation in .NET.',
     details: [
       'Led the React and TypeScript checkout using Stripe Payment and Address Elements.',
       'Set up automated Stripe Tax collection.',
       'Built secure server-side payment validation in C# (.NET).',
       'Mapped Stripe API errors to clear, actionable messages for users.',
     ],
-    tags: ['Stripe', 'Stripe Tax', 'React', 'C# / .NET'],
+    tools: ['Stripe', 'Stripe Tax', 'React', 'TypeScript', 'C# / .NET'],
     size: 'wide',
   },
   {
     id: 11,
-    category: 'Achievement',
-    emoji: '📜',
     headline: 'Type-safe API contracts',
     description:
-      'Introduced TypeScript API clients generated from OpenAPI specs, so breaking API changes are caught at compile time instead of in production.',
+      'I introduced TypeScript API clients generated from OpenAPI specs, so breaking API changes are caught at compile time, not in production.',
     details: [
       'Introduced TypeScript API clients generated from OpenAPI / Swagger specs.',
       'Keeps frontend and backend contracts in sync.',
-      'Breaking API changes are caught at compile time instead of in production.',
+      'Catches breaking API changes at compile time instead of in production.',
     ],
-    tags: ['OpenAPI', 'Swagger', 'TypeScript', 'Developer experience'],
+    tools: ['OpenAPI', 'Swagger', 'TypeScript'],
   },
   {
     id: 12,
-    category: 'Achievement',
-    emoji: '🤖',
     headline: 'AI-assisted engineering',
     description:
-      "Drives the team's adoption of Claude Code: project instructions, custom skills and workflows that keep AI-assisted work aligned with the architecture.",
+      "I lead my team's adoption of AI coding agents with Claude Code, keeping AI-assisted work in line with our architecture and engineering standards.",
     details: [
-      'Drives team-wide adoption of AI coding agents with Claude Code.',
-      'Defined workflows and wrote project instructions and custom skills.',
-      'Applies AI responsibly across planning, implementation, code review, debugging, testing and documentation.',
-      'Keeps the team up to date on new features and tools. (This calendar was built that way too.)',
+      'Defined workflows and wrote the project instructions and custom skills that keep AI-assisted work aligned with the architecture.',
+      'Apply AI responsibly across planning, implementation, code review, debugging, testing and documentation.',
+      'Keep the team up to date on new features and tools.',
+      'Built this calendar with Claude Code too.',
     ],
-    tags: ['Claude Code', 'AI agents', 'Developer tooling'],
+    tools: ['Claude Code', 'Claude.ai'],
     size: 'tall',
   },
   {
     id: 13,
-    category: 'Achievement',
-    emoji: '📣',
-    headline: 'Marketing automation',
+    headline: 'Automated ad marketing',
     description:
-      "Built the product's core self-service tool, where customers set up automated marketing across Meta and Google with targeting, budgets and validation.",
+      "I built the product's core self-service tool, where customers set up automated marketing on Meta and Google.",
     details: [
-      "Built the product's core self-service tool for automated marketing.",
-      'Customers set up campaigns across Meta and Google with targeting, budgets and validation.',
+      'Lets customers set up campaigns across Meta and Google, with targeting, budgets and validation.',
       "Used by real-estate agencies across the platform's markets.",
+      'Built in React and TypeScript.',
     ],
-    tags: ['React', 'TypeScript', 'Meta & Google Ads'],
+    tools: ['React', 'TypeScript', 'Meta Ads', 'Google Ads'],
     size: 'tall',
   },
   {
     id: 14,
-    category: 'Achievement',
-    emoji: '📱',
-    headline: 'Mobile-first checkout',
-    description:
-      'Launched a mobile-first self-service checkout, from product selection to payment, extending the platform to B2C.',
+    headline: 'From B2B to B2C',
+    description: 'I launched a mobile-first self-service checkout that extended the platform from B2B to B2C customers.',
     details: [
-      'Launched a mobile-first self-service checkout.',
-      'Covers the whole flow from product selection to payment.',
-      'Extended the platform from B2B to B2C customers.',
+      'Covers the whole flow, from product selection to payment.',
+      'Defined its API contracts together with backend engineers.',
     ],
-    tags: ['Mobile-first', 'Checkout', 'B2C'],
   },
   {
     id: 15,
-    category: 'Achievement',
-    emoji: '🦸‍♀️',
     headline: 'Back-office tools',
-    description:
-      'Built the tools internal teams use to onboard and support customers: white-labelling, ad-platform integrations, permissions and order management.',
+    description: 'I built the tools our internal teams use to onboard and support customers.',
     details: [
-      'Built the back-office tools internal teams use to onboard and support customers.',
-      'White-labelling, ad-platform integrations, permissions and order management.',
-      'Shaped the API contracts behind these tools together with backend engineers.',
+      'White-labelling and ad-platform integrations.',
+      'Permissions and order management.',
     ],
-    tags: ['Internal tools', 'Permissions', 'Integrations'],
   },
   {
     id: 16,
-    category: 'Skill',
-    emoji: '🎨',
     headline: 'Design systems and accessibility',
     description:
-      'Delivered key parts of the move to a Tailwind CSS and Catalyst design system, with accessible React components built to WCAG.',
+      'I delivered key parts of our move to a Tailwind CSS and Catalyst design system, with reusable, accessible React components.',
     details: [
       'Delivered key parts of the frontend modernisation of the main customer-facing app.',
-      'Moved to a new Tailwind CSS and Catalyst design system.',
-      'Builds reusable, accessible React components with WCAG in mind.',
+      'Build reusable, accessible React components with WCAG in mind.',
+      'Work closely with designers in Figma.',
     ],
-    tags: ['Tailwind CSS', 'Catalyst', 'Accessibility', 'WCAG'],
+    tools: ['Tailwind CSS', 'Catalyst', 'React', 'Figma'],
     size: 'wide',
   },
   {
     id: 17,
-    category: 'Skill',
-    emoji: '🕵️‍♀️',
     headline: 'Production reliability',
-    description:
-      'Uses Sentry to catch and debug production errors, and takes code reviews seriously, keeping customer-facing features reliable.',
-    details: [
-      'Uses Sentry to catch and debug production errors.',
-      'Helps keep customer-facing features reliable.',
-      'Regular code reviews across the product.',
-    ],
-    tags: ['Sentry', 'Debugging', 'Code review'],
+    description: 'I use Sentry to catch and debug production errors, keeping customer-facing features reliable.',
+    details: ['Monitor and debug production errors with Sentry.', 'Review code regularly across the product.'],
+    tools: ['Sentry'],
   },
   {
     id: 18,
-    category: 'Skill',
-    emoji: '🧪',
     headline: 'Automated testing',
-    description: 'Playwright, Cypress and Vitest, running in CI/CD for continuous delivery.',
+    description: 'I write automated tests with Playwright, Cypress and Vitest, running in CI/CD.',
     details: [
-      'Writes automated tests with Playwright, Cypress and Vitest.',
-      'Works with CI/CD and continuous delivery.',
-      'This site has a test suite too, run on every deploy.',
+      'Work with continuous delivery.',
+      'Built a test suite for this site too, run on every deploy.',
     ],
-    tags: ['Playwright', 'Cypress', 'Vitest', 'CI/CD'],
+    tools: ['Playwright', 'Cypress', 'Vitest'],
   },
   {
     id: 19,
-    category: 'Skill',
-    emoji: '🎭',
     headline: 'Unblocking the frontend',
-    description: 'Built API mocks so frontend features and tests could move ahead before backend endpoints were ready.',
+    description: 'I built API mocks so frontend features and tests could move ahead before backend endpoints were ready.',
     details: [
-      'Built API mocks so frontend features and tests could move ahead before backend endpoints were ready.',
-      'Keeps frontend work unblocked in parallel with backend development.',
+      'Kept frontend work and tests moving in parallel with backend development.',
+      'Integrated REST and GraphQL APIs into frontend components, for dynamic data and real-time UI updates.',
     ],
-    tags: ['API mocks', 'Testing'],
+    tools: ['REST', 'GraphQL'],
   },
   {
     id: 20,
-    category: 'Fact',
-    emoji: '🗺️',
-    headline: '10+ European markets',
-    description: 'Works on a B2B SaaS platform for real-estate agencies, used in more than ten European markets.',
+    headline: '10+ markets',
+    description: 'I work on a B2B SaaS platform for real-estate agencies, used in more than ten markets.',
     details: [
-      'Realforce (former Adfenix) is a marketing automation SaaS for real-estate agencies.',
-      'The platform is used in 10+ European markets.',
+      'Realforce (formerly Adfenix) is a marketing automation SaaS for real-estate agencies.',
+      'Serves both B2B and B2C customers.',
     ],
-    tags: ['B2B SaaS', 'Marketing automation'],
   },
   {
     id: 21,
-    category: 'Fact',
-    emoji: '🗣️',
     headline: 'Four languages',
-    description: 'English, Swedish, Ukrainian and Polish.',
-    details: ['English, Swedish, Ukrainian and Polish.', 'Comfortable working across cultures and markets.'],
-    tags: ['English', 'Swedish', 'Ukrainian', 'Polish'],
+    description: 'I speak English, Swedish, Ukrainian and Polish, and I live in Gothenburg, Sweden.',
+    details: [
+      'English, Swedish, Ukrainian and Polish.',
+      'Comfortable working across cultures and markets.',
+    ],
   },
   {
     id: 22,
-    category: 'Fact',
-    emoji: '⛵',
-    headline: 'Based in Gothenburg',
+    headline: 'Cross-functional by default',
     description:
-      'Gothenburg, Sweden, working in an autonomous, cross-functional team with product, design and architects.',
+      'I work in an autonomous, cross-functional team and partner with product, design and architects from scoping to release.',
     details: [
-      'Based in Gothenburg, Sweden.',
-      'Works in an autonomous, cross-functional team.',
-      'Partners with product and design from scoping to release, and validates technical decisions with architects and backend engineers.',
+      'Validate technical design and architecture decisions with architects and backend engineers.',
+      'Share knowledge across the team.',
     ],
-    tags: ['Collaboration', 'Figma', 'Knowledge sharing'],
+    tools: ['Figma'],
   },
   {
     id: 23,
-    category: 'Skill',
-    emoji: '🧾',
     headline: 'Complex business rules',
-    description:
-      'A legal background brings an edge with complex domain rules, paired with a focus on clean, maintainable software.',
+    description: 'My background as a tax attorney gives me an edge with complex business rules, such as payments and tax.',
     details: [
-      'A background as a tax attorney gives an edge with complex business rules.',
+      'Assessed tax risks in planned agreements and investment projects.',
       "Paired with an engineer's focus on clean, maintainable software that solves real user problems.",
     ],
-    tags: ['Domain modelling', 'Business rules'],
   },
   {
     id: 24,
-    emoji: '🎁',
     headline: 'All I want for Christmas is a new challenge',
     description:
-      'Fullstack engineer, former tax lawyer and AI enabler who owns features end to end. The full CV is one click away.',
+      'I am a fullstack engineer and former tax lawyer who owns features end to end and helps teams work well with AI. My full CV is one click away.',
     photo: 'me.jpg',
     highlight: 'Notice period: 1 month',
     hireMe: true,
     details: [
-      'Fullstack web engineer: TypeScript, React, C# / .NET.',
-      '7+ years in production on a B2B SaaS platform used in 10+ European markets.',
-      'Owns features end to end and improves how teams work, from type-safe APIs to AI-assisted engineering.',
+      'Fullstack: TypeScript, React and C# / .NET.',
+      '7+ years in production on a B2B SaaS platform used in 10+ markets.',
+      'Improve how teams work, from type-safe APIs to AI-assisted engineering.',
     ],
-    tags: ['Fullstack', 'TypeScript', 'React', 'C# / .NET', 'Claude Code'],
     size: 'big',
   },
 ]
@@ -381,6 +312,15 @@ export function orderWithTodayFirst(order: number[], todayId: number): number[] 
 
 /** Phones show the doors in plain order, 1–24, the same every day (today's door is highlighted in place). */
 export const phoneOrder: number[] = doors.map((d) => d.id)
+
+/**
+ * The order the doors appear on screen: plain 1–24 on phones, the shuffled calendar with today's
+ * door in the first rows on wider screens. The calendar renders this, and "Open all doors"
+ * cascades through it, so the doors open in the order you see them.
+ */
+export function displayOrder(phone: boolean, todayId: number): number[] {
+  return phone ? phoneOrder : orderWithTodayFirst(gridOrder, todayId)
+}
 
 /**
  * On phones (2 columns), the normal doors that would sit alone in a row in this order, because the

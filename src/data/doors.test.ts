@@ -11,12 +11,11 @@ describe('doors data', () => {
     expect(gridOrder).not.toEqual([...gridOrder].sort((a, b) => a - b))
   })
 
-  it('every door has a headline, a description, at least two detail points and a tag', () => {
+  it('every door has a headline, a description and at least two detail points', () => {
     for (const d of doors) {
       expect(d.headline.trim()).not.toBe('')
       expect(d.description.trim()).not.toBe('')
       expect(d.details.length).toBeGreaterThanOrEqual(2)
-      expect(d.tags.length).toBeGreaterThanOrEqual(1)
     }
   })
 })

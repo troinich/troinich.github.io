@@ -1,4 +1,4 @@
-import { doorById, gridOrder, orderWithTodayFirst, phoneFullWidth, phoneOrder } from '../data/doors'
+import { displayOrder, doorById, phoneFullWidth, phoneOrder } from '../data/doors'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 
 const phoneFull = phoneFullWidth(phoneOrder)
@@ -28,7 +28,7 @@ export function Calendar({
   // Phones: plain order 1–24, so the doors read like a list (App adds an "Open today's door" shortcut).
   // Wider screens: the shuffled advent calendar look, with today's door in the first rows.
   const phone = useMediaQuery('(max-width: 639px)')
-  const order = phone ? phoneOrder : orderWithTodayFirst(gridOrder, todayId)
+  const order = displayOrder(phone, todayId)
   const fullWidth = phone ? phoneFull : new Set<number>()
   return (
     <ul className="calendar" aria-label="Advent calendar, 24 doors">
