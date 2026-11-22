@@ -50,4 +50,4 @@ There is no linter configured. If the dev server suddenly renders without layout
 
 - Do not commit or push unless explicitly asked.
 - Never commit `_specs/` (local feature specs, git-ignored) or anything in `design/`.
-- Project slash commands live in `.claude/commands/` (`/spec`, `/commit-message`).
+- Slash commands (`/spec`, `/commit-message`) and subagents live in `.claude/commands/` and `.claude/agents/`, which are git-ignored: they stay local and are not in the repo.

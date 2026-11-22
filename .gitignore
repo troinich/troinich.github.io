@@ -10,3 +10,7 @@ _specs/
 # Original images (sources for the web copies in public/) stay local.
 # design/ also holds my original photo, which has GPS location in its metadata.
 design/
+
+# My Claude Code subagents and custom commands stay local
+.claude/agents/
+.claude/commands/
