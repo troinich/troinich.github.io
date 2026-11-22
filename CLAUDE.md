@@ -15,10 +15,11 @@ npx vitest run src/App.test.tsx  # one test file
 npx vitest run -t "Read more"    # tests whose name matches
 npm run test:e2e                 # Playwright: real-browser checks + axe, desktop and phone (builds, then vite preview on :4173)
 npm run typecheck                # tsc -b
+npm run lint                     # ESLint (typescript-eslint + react-hooks rules)
 npm run build                    # tsc -b && vite build -> dist/
 ```
 
-There is no linter configured. If the dev server suddenly renders without layout/styles (usually after a git branch switch makes Vite restart), stop and restart it; the Tailwind plugin stops processing after that restart, while the production build is unaffected.
+CI runs typecheck, lint, unit tests, build and the Playwright checks before deploying. If the dev server suddenly renders without layout/styles (usually after a git branch switch makes Vite restart), stop and restart it; the Tailwind plugin stops processing after that restart, while the production build is unaffected.
 
 ## Architecture
 

@@ -70,7 +70,7 @@ test.describe('phones', () => {
 
 test.describe('accessibility (axe)', () => {
   for (const [name, open] of [
-    ['calendar', async (_page: Page) => {}],
+    ['calendar', async () => {}],
     ['full CV', async (page: Page) => page.getByRole('button', { name: 'Show full CV' }).click()],
     ['"Too early!"', null],
   ] as const) {
