@@ -16,6 +16,7 @@ npx vitest run -t "Read more"    # tests whose name matches
 npm run test:e2e                 # Playwright: real-browser checks + axe, desktop and phone (builds, then vite preview on :4173)
 npm run typecheck                # tsc -b
 npm run lint                     # ESLint (typescript-eslint + react-hooks rules)
+npm run screenshots              # retake docs/screenshots/ for the README (builds, fixed date 10 Dec)
 npm run build                    # tsc -b && vite build -> dist/
 ```
 
