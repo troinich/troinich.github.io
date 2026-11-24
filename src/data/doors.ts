@@ -1,3 +1,5 @@
+import { cv } from './cv'
+
 export interface Door {
   id: number
   headline: string
@@ -10,7 +12,7 @@ export interface Door {
   photo?: string
   /** Optional short highlighted fact, e.g. availability. */
   highlight?: string
-  /** Show the "Email me" / "LinkedIn" call-to-action buttons (door 24). */
+  /** Show the contact buttons ("Book a call", "Email me", …) (door 24). */
   hireMe?: boolean
   /** Visual size in the grid, so the calendar looks hand-made. */
   size?: 'wide' | 'tall' | 'big'
@@ -180,7 +182,8 @@ export const doors: Door[] = [
   {
     id: 14,
     headline: 'From B2B to B2C',
-    description: 'I launched a mobile-first self-service checkout that extended the platform from B2B to B2C customers.',
+    description:
+      'I launched a mobile-first self-service checkout that extended the platform from B2B to B2C customers.',
     details: [
       'Covers the whole flow, from product selection to payment.',
       'Defined its API contracts together with backend engineers.',
@@ -190,10 +193,7 @@ export const doors: Door[] = [
     id: 15,
     headline: 'Back-office tools',
     description: 'I built the tools our internal teams use to onboard and support customers.',
-    details: [
-      'White-labelling and ad-platform integrations.',
-      'Permissions and order management.',
-    ],
+    details: ['White-labelling and ad-platform integrations.', 'Permissions and order management.'],
   },
   {
     id: 16,
@@ -219,16 +219,14 @@ export const doors: Door[] = [
     id: 18,
     headline: 'Automated testing',
     description: 'I write automated tests with Playwright, Cypress and Vitest, running in CI/CD.',
-    details: [
-      'Work with continuous delivery.',
-      'Built a test suite for this site too, run on every deploy.',
-    ],
+    details: ['Work with continuous delivery.', 'Built a test suite for this site too, run on every deploy.'],
     tools: ['Playwright', 'Cypress', 'Vitest'],
   },
   {
     id: 19,
     headline: 'Unblocking the frontend',
-    description: 'I built API mocks so frontend features and tests could move ahead before backend endpoints were ready.',
+    description:
+      'I built API mocks so frontend features and tests could move ahead before backend endpoints were ready.',
     details: [
       'Kept frontend work and tests moving in parallel with backend development.',
       'Integrated REST and GraphQL APIs into frontend components, for dynamic data and real-time UI updates.',
@@ -248,10 +246,7 @@ export const doors: Door[] = [
     id: 21,
     headline: 'Four languages',
     description: 'I speak English, Swedish, Ukrainian and Polish, and I live in Gothenburg, Sweden.',
-    details: [
-      'English, Swedish, Ukrainian and Polish.',
-      'Comfortable working across cultures and markets.',
-    ],
+    details: ['English, Swedish, Ukrainian and Polish.', 'Comfortable working across cultures and markets.'],
   },
   {
     id: 22,
@@ -267,7 +262,8 @@ export const doors: Door[] = [
   {
     id: 23,
     headline: 'Complex business rules',
-    description: 'My background as a tax attorney gives me an edge with complex business rules, such as payments and tax.',
+    description:
+      'My background as a tax attorney gives me an edge with complex business rules, such as payments and tax.',
     details: [
       'Assessed tax risks in planned agreements and investment projects.',
       "Paired with an engineer's focus on clean, maintainable software that solves real user problems.",
@@ -279,7 +275,7 @@ export const doors: Door[] = [
     description:
       'I am a fullstack engineer and former tax lawyer who owns features end to end and helps teams work well with AI. My full CV is one click away.',
     photo: 'me.webp',
-    highlight: 'Notice period: 1 month',
+    highlight: cv.availability,
     hireMe: true,
     details: [
       'Fullstack: TypeScript, React and C# / .NET.',
@@ -292,7 +288,7 @@ export const doors: Door[] = [
 
 /** Fixed shuffled order for the grid, like a real advent calendar. */
 export const gridOrder: number[] = [
-  7, 13, 2, 3, 10, 21, 4, 15, 23, 1, 9, 16, 24, 5, 20, 11, 18, 17, 12, 8, 22, 14, 6, 19,
+  7, 10, 13, 2, 3, 21, 4, 15, 23, 1, 9, 16, 24, 5, 20, 11, 18, 17, 12, 8, 22, 14, 6, 19,
 ]
 
 export const doorById = new Map(doors.map((d) => [d.id, d]))
@@ -300,12 +296,17 @@ export const doorById = new Map(doors.map((d) => [d.id, d]))
 /**
  * The grid order with today's door swapped into the place of the first door of the same size.
  * Swapping two doors of the same shape never changes how the grid packs (so no gaps appear),
- * and because the shuffled order starts with one door of each shape, today's door always ends
- * up in the first rows (1–2 on desktop, 1–3 on tablet). Phones use `phoneOrder` instead.
+ * and because the shuffled order starts with one door of each shape (big 7, wide 10, tall 13,
+ * normal 2), today's door always ends up in the first two rows on tablet and desktop; a test
+ * checks it. Phones use `phoneOrder` instead.
+ * Door 24 is the exception: the finale keeps its place in the middle of the calendar, even on its day.
  */
 export function orderWithTodayFirst(order: number[], todayId: number): number[] {
+  const FINALE = 24
+  if (todayId === FINALE) return order
   const size = (id: number) => doorById.get(id)?.size
-  const swapWith = order.find((id) => size(id) === size(todayId))
+  // door 24 is never swapped away either, even if another big door's day comes first
+  const swapWith = order.find((id) => id !== FINALE && size(id) === size(todayId))
   if (swapWith === undefined || swapWith === todayId) return order
   return order.map((id) => (id === todayId ? swapWith : id === swapWith ? todayId : id))
 }

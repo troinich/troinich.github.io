@@ -72,15 +72,29 @@ describe("today's door near the top", () => {
     }
   })
 
-  // phones don't use this order (see 'phone order' below), so only tablet and desktop are checked
-  it('leaves no gaps on any day, and puts today near the top on tablet and desktop', () => {
+  it('never moves door 24: on its day the calendar keeps its usual order', () => {
+    expect(orderWithTodayFirst(gridOrder, 24)).toEqual(gridOrder)
+  })
+
+  it('door 24 keeps its place in the middle on every day, even when another big door is today', () => {
+    const home = gridOrder.indexOf(24)
     for (let today = 1; today <= 24; today++) {
+      expect({ today, at: orderWithTodayFirst(gridOrder, today).indexOf(24) }).toEqual({ today, at: home })
+    }
+    // a shuffle where door 24 comes before the other big door (7): 7's day must not swap with 24
+    const order24First = [24, ...gridOrder.filter((id) => id !== 24)]
+    expect(orderWithTodayFirst(order24First, 7).indexOf(24)).toBe(0)
+  })
+
+  // phones don't use this order (see 'phone order' below), so only tablet and desktop are checked
+  it('leaves no gaps on any day, and puts today (1–23) near the top on tablet and desktop', () => {
+    for (let today = 1; today <= 23; today++) {
       const order = orderWithTodayFirst(gridOrder, today)
       for (const cols of [4, 6]) {
         const { empty, rowOf } = layout(order, cols)
         expect({ today, cols, empty }).toEqual({ today, cols, empty: 0 })
-        // desktop: first two rows; tablet: first three
-        const maxRow = cols === 6 ? 2 : 3
+        // tablet and desktop: never lower than the second row
+        const maxRow = 2
         expect({ today, cols, inFirstRows: rowOf.get(today)! <= maxRow }).toEqual({ today, cols, inFirstRows: true })
       }
     }

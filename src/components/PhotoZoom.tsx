@@ -40,6 +40,7 @@ export function PhotoZoom({ onClose, onShowCv }: { onClose: () => void; onShowCv
           <div className="mt-4">
             <HireMeButtons
               size="sm"
+              place="photo"
               onShowCv={() => {
                 onClose()
                 onShowCv()

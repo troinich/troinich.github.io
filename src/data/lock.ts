@@ -2,7 +2,7 @@
  * The calendar is locked outside December, unless the visitor has
  * "cheated" by building the snowman. Winning is remembered in this browser.
  */
-export const UNLOCK_KEY = 'meet-me:unlocked'
+const UNLOCK_KEY = 'meet-me:unlocked'
 
 export function isDecember(date: Date = new Date()): boolean {
   return date.getMonth() === 11
@@ -25,7 +25,7 @@ export function rememberUnlocked() {
 }
 
 /** Query parameter of the link I share with recruiters: troinich.github.io/?open */
-export const SHARE_PARAM = 'open'
+const SHARE_PARAM = 'open'
 
 /**
  * Visitors who come through my shared link (`?open`) skip the lock, so recruiters see the

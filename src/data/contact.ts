@@ -20,16 +20,16 @@ export function emailHref(): string {
   return `mailto:${address()}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(BODY)}`
 }
 
-/** Copies the email address to the clipboard. Resolves to false if the browser refuses. */
-export async function copyEmail(): Promise<boolean> {
+/** Copies text to the clipboard. Resolves to false if the browser refuses. */
+export async function copyText(text: string): Promise<boolean> {
   try {
-    await navigator.clipboard.writeText(address())
+    await navigator.clipboard.writeText(text)
     return true
   } catch {
     // older browsers / no permission: fall back to a hidden text field
     try {
       const field = document.createElement('textarea')
-      field.value = address()
+      field.value = text
       field.setAttribute('readonly', '')
       field.style.position = 'fixed'
       field.style.opacity = '0'

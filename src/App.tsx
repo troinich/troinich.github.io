@@ -108,9 +108,10 @@ export default function App() {
   // Arrival: today's door pulses gold (it stays closed until the visitor opens it). Runs on page load
   // (if unlocked) or right after the snowman unlocks the calendar. The page isn't scrolled.
   const [highlightId, setHighlightId] = useState<number | null>(null)
-  // Bumped to queue a pulse. Wider screens pulse right away (today's door is in the first rows).
-  // Phones, where the doors go 1–24, wait until the visitor actually gets to it: by scrolling down
-  // or with "Go to today's door".
+  // Bumped to queue a pulse. It waits until today's door is actually on screen: on phones the doors
+  // go 1–24, and on wider screens door 24 stays in the middle, so the visitor may need to scroll
+  // down (or use "Go to today's door" on phones) first. Doors 1–23 on wider screens are in the
+  // first rows, so they pulse right away.
   const [pulseRequest, setPulseRequest] = useState(0)
   const startArrival = () => {
     setAnnouncement(`Today is door ${todayId}.`)
@@ -125,8 +126,7 @@ export default function App() {
       unhighlight = window.setTimeout(() => setHighlightId(null), 4500)
     }
     const door = document.getElementById(`door-${todayId}`)
-    const phone = window.matchMedia?.('(max-width: 639px)').matches
-    if (!phone || !door || typeof IntersectionObserver === 'undefined') {
+    if (!door || typeof IntersectionObserver === 'undefined') {
       pulse()
       return () => window.clearTimeout(unhighlight)
     }
@@ -235,7 +235,6 @@ export default function App() {
             highlightId={highlightId}
             locked={locked}
             onToggle={handleToggle}
-            onShowCv={openCv}
             onReadMore={(id) => setOverlay({ kind: 'door', id })}
           />
         </main>

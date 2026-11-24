@@ -1,6 +1,8 @@
 import { useRef } from 'react'
 import { useModal } from '../hooks/useModal'
 import { cv, type Role } from '../data/cv'
+import { HireMeButtons } from './HireMeButtons'
+import { trackCta } from '../consent'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -57,9 +59,12 @@ export function CvView({ onClose }: { onClose: () => void }) {
           <button ref={closeRef} type="button" onClick={onClose} className="btn btn--secondary btn--sm">
             ← Back to calendar
           </button>
-          <a href={cv.pdf} download className="btn btn--primary btn--sm">
-            Download PDF
-          </a>
+          <div className="flex flex-wrap items-center gap-2">
+            <a href={cv.pdf} download onClick={() => trackCta('pdf', 'cv-top')} className="btn btn--secondary btn--sm">
+              Download PDF
+            </a>
+            <HireMeButtons size="sm" mainOnly place="cv-top" />
+          </div>
         </div>
 
         <div className="rounded-[var(--radius-card)] border border-[var(--line)] bg-[var(--surface)] p-5 sm:p-10">

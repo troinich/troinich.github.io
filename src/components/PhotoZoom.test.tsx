@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { Header } from './Header'
 
 function renderHeader(onShowCv = () => {}) {
@@ -32,9 +32,9 @@ describe('Header photo zoom', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Say hej: photo and intro' }))
     const dialog = screen.getByRole('dialog', { name: 'Photo of Natalia Troinich' })
     expect(dialog.querySelector('a[href="https://www.linkedin.com/in/troinicz"]')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Email me/ })).toBeInTheDocument()
+    expect(within(dialog).getByRole('button', { name: /Email me/ })).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Full CV' }))
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Full CV' }))
     expect(onShowCv).toHaveBeenCalled()
     expect(screen.queryByRole('dialog', { name: 'Photo of Natalia Troinich' })).not.toBeInTheDocument()
   })
@@ -42,7 +42,8 @@ describe('Header photo zoom', () => {
   it('clicking a contact button does not close the photo', () => {
     renderHeader()
     fireEvent.click(screen.getByRole('button', { name: 'Say hej: photo and intro' }))
-    fireEvent.click(screen.getByRole('link', { name: 'LinkedIn' }))
+    const dialog = screen.getByRole('dialog', { name: 'Photo of Natalia Troinich' })
+    fireEvent.click(within(dialog).getByRole('link', { name: 'LinkedIn' }))
     expect(screen.getByRole('dialog', { name: 'Photo of Natalia Troinich' })).toBeInTheDocument()
   })
 

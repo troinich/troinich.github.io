@@ -15,8 +15,6 @@ interface Props {
   phoneFullWidth?: boolean
   onToggle: (id: number) => void
   onReadMore: (id: number) => void
-  /** Opens the full CV page (used by door 24's "Full CV" button). */
-  onShowCv?: () => void
 }
 
 export function Door({
@@ -28,7 +26,6 @@ export function Door({
   phoneFullWidth = false,
   onToggle,
   onReadMore,
-  onShowCv,
 }: Props) {
   const panelId = `door-${door.id}-content`
   // While closed, the card is inert: nothing on it can be focused, clicked or read out. This
@@ -124,7 +121,7 @@ export function Door({
               never pushes the rows below down */}
           {door.hireMe && (
             <div className="pt-1 pb-1">
-              <HireMeButtons size="sm" onShowCv={onShowCv} />
+              <HireMeButtons size="sm" pdf linkedin={false} place="door24" />
             </div>
           )}
           {inlineDetails.length > 0 && (

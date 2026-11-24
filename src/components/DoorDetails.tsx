@@ -60,7 +60,7 @@ export function DoorDetails({ door, onClose, onShowCv }: Props) {
         {door.highlight && <p className="door__highlight mt-5 mb-1">{door.highlight}</p>}
         {door.hireMe && (
           <div className="mt-4">
-            <HireMeButtons onShowCv={onShowCv} />
+            <HireMeButtons pdf linkedin={false} place="door24-card" />
           </div>
         )}
 

@@ -14,6 +14,13 @@ describe('CvView', () => {
     )
   })
 
+  it('offers Book a call next to the PDF download, and no contact section at the end', () => {
+    render(<CvView onClose={() => {}} />)
+    expect(screen.getAllByRole('link', { name: 'Book a call' })).toHaveLength(1)
+    expect(screen.getByRole('link', { name: 'LinkedIn' })).toBeInTheDocument() // under the name
+    expect(screen.queryByRole('heading', { name: "Hiring? Let's talk." })).not.toBeInTheDocument()
+  })
+
   it('does not show email or phone', () => {
     const { container } = render(<CvView onClose={() => {}} />)
     const text = container.textContent ?? ''

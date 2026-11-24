@@ -26,7 +26,7 @@ export function writeConsent(value: Consent) {
   }
 }
 
-type GoatCounter = { no_onload?: boolean; count?: (...args: unknown[]) => void }
+type GoatCounter = { no_onload?: boolean; count?: (vars?: { path: string; title?: string; event?: boolean }) => void }
 type WithGoatCounter = Window & { goatcounter?: GoatCounter }
 
 /** GoatCounter's own opt-out flag: when set, its script never counts in this browser. */
@@ -66,4 +66,22 @@ export function stopAnalytics() {
   } catch {
     // ignore: the script is removed and disabled anyway
   }
+}
+
+/**
+ * Counts a click (e.g. 'cta-book-intro') as a GoatCounter event. Does nothing unless the visitor said
+ * "Yes" and the script has loaded; after a "No", `stopAnalytics` has made `count` a no-op anyway.
+ */
+export function trackEvent(name: string) {
+  if (readConsent() !== 'yes') return
+  try {
+    ;(window as WithGoatCounter).goatcounter?.count?.({ path: name, title: name, event: true })
+  } catch {
+    // counting must never break a button
+  }
+}
+
+/** Counts a click on a contact button as `cta-<what>-<place>`, e.g. `cta-book-intro`. */
+export function trackCta(what: string, place?: string) {
+  trackEvent(place ? `cta-${what}-${place}` : `cta-${what}`)
 }

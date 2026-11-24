@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { Door } from './Door'
@@ -92,6 +92,16 @@ describe('Door 24 (open)', () => {
     )
     return onToggle
   }
+
+  it('offers Book a call, Email me and Download CV, but not LinkedIn or Full CV', () => {
+    renderOpenDoor24()
+    const card = document.getElementById('door-24')!
+    expect(within(card).getByRole('link', { name: 'Book a call' })).toBeInTheDocument()
+    expect(within(card).getByRole('button', { name: 'Email me' })).toBeInTheDocument()
+    expect(within(card).getByRole('link', { name: 'Download CV (PDF)' })).toHaveAttribute('download')
+    expect(within(card).queryByRole('link', { name: 'LinkedIn' })).not.toBeInTheDocument()
+    expect(within(card).queryByRole('button', { name: 'Full CV' })).not.toBeInTheDocument()
+  })
 
   it('"Email me" opens an email to the CV address and does not close the door', () => {
     const onToggle = renderOpenDoor24()

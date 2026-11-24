@@ -312,20 +312,6 @@ describe('Open all / Close all buttons', () => {
   })
 })
 
-describe('Door 24 "Full CV" button', () => {
-  it('opens the CV page, and "Back to calendar" returns with door 24 still open', () => {
-    arrive(new Date(2026, 11, 24))
-    fireEvent.click(screen.getByRole('button', { name: 'Door 24 (today), closed' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Full CV' }))
-    expect(screen.getByRole('dialog', { name: 'Natalia Troinich' })).toBeInTheDocument()
-    expect(document.getElementById('door-24')).toHaveClass('is-open')
-
-    fireEvent.click(screen.getByRole('button', { name: /Back to calendar/ }))
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(document.getElementById('door-24')).toHaveClass('is-open')
-  })
-})
-
 describe('Read more', () => {
   it('opens a detail card for an opened door and closes it with Escape', () => {
     arrive(new Date(2026, 11, 10))
@@ -561,13 +547,6 @@ describe('Locked before December', () => {
     expect(screen.getByRole('dialog', { name: 'Too early!' })).toBeInTheDocument()
   })
 
-  it('the shared ?open link skips "Too early!" and goes straight to the calendar', () => {
-    window.history.replaceState(null, '', '/?open')
-    arrive(NOV_19)
-    expect(screen.queryByRole('dialog', { name: 'Too early!' })).not.toBeInTheDocument()
-    expect(document.getElementById('door-19')).toHaveClass('is-highlighted')
-    expect(window.location.search).toBe('')
-  })
 
   it('a visitor who already built the snowman is not locked out again', () => {
     localStorage.setItem('meet-me:unlocked', '1')

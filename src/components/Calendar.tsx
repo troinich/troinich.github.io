@@ -13,7 +13,6 @@ interface Props {
   locked?: boolean
   onToggle: (id: number) => void
   onReadMore: (id: number) => void
-  onShowCv?: () => void
 }
 
 export function Calendar({
@@ -23,7 +22,6 @@ export function Calendar({
   locked = false,
   onToggle,
   onReadMore,
-  onShowCv,
 }: Props) {
   // Phones: plain order 1–24, so the doors read like a list (App adds an "Open today's door" shortcut).
   // Wider screens: the shuffled advent calendar look, with today's door in the first rows.
@@ -45,7 +43,6 @@ export function Calendar({
             locked={locked}
             onToggle={onToggle}
             onReadMore={onReadMore}
-            onShowCv={onShowCv}
           />
         )
       })}
